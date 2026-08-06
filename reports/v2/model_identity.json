@@ -1,0 +1,75 @@
+{
+  "timestamp": "2026-08-05T16:30:29.392113+00:00",
+  "served_model_name": "qwen3.5-9b-awq",
+  "model_id": "qwen3.5-9b-awq",
+  "base_url": "http://127.0.0.1:8000/v1",
+  "backend": "vllm_openai_compatible",
+  "vision_smoke_test": {
+    "status": "passed",
+    "http_status": 200,
+    "nonempty_final_response": true,
+    "raw_response": "```json\n{\n  \"damage_severity\": \"severe_damage\",\n  \"confidence\": 0.95,\n  \"short_rationale\": \"The image shows a building with a completely collapsed and mangled roof, with corrugated metal sheets and structural beams twisted and lying on the ground. The damage is extensive, indicating a severe impact.\"\n}\n```"
+  },
+  "prompt_lock": {
+    "prompt_version": "frozen_p3",
+    "source_prompt_version": "p3",
+    "prompt_text_sha256": "0f660e2d778d14d303463decc3e62a38712b5bac2636aa367c6c5e9add335733",
+    "selection_metric": "macro_f1",
+    "clean_metrics": {
+      "accuracy": 0.494949494949495,
+      "macro_f1": 0.4692001838198565,
+      "balanced_accuracy": 0.494949494949495,
+      "severe_recall": 0.7878787878787878,
+      "mild_recall": 0.4545454545454545,
+      "little_or_no_recall": 0.2424242424242424,
+      "parse_errors": 0
+    },
+    "model_id": "qwen3.5-9b-awq",
+    "served_model_name": "qwen3.5-9b-awq",
+    "quantization": {
+      "quant_method": "awq",
+      "bits": 4,
+      "group_size": 128,
+      "version": "gemm",
+      "zero_point": true,
+      "modules_to_not_convert": [
+        "visual",
+        "linear_attn",
+        "self_attn",
+        "model.layers.0.",
+        "mtp"
+      ]
+    },
+    "thinking_enabled": false,
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "seed": 42,
+    "image_settings": {
+      "preprocessor_config": {
+        "size": {
+          "longest_edge": 16777216,
+          "shortest_edge": 65536
+        },
+        "patch_size": 16,
+        "temporal_patch_size": 2,
+        "merge_size": 2,
+        "image_mean": [
+          0.5,
+          0.5,
+          0.5
+        ],
+        "image_std": [
+          0.5,
+          0.5,
+          0.5
+        ],
+        "processor_class": "Qwen3VLProcessor",
+        "image_processor_type": "Qwen2VLImageProcessorFast"
+      },
+      "server_command": "24227    01:58:23 /home/db21052/anaconda3/envs/vlm_app/bin/python /home/db21052/anaconda3/envs/vlm_app/bin/vllm serve /home/db21052/Workspace/vlm-app/models/qwen3_5_9b_awq --host 127.0.0.1 --port 8000 --trust-remote-code --max-model-len 4096 --limit-mm-per-prompt {\"image\":1} --gpu-memory-utilization 0.88 --served-model-name qwen3.5-9b-awq --dtype half --enforce-eager --max-num-seqs 5",
+      "limit_mm_per_prompt": "{image: 1}"
+    },
+    "timestamp": "2026-08-05T08:54:36.451879+00:00",
+    "git_commit": "nogit"
+  }
+}

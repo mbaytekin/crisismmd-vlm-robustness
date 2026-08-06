@@ -1,0 +1,7 @@
+vlm_base_url: ""
+ollama_host: ""
+openai_timeout_seconds: 90
+ollama_timeout_seconds: 120
+model_id: ""
+smoke_test: true
+

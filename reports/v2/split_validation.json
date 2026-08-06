@@ -1,0 +1,45 @@
+{
+  "summaries": [
+    {
+      "split": "pilot",
+      "n": 99,
+      "little_or_no_damage": 33,
+      "mild_damage": 33,
+      "severe_damage": 33,
+      "duplicate_sample_id": 0,
+      "duplicate_sha256": 0,
+      "duplicate_perceptual_hash": 0
+    },
+    {
+      "split": "main",
+      "n": 900,
+      "little_or_no_damage": 300,
+      "mild_damage": 300,
+      "severe_damage": 300,
+      "duplicate_sample_id": 0,
+      "duplicate_sha256": 0,
+      "duplicate_perceptual_hash": 12
+    },
+    {
+      "split": "style_ablation",
+      "n": 180,
+      "little_or_no_damage": 60,
+      "mild_damage": 60,
+      "severe_damage": 60,
+      "duplicate_sample_id": 0,
+      "duplicate_sha256": 0,
+      "duplicate_perceptual_hash": 0
+    },
+    {
+      "split": "size_ablation",
+      "n": 90,
+      "little_or_no_damage": 30,
+      "mild_damage": 30,
+      "severe_damage": 30,
+      "duplicate_sample_id": 0,
+      "duplicate_sha256": 0,
+      "duplicate_perceptual_hash": 1
+    }
+  ],
+  "failures": []
+}

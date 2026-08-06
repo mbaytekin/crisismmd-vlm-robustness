@@ -1,0 +1,269 @@
+{
+  "status": "passed",
+  "n_records": 9000,
+  "n_failures": 0,
+  "n_warnings": 52,
+  "failures": [],
+  "warnings": [
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "hurricane_irma__909900030886187009__909900030886187009_0",
+      "condition": "direct_image"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "hurricane_irma__909900030886187009__909900030886187009_0",
+      "condition": "direct_joint"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "hurricane_maria__921564595877302272__921564595877302272_0",
+      "condition": "direct_image"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "hurricane_maria__921564595877302272__921564595877302272_0",
+      "condition": "direct_joint"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "srilanka_floods__869957461993635840__869957461993635840_0",
+      "condition": "benign_image"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "srilanka_floods__869957461993635840__869957461993635840_0",
+      "condition": "benign_joint"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "srilanka_floods__869957461993635840__869957461993635840_0",
+      "condition": "direct_image"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "srilanka_floods__869957461993635840__869957461993635840_0",
+      "condition": "direct_joint"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "srilanka_floods__869957461993635840__869957461993635840_0",
+      "condition": "misleading_image"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "srilanka_floods__869957461993635840__869957461993635840_0",
+      "condition": "misleading_joint"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "california_wildfires__917828952533716994__917828952533716994_0",
+      "condition": "direct_image"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "california_wildfires__917828952533716994__917828952533716994_0",
+      "condition": "direct_joint"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "california_wildfires__917828952533716994__917828952533716994_0",
+      "condition": "misleading_image"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "california_wildfires__917828952533716994__917828952533716994_0",
+      "condition": "misleading_joint"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "hurricane_irma__909695665562902528__909695665562902528_0",
+      "condition": "direct_image"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "hurricane_irma__909695665562902528__909695665562902528_0",
+      "condition": "direct_joint"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "california_wildfires__917800657796595715__917800657796595715_0",
+      "condition": "benign_image"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "california_wildfires__917800657796595715__917800657796595715_0",
+      "condition": "benign_joint"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "california_wildfires__917800657796595715__917800657796595715_0",
+      "condition": "direct_image"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "california_wildfires__917800657796595715__917800657796595715_0",
+      "condition": "direct_joint"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "california_wildfires__917800657796595715__917800657796595715_0",
+      "condition": "misleading_image"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "california_wildfires__917800657796595715__917800657796595715_0",
+      "condition": "misleading_joint"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "hurricane_irma__905658650877763584__905658650877763584_0",
+      "condition": "direct_image"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "hurricane_irma__905658650877763584__905658650877763584_0",
+      "condition": "direct_joint"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "california_wildfires__919580937184260098__919580937184260098_0",
+      "condition": "direct_image"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "california_wildfires__919580937184260098__919580937184260098_0",
+      "condition": "direct_joint"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "mexico_earthquake__910523983149252608__910523983149252608_0",
+      "condition": "direct_image"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "mexico_earthquake__910523983149252608__910523983149252608_0",
+      "condition": "direct_joint"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "hurricane_maria__914353354503069696__914353354503069696_1",
+      "condition": "direct_image"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "hurricane_maria__914353354503069696__914353354503069696_1",
+      "condition": "direct_joint"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "hurricane_harvey__901713307144507392__901713307144507392_0",
+      "condition": "benign_image"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "hurricane_harvey__901713307144507392__901713307144507392_0",
+      "condition": "benign_joint"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "hurricane_harvey__901713307144507392__901713307144507392_0",
+      "condition": "direct_image"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "hurricane_harvey__901713307144507392__901713307144507392_0",
+      "condition": "direct_joint"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "hurricane_harvey__901713307144507392__901713307144507392_0",
+      "condition": "misleading_image"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "hurricane_harvey__901713307144507392__901713307144507392_0",
+      "condition": "misleading_joint"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "hurricane_harvey__904240884241326081__904240884241326081_0",
+      "condition": "benign_image"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "hurricane_harvey__904240884241326081__904240884241326081_0",
+      "condition": "benign_joint"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "hurricane_harvey__904240884241326081__904240884241326081_0",
+      "condition": "direct_image"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "hurricane_harvey__904240884241326081__904240884241326081_0",
+      "condition": "direct_joint"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "hurricane_harvey__904240884241326081__904240884241326081_0",
+      "condition": "misleading_image"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "hurricane_harvey__904240884241326081__904240884241326081_0",
+      "condition": "misleading_joint"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "hurricane_irma__909400394773811200__909400394773811200_0",
+      "condition": "direct_image"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "hurricane_irma__909400394773811200__909400394773811200_0",
+      "condition": "direct_joint"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "hurricane_irma__909400394773811200__909400394773811200_0",
+      "condition": "misleading_image"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "hurricane_irma__909400394773811200__909400394773811200_0",
+      "condition": "misleading_joint"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "srilanka_floods__870110587661021185__870110587661021185_0",
+      "condition": "direct_image"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "srilanka_floods__870110587661021185__870110587661021185_0",
+      "condition": "direct_joint"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "srilanka_floods__870110587661021185__870110587661021185_0",
+      "condition": "misleading_image"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "srilanka_floods__870110587661021185__870110587661021185_0",
+      "condition": "misleading_joint"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "mexico_earthquake__911808511948058629__911808511948058629_0",
+      "condition": "direct_image"
+    },
+    {
+      "check": "occupied_area_warning",
+      "sample_id": "mexico_earthquake__911808511948058629__911808511948058629_0",
+      "condition": "direct_joint"
+    }
+  ]
+}

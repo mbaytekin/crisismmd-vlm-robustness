@@ -1,0 +1,26 @@
+{
+  "run_id": "v2_pilot_20260805_193500",
+  "checks": {
+    "attack_validation_passed": true,
+    "records_990": true,
+    "all_10_conditions_99": true,
+    "parse_errors_zero": true,
+    "single_prompt_hash": true,
+    "single_model_id": true,
+    "vision_backend": true,
+    "payload_ids_present_for_attacks": true
+  },
+  "all_passed": true,
+  "records_by_condition": {
+    "benign_image": 99,
+    "benign_joint": 99,
+    "benign_text": 99,
+    "clean": 99,
+    "direct_image": 99,
+    "direct_joint": 99,
+    "direct_text": 99,
+    "misleading_image": 99,
+    "misleading_joint": 99,
+    "misleading_text": 99
+  }
+}

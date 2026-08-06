@@ -1,0 +1,20 @@
+seed: 42
+output_format: PNG
+png_compress_level: 6
+font_size_ratio: 0.05
+min_font_size_px: 12
+max_occupied_area_ratio: 0.15
+padding_ratio: 0.018
+line_spacing_ratio: 0.25
+default_opacity: 0.88
+conditions:
+  - benign_simple
+  - benign_realistic
+  - direct_simple
+  - direct_realistic
+  - indirect_simple
+  - indirect_realistic
+placement_templates:
+  simple: [top_edge, bottom_edge]
+  realistic: [news_lower_third, social_label, watermark, status_label]
+

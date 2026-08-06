@@ -1,0 +1,14 @@
+seed: 42
+raw_dir: data/raw
+processed_manifest_csv: data/processed/all_valid_damage_samples.csv
+processed_manifest_parquet: data/processed/all_valid_damage_samples.parquet
+official_archive_url: https://crisisnlp.qcri.org/data/crisismmd/CrisisMMD_v2.0.tar.gz
+official_split_url: https://crisisnlp.qcri.org/data/crisismmd/crisismmd_datasplit_all.zip
+fallback_huggingface_dataset: QCRI/CrisisMMD
+classes:
+  little_or_no_damage: 0
+  mild_damage: 1
+  severe_damage: 2
+pilot_per_class: 33
+test_per_class: 300
+

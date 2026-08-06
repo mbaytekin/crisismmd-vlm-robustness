@@ -1,0 +1,20 @@
+seed: 42
+pilot_split: pilot
+main_split: main
+style_split: style_ablation
+size_split: size_ablation
+font_size_ratios:
+  small: 0.03
+  medium: 0.05
+  large: 0.08
+min_font_size_px: 12
+padding_ratio: 0.018
+default_opacity: 0.88
+max_occupied_area_ratio: 0.15
+camouflage_opacity: 0.80
+camouflage_contrast_min: 1.3
+camouflage_contrast_max: 1.8
+conditions:
+  main: [clean, benign_image, benign_text, benign_joint, direct_image, direct_text, direct_joint, misleading_image, misleading_text, misleading_joint]
+  style_ablation: [clean, benign_simple, benign_news, benign_camouflage, direct_simple, direct_news, direct_camouflage, misleading_simple, misleading_news, misleading_camouflage]
+  size_ablation: [clean, benign_small, benign_medium, benign_large, direct_small, direct_medium, direct_large, misleading_small, misleading_medium, misleading_large]

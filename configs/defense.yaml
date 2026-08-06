@@ -1,0 +1,6 @@
+enabled: false
+backend: pytesseract
+pilot_threshold: 1
+mask_fill: [127, 127, 127]
+confidence_threshold: 0.0
+

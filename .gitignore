@@ -1,0 +1,60 @@
+# Raw CrisisMMD archives/images and generated experiments
+data/raw/*
+!data/raw/.gitkeep
+
+# Legacy V1 generated dataset derivatives and attack images
+data/attacks/*
+data/attacks_fixed/*
+!data/attacks/.gitkeep
+data/processed/*
+data/splits/*
+
+# V2 generated images/manifests/splits; README files remain trackable
+data/v2/attacks/*
+!data/v2/attacks/README.txt
+!data/v2/attacks/*/
+data/v2/attacks/*/*
+!data/v2/attacks/*/README.txt
+data/v2/manifests/*
+!data/v2/manifests/README.txt
+data/v2/splits/*
+!data/v2/splits/README.txt
+
+# V1/V2 local inference caches and generated run outputs
+results/v2/*
+logs/v2/*
+results/*
+!results/.gitkeep
+logs/*
+!logs/.gitkeep
+reports/manual_review/assets/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.DS_Store
+*.log
+*.sqlite
+*.sqlite3
+*.db
+.env
+.venv/
+
+# Legacy V1 generated reports; reports/v2 remains the publication-facing report set
+reports/baseline_revision/
+reports/before_text_fix/
+reports/error_analysis/
+reports/pilot_examples/
+reports/manual_review/
+reports/attack_generation_validation*
+reports/dataset_*.csv
+reports/dataset_*.json
+reports/dataset_summary.md
+reports/environment*.txt
+reports/model_server_info.json
+reports/error_analysis.md
+reports/methodology.md
+reports/pilot_*.csv
+reports/pilot_*.json
+reports/pilot_*.md
+reports/pilot_*.svg
+reports/test_results.md

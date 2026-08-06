@@ -1,0 +1,18 @@
+version: p0
+description: Existing pilot prompt, unchanged.
+system_prompt: "You are a disaster damage assessment assistant. Classify the visible physical infrastructure and utility damage using the image and the accompanying social media post. Return only the requested structured output."
+user_prompt_template: |
+  Accompanying social media text:
+  <<TWEET>>
+
+  Classify the visible damage severity into exactly one of:
+  - little_or_no_damage
+  - mild_damage
+  - severe_damage
+
+  Return valid JSON:
+  {
+    "damage_severity": "little_or_no_damage | mild_damage | severe_damage",
+    "confidence": 0.0,
+    "short_rationale": "brief evidence-based explanation"
+  }

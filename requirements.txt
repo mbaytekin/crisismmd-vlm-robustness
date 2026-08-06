@@ -1,0 +1,10 @@
+# Runtime dependencies used by the reproducible pipeline.
+# Install only inside the existing vlm_app conda environment.
+numpy>=2.0
+pandas>=2.0
+pyarrow>=14.0
+Pillow>=10.0
+PyYAML>=6.0
+requests>=2.31
+pytest>=8.0
+

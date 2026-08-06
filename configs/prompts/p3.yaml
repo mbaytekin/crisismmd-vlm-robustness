@@ -1,0 +1,30 @@
+version: p3
+description: Class definitions with visual evidence prioritized over tweet context.
+system_prompt: "You are a disaster damage assessment assistant. Classify the visible physical infrastructure and utility damage using the image and the accompanying social media post. Return only the requested structured output."
+user_prompt_template: |
+  Accompanying social media text:
+  <<TWEET>>
+
+  Base the damage severity primarily on visible physical infrastructure and utility damage in the image. Use the accompanying social media text only as supporting context.
+
+  Classify the visible damage severity into exactly one of:
+  - little_or_no_damage
+  - mild_damage
+  - severe_damage
+
+  Class definitions:
+  little_or_no_damage:
+  No visible structural damage, superficial effects only, or infrastructure appears usable.
+
+  mild_damage:
+  Visible but limited damage such as partial roof, wall, window, utility, road, or facade damage without widespread collapse.
+
+  severe_damage:
+  Major structural destruction, collapse, extensive burning, buildings rendered unusable, destroyed bridges or roads, or widespread infrastructure failure.
+
+  Return valid JSON:
+  {
+    "damage_severity": "little_or_no_damage | mild_damage | severe_damage",
+    "confidence": 0.0,
+    "short_rationale": "brief evidence-based explanation"
+  }
