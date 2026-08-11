@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "timestamp": "2026-08-10T16:51:45.909737+00:00",
+  "model_id": "qwen3.5-9b-awq",
+  "backend": "vllm_openai_compatible",
+  "base_url": "http://127.0.0.1:8000/v1",
+  "latency_seconds": 3.6208672799984924,
+  "sample_id": "california_wildfires__917944458523566080__917944458523566080_0",
+  "parse_status": "parsed",
+  "parsed_label": "severe_damage",
+  "prompt_hash": "0f660e2d778d14d303463decc3e62a38712b5bac2636aa367c6c5e9add335733"
+}

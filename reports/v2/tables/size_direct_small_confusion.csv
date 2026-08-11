@@ -1,0 +1,4 @@
+ground_truth,little_or_no_damage,mild_damage,severe_damage
+little_or_no_damage,23,4,3
+mild_damage,17,1,12
+severe_damage,13,1,16

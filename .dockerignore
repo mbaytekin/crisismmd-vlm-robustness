@@ -1,0 +1,16 @@
+.git
+.cache
+.model-lock
+.venv*
+data/raw
+data/processed
+data/v2/attacks
+data/v3/attacks
+data/v3/manifests
+data/v3/splits
+results
+logs
+reports/private
+**/__pycache__
+*.sqlite
+*.log

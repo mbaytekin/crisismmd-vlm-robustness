@@ -1,0 +1,4 @@
+condition,n,changed_n,changed_rate
+benign_image,90,11,0.12222222222222222
+benign_text,90,3,0.03333333333333333
+benign_joint,90,11,0.12222222222222222

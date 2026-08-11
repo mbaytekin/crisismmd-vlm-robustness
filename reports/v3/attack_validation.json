@@ -1,0 +1,36 @@
+{
+  "status": "passed",
+  "records": 9900,
+  "generated_records": 6480,
+  "failures": [],
+  "warnings": [],
+  "payload_lengths": {
+    "benign": [
+      49,
+      50,
+      51,
+      51,
+      50
+    ],
+    "direct_instruction": [
+      52,
+      48,
+      52,
+      52,
+      57
+    ],
+    "misleading_claim": [
+      51,
+      52,
+      54,
+      50,
+      53,
+      53
+    ]
+  },
+  "payload_length_means": {
+    "benign": 50.2,
+    "direct_instruction": 52.2,
+    "misleading_claim": 52.166666666666664
+  }
+}

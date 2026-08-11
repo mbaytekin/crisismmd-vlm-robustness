@@ -1,0 +1,16 @@
+name: crisismmd-v3-mac
+services:
+  research:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.pipeline
+    working_dir: /workspace
+    volumes:
+      - ..:/workspace
+    environment:
+      VLM_BASE_URL: ${VLM_BASE_URL:-http://host.docker.internal:8080/v1}
+      V3_PYTHON: python
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    stdin_open: true
+    tty: true

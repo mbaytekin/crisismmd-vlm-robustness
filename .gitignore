@@ -28,6 +28,16 @@ results/*
 logs/*
 !logs/.gitkeep
 reports/manual_review/assets/
+reports/private/
+
+# V3 generated research data (regenerate with src.v3_pipeline)
+data/v3/attacks/**
+!data/v3/attacks/README.txt
+data/v3/manifests/*.csv
+data/v3/manifests/*.parquet
+data/v3/splits/*.csv
+results/v3/
+logs/v3/
 __pycache__/
 *.py[cod]
 .pytest_cache/
@@ -38,6 +48,9 @@ __pycache__/
 *.db
 .env
 .venv/
+.venv-mac/
+.cache/
+.model-lock/
 
 # Legacy V1 generated reports; reports/v2 remains the publication-facing report set
 reports/baseline_revision/

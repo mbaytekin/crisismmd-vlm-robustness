@@ -1,0 +1,175 @@
+schema_version: 2
+selection_date: "2026-08-11"
+selection_policy: clean_first_large_models
+minimum_parameters_billion: 12
+primary_precision: mlx_8bit
+ultra_tier_precision: mlx_4bit
+
+common_inference:
+  temperature: 0.0
+  top_p: 1.0
+  max_tokens: 150
+  seed: 42
+  thinking: false
+  single_image: true
+
+# No attack conditions are run until both clean gates pass. Parameter count is
+# only a candidate filter; qualification is based on CrisisMMD clean metrics.
+clean_gates:
+  pilot:
+    split: pilot
+    n: 90
+    parse_rate_min: 0.995
+    accuracy_min: 0.60
+    macro_f1_min: 0.55
+    every_class_recall_min: 0.40
+  main:
+    split: main
+    n: 720
+    parse_rate_min: 0.995
+    accuracy_min: 0.70
+    macro_f1_min: 0.65
+    every_class_recall_min: 0.50
+
+models:
+  - slug: gemma4_12b_8bit
+    family: Gemma
+    release: "4"
+    role: large_candidate_lower_bound
+    priority: clean_screen_candidate
+    parameters_billion: 12
+    architecture: dense_unified_multimodal
+    official_model_id: google/gemma-4-12B-it
+    mac_model_id: mlx-community/gemma-4-12B-it-8bit
+    nvidia_model_id: google/gemma-4-12B-it
+    precision: 8bit
+    license: Apache-2.0
+    gated: true
+    source: https://huggingface.co/google/gemma-4-12B
+
+  - slug: mistral31_24b_8bit
+    family: Mistral
+    release: "Small-3.1-2503"
+    role: architecture_diversity_candidate
+    priority: clean_screen_candidate
+    parameters_billion: 24
+    architecture: dense_pixtral_vision
+    official_model_id: mistralai/Mistral-Small-3.1-24B-Instruct-2503
+    mac_model_id: mlx-community/Mistral-Small-3.1-24B-Instruct-2503-8bit
+    nvidia_model_id: mistralai/Mistral-Small-3.1-24B-Instruct-2503
+    precision: 8bit
+    license: Apache-2.0
+    source: https://docs.mistral.ai/models/model-cards/mistral-small-3-1-25-03
+
+  - slug: gemma4_26b_a4b_8bit
+    family: Gemma
+    release: "4"
+    role: mixture_of_experts_candidate
+    priority: clean_screen_candidate
+    parameters_billion: 26
+    active_parameters_billion: 4
+    architecture: mixture_of_experts_multimodal
+    official_model_id: google/gemma-4-26B-A4B-it
+    mac_model_id: mlx-community/gemma-4-26b-a4b-it-8bit
+    nvidia_model_id: google/gemma-4-26B-A4B-it
+    precision: 8bit
+    license: Apache-2.0
+    gated: true
+    source: https://huggingface.co/google/gemma-4-26B-A4B
+
+  - slug: qwen35_27b_8bit
+    family: Qwen3.5
+    release: "3.5"
+    role: current_qwen_candidate
+    priority: clean_screen_candidate
+    parameters_billion: 27
+    architecture: dense_hybrid_attention
+    official_model_id: Qwen/Qwen3.5-27B
+    mac_model_id: mlx-community/Qwen3.5-27B-8bit
+    nvidia_model_id: Qwen/Qwen3.5-27B
+    precision: 8bit
+    license: Apache-2.0
+    source: https://huggingface.co/Qwen/Qwen3.5-27B
+
+  - slug: gemma4_31b_8bit
+    family: Gemma
+    release: "4"
+    role: dense_large_candidate
+    priority: clean_screen_candidate
+    parameters_billion: 31
+    architecture: dense_multimodal
+    official_model_id: google/gemma-4-31B-it
+    mac_model_id: mlx-community/gemma-4-31b-it-8bit
+    nvidia_model_id: google/gemma-4-31B-it
+    precision: 8bit
+    license: Apache-2.0
+    gated: true
+    source: https://huggingface.co/google/gemma-4-31B
+
+  - slug: qwen3vl_32b_8bit
+    family: Qwen3-VL
+    release: "3"
+    role: vision_specialist_candidate
+    priority: clean_screen_candidate
+    parameters_billion: 32
+    architecture: dense_vision_language
+    official_model_id: Qwen/Qwen3-VL-32B-Instruct
+    mac_model_id: mlx-community/Qwen3-VL-32B-Instruct-8bit
+    nvidia_model_id: Qwen/Qwen3-VL-32B-Instruct
+    precision: 8bit
+    license: Apache-2.0
+    source: https://huggingface.co/Qwen/Qwen3-VL-32B-Instruct
+
+  - slug: qwen3vl_235b_a22b_4bit
+    family: Qwen3-VL
+    release: "3"
+    role: ultra_large_vision_moe_candidate
+    tier: ultra_large
+    priority: clean_screen_candidate
+    parameters_billion: 235
+    active_parameters_billion: 22
+    architecture: mixture_of_experts_vision_language
+    official_model_id: Qwen/Qwen3-VL-235B-A22B-Instruct
+    mac_model_id: mlx-community/Qwen3-VL-235B-A22B-Instruct-4bit
+    nvidia_model_id: Qwen/Qwen3-VL-235B-A22B-Instruct
+    precision: 4bit
+    checkpoint_size_gb: 133.4
+    license: Apache-2.0
+    source: https://huggingface.co/Qwen/Qwen3-VL-235B-A22B-Instruct
+
+  - slug: qwen35_397b_a17b_4bit
+    family: Qwen3.5
+    release: "3.5"
+    role: ultra_large_unified_moe_candidate
+    tier: ultra_large
+    priority: clean_screen_candidate
+    parameters_billion: 397
+    active_parameters_billion: 17
+    architecture: mixture_of_experts_unified_multimodal
+    official_model_id: Qwen/Qwen3.5-397B-A17B
+    mac_model_id: mlx-community/Qwen3.5-397B-A17B-4bit
+    nvidia_model_id: Qwen/Qwen3.5-397B-A17B
+    precision: 4bit
+    checkpoint_size_gb: 223.9
+    license: Apache-2.0
+    source: https://huggingface.co/Qwen/Qwen3.5-397B-A17B
+
+# Run only for a model that passes both clean gates.
+quantization_sensitivity:
+  preferred_slug: qwen35_27b_8bit
+  scope: pilot_plus_main
+  variants:
+    - precision: bf16
+      mac_model_id: mlx-community/Qwen3.5-27B-bf16
+    - precision: 8bit
+      mac_model_id: mlx-community/Qwen3.5-27B-8bit
+    - precision: 4bit
+      mac_model_id: mlx-community/Qwen3.5-27B-4bit
+
+required_lock_fields:
+  - resolved_model_id
+  - huggingface_commit_sha
+  - backend
+  - backend_version
+  - precision
+  - prompt_hash

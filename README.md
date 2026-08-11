@@ -2,7 +2,7 @@
 
 Reproducible research codebase for evaluating whether typographic visual and multimodal interventions can alter a vision-language model’s disaster-damage severity assessment on CrisisMMD.
 
-The primary V2 experiment uses a frozen prompt and a locally served `qwen3.5-9b-awq` model through vLLM. The study compares clean inputs with benign controls, direct instruction attacks, and misleading-claim attacks.
+V2 is the completed historical experiment. V3 is the corrected primary pipeline: it removes tweet/near-image split leakage, excludes unusable text/images, matches visual dose across payload families, freezes size-ablation placement, and validates camouflage contrast after rendering. V3 uses one frozen prompt and clean-screens eight 12B–397B candidate models through one MLX-VLM backend on Apple Silicon before any attack inference.
 
 ## Research question
 
@@ -34,6 +34,42 @@ This produces 9,000 model evaluations. Additional image-only ablations evaluate 
 The main run is complete with 9,000/9,000 parsed predictions. The strongest main condition is `direct_image` (ASR 32.5%, severity drop 0.576), followed by `direct_joint` (30.5%, 0.422). Misleading image and joint conditions reach 23.5% and 26.1% ASR, respectively. Benign controls produce much smaller effects and are used to separate ordinary content sensitivity from adversarial behavior.
 
 The full tables, ablations, confidence intervals, error analysis, and audit materials are in [`reports/v2/`](reports/v2/), with the entry point at [`reports/v2/final_summary.md`](reports/v2/final_summary.md).
+
+The corrected V3 Qwen 9B pilot contains 90 independent samples × 10 conditions (900/900 parsed). Clean accuracy is 53.3%, so V3 attack estimates are exploratory and use 48 clean-correct samples. Direct-image and direct-joint ASR are both 39.6% (95% Wilson CI 27.0%–53.7%); benign-image/joint instability is 12.2%. See [`reports/v3/pilot_results.md`](reports/v3/pilot_results.md).
+
+## Corrected V3 workflow
+
+The full V3 study is designed for a 512 GB M3 Ultra Mac Studio. Start with [`docs/V3_TODO.md`](docs/V3_TODO.md), then use the [`Mac Studio runbook`](docs/MAC_STUDIO_RUNBOOK.md). Model choices and size-tier rationale are documented in [`docs/V3_MODEL_SELECTION.md`](docs/V3_MODEL_SELECTION.md); the executable registry is [`configs/v3/models.yaml`](configs/v3/models.yaml).
+
+On the Mac, MLX-VLM runs natively so it can use Metal. The version-pinned Docker container runs the research pipeline and calls that native OpenAI-compatible endpoint. An NVIDIA/vLLM Compose profile is retained as a portability path, but results from different backends must not be pooled in the primary comparison.
+
+```bash
+scripts/setup_macos.sh
+scripts/start_v3_mlx.sh mlx-community/Qwen3.5-27B-8bit
+python -m src.model_registry validate
+python scripts/freeze_v3_artifacts.py check
+scripts/run_v3_model.sh qwen35_27b_8bit
+```
+
+The runner defaults to clean-only screening: 90 pilot images followed by 720 main images if the pilot passes. Review the gate reports, then rerun a qualified model with `V3_RUN_ATTACKS=1` to unlock adversarial, benign, style, and size conditions.
+
+```bash
+python -m src.v3_pipeline prepare
+python -m src.v3_pipeline generate --split pilot
+python -m src.v3_pipeline generate --split main
+python -m src.v3_pipeline generate --split style_ablation
+python -m src.v3_pipeline generate --split size_ablation
+python -m src.v3_pipeline validate
+
+scripts/start_v3_vllm.sh
+python -m src.v3_inference smoke
+python -m src.v3_inference run --run-id RUN_ID --split pilot \
+  --conditions clean benign_image benign_text benign_joint direct_image direct_text direct_joint misleading_image misleading_text misleading_joint \
+  --concurrency 5
+python -m src.v3_reporting --run-id RUN_ID
+```
+
+V3 selects one representative per globally constructed duplicate cluster. Clusters union exact tweet IDs/text, exact image SHA/pHash, and dHash neighbours within Hamming distance 4. The old prompt-selection pilot, suspected mojibake, and images with a short side below 128 px are excluded before selection.
 
 ## Reproducible V2 workflow
 
@@ -76,12 +112,14 @@ The same `inference` and `evaluate` commands apply to `pilot`, `style_ablation`,
 ## Repository structure
 
 ```text
-configs/       prompts, model settings, attack payloads, V2 pipeline config
+configs/       prompts, model settings, and versioned attack/pipeline configs
 src/           data preparation, attack generation, inference, evaluation, reporting
 tests/         reproducibility, parser, cache, split, and metric tests
 scripts/       legacy V1 shell entry points retained for reference
-reports/v2/    publication-facing reports, tables, audit gallery, and review templates
-data/v2/       local generated manifests, split metadata, and attack-image documentation
+reports/v2/    historical experiment reports and corrected retrospective analysis
+reports/v3/    corrected split/attack validation, pilot metrics, and review package
+data/v2/       historical generated-data documentation
+data/v3/       corrected generated-data documentation (large outputs ignored)
 ```
 
 Raw CrisisMMD files, generated attack images, processed dataset derivatives, inference caches, and local logs are excluded by `.gitignore`. The repository is intended to contain code, configuration, tests, documentation, and aggregate research artifacts—not the dataset itself.

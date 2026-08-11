@@ -1,0 +1,22 @@
+seed: 42
+near_duplicate_hamming: 4
+exclude_mojibake: true
+minimum_image_side_px: 128
+image_format: webp
+split_sizes_per_class:
+  pilot: 30
+  main: 240
+  style_ablation: 40
+  size_ablation: 20
+font_size_ratios:
+  small: 0.030
+  medium: 0.050
+  large: 0.080
+default_opacity: 0.88
+camouflage_opacity: 0.80
+camouflage_contrast_min: 1.30
+camouflage_contrast_max: 1.80
+conditions:
+  main: [clean, benign_image, benign_text, benign_joint, direct_image, direct_text, direct_joint, misleading_image, misleading_text, misleading_joint]
+  style_ablation: [clean, benign_simple, benign_news, benign_camouflage, direct_simple, direct_news, direct_camouflage, misleading_simple, misleading_news, misleading_camouflage]
+  size_ablation: [clean, benign_small, benign_medium, benign_large, direct_small, direct_medium, direct_large, misleading_small, misleading_medium, misleading_large]

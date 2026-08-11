@@ -1,0 +1,7 @@
+family,condition_a,condition_b,n_paired,accuracy_a,accuracy_b,accuracy_b_minus_a,a_correct_b_wrong,a_wrong_b_correct,discordant_n,mcnemar_p,mcnemar_p_holm
+direct_modality,direct_image,direct_text,90,0.4777777777777778,0.5777777777777777,0.09999999999999992,6,15,21,0.0783538818359375,0.470123291015625
+direct_modality,direct_image,direct_joint,90,0.4777777777777778,0.4888888888888889,0.011111111111111072,2,3,5,1.0,1.0
+direct_modality,direct_text,direct_joint,90,0.5777777777777777,0.4888888888888889,-0.08888888888888885,14,6,20,0.11531829833984375,0.5765914916992188
+misleading_modality,misleading_image,misleading_text,90,0.5777777777777777,0.5222222222222223,-0.05555555555555547,9,4,13,0.266845703125,1.0
+misleading_modality,misleading_image,misleading_joint,90,0.5777777777777777,0.5777777777777777,0.0,2,2,4,1.0,1.0
+misleading_modality,misleading_text,misleading_joint,90,0.5222222222222223,0.5777777777777777,0.05555555555555547,4,9,13,0.266845703125,1.0

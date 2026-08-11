@@ -1,0 +1,48 @@
+{
+  "status": "passed",
+  "near_duplicate_hamming": 4,
+  "splits": [
+    {
+      "split": "pilot",
+      "n": 90,
+      "clusters": 90,
+      "little_or_no_damage": 30,
+      "mild_damage": 30,
+      "severe_damage": 30
+    },
+    {
+      "split": "main",
+      "n": 720,
+      "clusters": 720,
+      "little_or_no_damage": 240,
+      "mild_damage": 240,
+      "severe_damage": 240
+    },
+    {
+      "split": "style_ablation",
+      "n": 120,
+      "clusters": 120,
+      "little_or_no_damage": 40,
+      "mild_damage": 40,
+      "severe_damage": 40
+    },
+    {
+      "split": "size_ablation",
+      "n": 60,
+      "clusters": 60,
+      "little_or_no_damage": 20,
+      "mild_damage": 20,
+      "severe_damage": 20
+    }
+  ],
+  "exclusions": {
+    "source_rows": 3474,
+    "old_pilot_cluster_rows": 144,
+    "mojibake_rows": 207,
+    "below_minimum_image_side_rows": 28,
+    "minimum_image_side_px": 128,
+    "eligible_rows": 3095,
+    "selected_rows": 990
+  },
+  "failures": []
+}
