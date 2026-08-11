@@ -39,7 +39,7 @@ The corrected V3 Qwen 9B pilot contains 90 independent samples × 10 conditions 
 
 ## Corrected V3 workflow
 
-The full V3 study is designed for a 512 GB M3 Ultra Mac Studio. Start with [`docs/V3_TODO.md`](docs/V3_TODO.md), then use the [`Mac Studio runbook`](docs/MAC_STUDIO_RUNBOOK.md). Model choices and size-tier rationale are documented in [`docs/V3_MODEL_SELECTION.md`](docs/V3_MODEL_SELECTION.md); the executable registry is [`configs/v3/models.yaml`](configs/v3/models.yaml).
+The full V3 study is designed for a 512 GB M3 Ultra Mac Studio. Start with [`docs/V3_TODO.md`](docs/V3_TODO.md), then use the [`Mac Studio runbook`](docs/MAC_STUDIO_RUNBOOK.md). External-disk export and Ubuntu restore instructions are in [`docs/UBUNTU_DATA_TRANSFER.md`](docs/UBUNTU_DATA_TRANSFER.md). Model choices and size-tier rationale are documented in [`docs/V3_MODEL_SELECTION.md`](docs/V3_MODEL_SELECTION.md); the executable registry is [`configs/v3/models.yaml`](configs/v3/models.yaml).
 
 On the Mac, MLX-VLM runs natively so it can use Metal. The version-pinned Docker container runs the research pipeline and calls that native OpenAI-compatible endpoint. An NVIDIA/vLLM Compose profile is retained as a portability path, but results from different backends must not be pooled in the primary comparison.
 

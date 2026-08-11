@@ -4,17 +4,54 @@ Target: Apple Silicon M3 Ultra with 512 GB unified memory. Run one model at a ti
 
 ## 1. Transfer and verify data
 
-Clone the public repository, then copy the ignored local directories separately:
+Clone the public repository. The recommended portable transfer uses a mounted
+external disk, preserves repository-relative paths, and verifies every copied
+file with SHA-256. The Ubuntu export/restore procedure is documented separately
+in [`UBUNTU_DATA_TRANSFER.md`](UBUNTU_DATA_TRANSFER.md).
 
-```text
-data/raw/
-data/processed/
-data/v3/attacks/
-data/v3/manifests/
-data/v3/splits/
+On the source Linux machine, find the mount point and export:
+
+```bash
+findmnt -nr -S /dev/sda1 -o TARGET
+mkdir -p /media/db21052/YZTB_Vision/can.baytekin
+scripts/transfer_research_data.py export \
+  /media/db21052/YZTB_Vision/can.baytekin
+scripts/transfer_research_data.py verify-disk \
+  /media/db21052/YZTB_Vision/can.baytekin
 ```
 
-Do not move private tweet text through public Git. Verify the freeze hash manifest before inference.
+On the Mac, clone the repository and import from the mounted volume:
+
+```bash
+git clone git@github.com:mbaytekin/crisismmd-vlm-robustness.git
+cd crisismmd-vlm-robustness
+scripts/transfer_research_data.py import \
+  /Volumes/YZTB_Vision/can.baytekin
+scripts/transfer_research_data.py verify-repo \
+  /Volumes/YZTB_Vision/can.baytekin
+python scripts/freeze_v3_artifacts.py check
+```
+
+The transfer bundle includes these ignored/private locations when present:
+
+```text
+data/
+results/
+logs/
+reports/private/
+reports/manual_review/assets/
+.model-lock/
+```
+
+Import overwrites only manifest-listed files whose content differs and never
+deletes extra local files. Model caches and virtual environments are not
+included. Do not move private tweet text through public Git. Verify the freeze
+hash manifest before inference.
+
+The current external disk is NTFS. Native macOS access is normally read-only,
+which is sufficient for importing the bundle. Writing a refreshed bundle from
+the Mac requires a compatible NTFS write driver; do not reformat the disk
+without a separate backup.
 
 ## 2. Install native Metal runtime
 
