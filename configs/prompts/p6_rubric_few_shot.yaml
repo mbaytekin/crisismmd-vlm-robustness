@@ -1,0 +1,65 @@
+version: p6_rubric_few_shot
+description: P5 operational damage rubric with six balanced synthetic demonstrations.
+system_prompt: "You are a disaster damage assessment assistant. Classify only visible physical damage to man-made infrastructure and utilities in the target image. Return only the requested structured output."
+user_prompt_template: |
+  Accompanying social media text for the target image:
+  <<TWEET>>
+
+  Assess only visible physical damage to man-made infrastructure and utilities in the target image, including buildings, roads, bridges, and power, water, or communication systems. Use the social media text only to clarify visible evidence; never let it override the image or imply damage that is not visible.
+
+  Evidence rules:
+  - Do not infer damage from the disaster name, location, emergency response, or seriousness of the event.
+  - Smoke, flames, floodwater, debris, and damaged vegetation show a hazard, but do not by themselves establish infrastructure damage.
+  - Vegetation or landscape damage alone is little_or_no_damage.
+  - Evaluate whether infrastructure is physically damaged, whether it remains usable, and whether the damage is localized or widespread.
+  - Require clear visible evidence of destruction or loss of function before selecting severe_damage.
+
+  Select exactly one class:
+
+  little_or_no_damage:
+  No visible physical infrastructure damage; cosmetic or superficial effects only; hazard or vegetation damage without visible infrastructure impact; infrastructure remains visibly usable.
+
+  mild_damage:
+  Localized or partial physical damage without major collapse or widespread failure. Examples include partial roof, wall, window, facade, utility-line, or road damage; a standing building with limited damage; or a locally obstructed route that is not physically destroyed.
+
+  severe_damage:
+  Clear major destruction or visible loss of function. Examples include structural collapse, a building visibly rendered unusable, an actively burning structure with extensive destruction, a bridge span or road physically severed or washed out, or widespread failure across multiple structures or utility systems.
+
+  Boundary rules:
+  - A standing structure with partial damage is mild_damage, not severe_damage.
+  - Local debris or a fallen tree near or across a route is mild_damage only when it visibly impairs that infrastructure; otherwise it is little_or_no_damage.
+  - A route is severe_damage only when it is visibly destroyed, severed, or fully unusable, not merely wet or partially obstructed.
+  - Confidence must reflect the strength of visible evidence for the selected class, not confidence that a disaster occurred.
+
+  Calibration examples below are synthetic descriptions, not additional target images.
+
+  Example 1:
+  Visible evidence: Heavy smoke and emergency vehicles are present, but all visible buildings, roads, and utilities are intact and usable.
+  Output: {"damage_severity":"little_or_no_damage","confidence":0.92,"short_rationale":"No visible infrastructure or utility damage."}
+
+  Example 2:
+  Visible evidence: Several trees are uprooted in an open park while nearby buildings, roads, and utility lines remain intact.
+  Output: {"damage_severity":"little_or_no_damage","confidence":0.90,"short_rationale":"Vegetation is damaged, but visible infrastructure remains intact."}
+
+  Example 3:
+  Visible evidence: A standing house has a localized section of roof covering missing, with no collapse and most of the structure intact.
+  Output: {"damage_severity":"mild_damage","confidence":0.91,"short_rationale":"Localized partial roof damage is visible without structural collapse."}
+
+  Example 4:
+  Visible evidence: Debris blocks one lane and a utility line is down in one location, while the road and surrounding structures remain otherwise usable.
+  Output: {"damage_severity":"mild_damage","confidence":0.88,"short_rationale":"Damage causes localized impairment without widespread infrastructure failure."}
+
+  Example 5:
+  Visible evidence: A building has collapsed, with major structural sections reduced to rubble and the building visibly unusable.
+  Output: {"damage_severity":"severe_damage","confidence":0.97,"short_rationale":"Major structural collapse has rendered the building unusable."}
+
+  Example 6:
+  Visible evidence: A bridge span has been washed away, physically severing the only visible route.
+  Output: {"damage_severity":"severe_damage","confidence":0.96,"short_rationale":"The destroyed bridge visibly causes complete loss of route function."}
+
+  Now classify only the target image and accompanying text. Return valid JSON and no additional text:
+  {
+    "damage_severity": "little_or_no_damage | mild_damage | severe_damage",
+    "confidence": 0.0,
+    "short_rationale": "brief explanation citing only decisive visible evidence"
+  }

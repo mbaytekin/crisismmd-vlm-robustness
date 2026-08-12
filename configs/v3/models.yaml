@@ -1,6 +1,6 @@
 schema_version: 2
 selection_date: "2026-08-11"
-selection_policy: clean_first_large_models
+selection_policy: prompt_validation_180_then_main_clean
 minimum_parameters_billion: 12
 primary_precision: mlx_8bit
 ultra_tier_precision: mlx_4bit
@@ -16,16 +16,20 @@ common_inference:
 # No attack conditions are run until both clean gates pass. Parameter count is
 # only a candidate filter; qualification is based on CrisisMMD clean metrics.
 clean_gates:
-  pilot:
-    split: pilot
-    n: 90
+  prompt_validation:
+    split: prompt_validation
+    manifest: data/v3/manifests/prompt_validation_clean.csv
+    n: 180
+    per_class: 60
     parse_rate_min: 0.995
     accuracy_min: 0.60
     macro_f1_min: 0.55
     every_class_recall_min: 0.40
+    caveat: post_hoc_prompt_selection_split_for_qwen35_27b
   main:
     split: main
     n: 720
+    per_class: 240
     parse_rate_min: 0.995
     accuracy_min: 0.70
     macro_f1_min: 0.65
@@ -157,7 +161,7 @@ models:
 # Run only for a model that passes both clean gates.
 quantization_sensitivity:
   preferred_slug: qwen35_27b_8bit
-  scope: pilot_plus_main
+  scope: prompt_validation_plus_main
   variants:
     - precision: bf16
       mac_model_id: mlx-community/Qwen3.5-27B-bf16

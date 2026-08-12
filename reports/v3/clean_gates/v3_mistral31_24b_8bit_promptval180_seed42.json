@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "phase": "prompt_validation",
+  "run_id": "v3_mistral31_24b_8bit_promptval180_seed42",
+  "model_id": "mlx-community/Mistral-Small-3.1-24B-Instruct-2503-8bit",
+  "qualified": false,
+  "observed": {
+    "sample_count": 180,
+    "per_class_support": {
+      "little_or_no_damage": 60,
+      "mild_damage": 60,
+      "severe_damage": 60
+    },
+    "parse_rate": 1.0,
+    "accuracy": 0.5444444444444444,
+    "macro_f1": 0.5247068177300735,
+    "every_class_recall": 0.25,
+    "per_class_recall": {
+      "little_or_no_damage": 0.6833333333333333,
+      "mild_damage": 0.7,
+      "severe_damage": 0.25
+    }
+  },
+  "thresholds": {
+    "split": "prompt_validation",
+    "manifest": "data/v3/manifests/prompt_validation_clean.csv",
+    "n": 180,
+    "per_class": 60,
+    "parse_rate_min": 0.995,
+    "accuracy_min": 0.6,
+    "macro_f1_min": 0.55,
+    "every_class_recall_min": 0.4,
+    "caveat": "post_hoc_prompt_selection_split_for_qwen35_27b"
+  },
+  "checks": {
+    "parse_rate": true,
+    "accuracy": false,
+    "macro_f1": false,
+    "every_class_recall": false,
+    "sample_count": true,
+    "class_balance": true
+  }
+}

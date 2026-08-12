@@ -2,6 +2,7 @@
 
 V3 is the leakage-resistant, visual-dose-controlled revision. Start with:
 
+- [`paper decision log`](../../docs/PAPER_DECISIONS.md): active decisions, amendments, and evidence map;
 - `split_validation.md`: independent-cluster split counts and exclusions;
 - `attack_validation.md`: full generated-condition validation;
 - `pilot_results.md`: Qwen 9B clean and attack pilot metrics;

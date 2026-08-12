@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "resolved_at": "2026-08-12T10:10:02.388401+00:00",
+  "slug": "mistral31_24b_8bit",
+  "platform": "mac",
+  "model_id": "mlx-community/Mistral-Small-3.1-24B-Instruct-2503-8bit",
+  "huggingface_commit_sha": "357ea64f6a582fe66110e70ee0dafe180a418b25",
+  "precision": "8bit",
+  "parameters_billion": 24,
+  "license_declared": "Apache-2.0",
+  "gated": false,
+  "registry_path": "configs/v3/models.yaml"
+}

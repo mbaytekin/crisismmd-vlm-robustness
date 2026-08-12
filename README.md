@@ -2,6 +2,33 @@
 
 Reproducible research codebase for evaluating whether typographic visual and multimodal interventions can alter a vision-language model’s disaster-damage severity assessment on CrisisMMD.
 
+Paper-facing decisions, amendments, current evidence, and unresolved questions
+are maintained in [`docs/PAPER_DECISIONS.md`](docs/PAPER_DECISIONS.md). Read it
+before editing [`paper.md`](paper.md) or interpreting historical V3 results.
+
+## Paper and GPT workflow
+
+Use the following order for manuscript work or a new GPT conversation:
+
+1. Read [`docs/PAPER_DECISIONS.md`](docs/PAPER_DECISIONS.md) for the active
+   protocol, amendments, caveats, current evidence, and open questions.
+2. Read [`paper.md`](paper.md) as the manuscript blueprint, then check its
+   `Paper synchronization debt` against the decision log before editing it.
+3. Verify empirical claims using the evidence paths linked from the decision
+   log; conversation summaries alone are not evidence.
+4. Record a new dated decision in the log before changing a prompt, cohort,
+   threshold, metric, model panel, exclusion, or manuscript claim. Preserve old
+   decisions by marking them `SUPERSEDED` rather than deleting them.
+
+Give GPT both files and the following instruction:
+
+```text
+PAPER_DECISIONS.md içindeki ACCEPTED kararları güncel kabul et.
+SUPERSEDED kararları yalnızca tarihçe olarak değerlendir.
+OPEN maddeleri çözülmemiş sorular olarak ele al.
+paper.md ile çelişkileri bul, caveat'leri koru ve kanıtsız iddia ekleme.
+```
+
 V2 is the completed historical experiment. V3 is the corrected primary pipeline: it removes tweet/near-image split leakage, excludes unusable text/images, matches visual dose across payload families, freezes size-ablation placement, and validates camouflage contrast after rendering. V3 uses one frozen prompt and clean-screens eight 12B–397B candidate models through one MLX-VLM backend on Apple Silicon before any attack inference.
 
 ## Research question
@@ -51,7 +78,7 @@ python scripts/freeze_v3_artifacts.py check
 scripts/run_v3_model.sh qwen35_27b_8bit
 ```
 
-The runner defaults to clean-only screening: 90 pilot images followed by 720 main images if the pilot passes. Review the gate reports, then rerun a qualified model with `V3_RUN_ATTACKS=1` to unlock adversarial, benign, style, and size conditions.
+The runner defaults to clean-only screening with the selected V4 zero-shot prompt: 180 balanced prompt-validation images followed by 720 main images if the screen passes. Review the gate reports, then rerun a qualified model with `V3_RUN_ATTACKS=1` to unlock adversarial, benign, style, and size conditions. The 180-image split selected V4 with Qwen3.5 27B, so that model's screen is post-hoc; the untouched main split remains its confirmatory gate.
 
 ```bash
 python -m src.v3_pipeline prepare

@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "split_name": "prompt_validation",
+  "purpose": "exploratory_prompt_validation_only",
+  "seed": 42,
+  "n": 180,
+  "per_class": {
+    "little_or_no_damage": 60,
+    "mild_damage": 60,
+    "severe_damage": 60
+  },
+  "per_event": {
+    "california_wildfires": 10,
+    "hurricane_harvey": 30,
+    "hurricane_irma": 90,
+    "hurricane_maria": 30,
+    "iraq_iran_earthquake": 10,
+    "mexico_earthquake": 10
+  },
+  "per_class_event": {
+    "little_or_no_damage": {
+      "hurricane_irma": 60
+    },
+    "mild_damage": {
+      "hurricane_harvey": 20,
+      "hurricane_irma": 20,
+      "hurricane_maria": 20
+    },
+    "severe_damage": {
+      "california_wildfires": 10,
+      "hurricane_harvey": 10,
+      "hurricane_irma": 10,
+      "hurricane_maria": 10,
+      "iraq_iran_earthquake": 10,
+      "mexico_earthquake": 10
+    }
+  },
+  "eligible_unused_rows": 1881,
+  "duplicate_clusters": 180,
+  "overlap_with_v3_experiment_clusters": 0,
+  "limitation": "All remaining independent little_or_no_damage clusters are from hurricane_irma; use this split for paired prompt comparison, not event-general performance estimation.",
+  "split_sha256": "33489ec951793e7f766d940ffdf58aedca0304d208af823ef72bd28f812087ff",
+  "manifest_sha256": "1d986e54dbdd48629aaa236ab5d6211f53609298615166d066b8c6779848f30d"
+}

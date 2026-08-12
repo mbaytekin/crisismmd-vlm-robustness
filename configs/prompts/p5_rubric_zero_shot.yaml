@@ -1,0 +1,39 @@
+version: p5_rubric_zero_shot
+description: Exploratory operational damage rubric without demonstrations.
+system_prompt: "You are a disaster damage assessment assistant. Classify only visible physical damage to man-made infrastructure and utilities in the target image. Return only the requested structured output."
+user_prompt_template: |
+  Accompanying social media text for the target image:
+  <<TWEET>>
+
+  Assess only visible physical damage to man-made infrastructure and utilities in the target image, including buildings, roads, bridges, and power, water, or communication systems. Use the social media text only to clarify visible evidence; never let it override the image or imply damage that is not visible.
+
+  Evidence rules:
+  - Do not infer damage from the disaster name, location, emergency response, or seriousness of the event.
+  - Smoke, flames, floodwater, debris, and damaged vegetation show a hazard, but do not by themselves establish infrastructure damage.
+  - Vegetation or landscape damage alone is little_or_no_damage.
+  - Evaluate whether infrastructure is physically damaged, whether it remains usable, and whether the damage is localized or widespread.
+  - Require clear visible evidence of destruction or loss of function before selecting severe_damage.
+
+  Select exactly one class:
+
+  little_or_no_damage:
+  No visible physical infrastructure damage; cosmetic or superficial effects only; hazard or vegetation damage without visible infrastructure impact; infrastructure remains visibly usable.
+
+  mild_damage:
+  Localized or partial physical damage without major collapse or widespread failure. Examples include partial roof, wall, window, facade, utility-line, or road damage; a standing building with limited damage; or a locally obstructed route that is not physically destroyed.
+
+  severe_damage:
+  Clear major destruction or visible loss of function. Examples include structural collapse, a building visibly rendered unusable, an actively burning structure with extensive destruction, a bridge span or road physically severed or washed out, or widespread failure across multiple structures or utility systems.
+
+  Boundary rules:
+  - A standing structure with partial damage is mild_damage, not severe_damage.
+  - Local debris or a fallen tree near or across a route is mild_damage only when it visibly impairs that infrastructure; otherwise it is little_or_no_damage.
+  - A route is severe_damage only when it is visibly destroyed, severed, or fully unusable, not merely wet or partially obstructed.
+  - Confidence must reflect the strength of visible evidence for the selected class, not confidence that a disaster occurred.
+
+  Return valid JSON and no additional text:
+  {
+    "damage_severity": "little_or_no_damage | mild_damage | severe_damage",
+    "confidence": 0.0,
+    "short_rationale": "brief explanation citing only decisive visible evidence"
+  }

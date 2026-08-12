@@ -31,8 +31,8 @@ For every clean-screen candidate in `configs/v3/models.yaml`:
 - [ ] Save model ID, immutable Hub SHA, MLX-VLM version, precision, prompt hash, macOS version, chip, RAM, and server arguments.
 - [ ] Run a one-image vision smoke test.
 - [ ] Run five identical deterministic requests; investigate any label disagreement.
-- [ ] Run only the 90-sample clean pilot; stop below 60% accuracy, 55% macro-F1, 40% minimum class recall, or 99.5% parse rate.
-- [ ] For pilot passers, run only the 720-sample main clean condition; stop below 70% accuracy, 65% macro-F1, 50% minimum class recall, or 99.5% parse rate.
+- [ ] Run the frozen V4 prompt on the 180-sample balanced prompt-validation screen; stop below 60% accuracy, 55% macro-F1, 40% minimum class recall, or 99.5% parse rate.
+- [ ] For screen passers, run only the 720-sample main clean condition; stop below 70% accuracy, 65% macro-F1, 50% minimum class recall, or 99.5% parse rate.
 - [ ] Publish every clean-screen result, including rejected models; do not select on attack metrics.
 - [ ] Set `V3_RUN_ATTACKS=1` only for models passing both gates.
 
@@ -49,7 +49,7 @@ Run models sequentially; never keep multiple large checkpoints resident merely b
 - [ ] Qwen3-VL 235B-A22B 4-bit — ultra-large full V3 matrix only if qualified.
 - [ ] Qwen3.5 397B-A17B 4-bit — ultra-large full V3 matrix only if qualified.
 - [ ] Resume with the same run ID after interruptions; never delete an inference cache during production.
-- [ ] Verify 9,900 parsed predictions per model (or explicitly record every failure/retry).
+- [ ] Verify 9,180 parsed predictions per qualified model (or explicitly record every failure/retry).
 - [ ] Back up completed run folders after each model.
 
 Example per model:
@@ -66,7 +66,7 @@ Raise concurrency only after a 100-request stability test. Record the final valu
 
 ## P4 — sensitivity studies
 
-- [ ] Qwen3.5 27B BF16 vs 8-bit vs 4-bit on pilot + main, only if its 8-bit candidate qualifies.
+- [ ] Qwen3.5 27B BF16 vs 8-bit vs 4-bit on prompt-validation + main, only if its 8-bit candidate qualifies.
 - [ ] Report the 235B/397B 4-bit ultra tier separately; do not interpret its contrast with 8-bit standard models as a pure size effect.
 - [ ] Near-duplicate threshold sensitivity at dHash Hamming 2/4/6 without reusing those alternative splits for the primary result.
 - [ ] Minimum-image-side sensitivity at 96/128/224 px.

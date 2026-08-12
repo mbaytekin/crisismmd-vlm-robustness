@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "resolved_at": "2026-08-12T10:28:10.518851+00:00",
+  "slug": "qwen35_27b_8bit",
+  "platform": "mac",
+  "model_id": "mlx-community/Qwen3.5-27B-8bit",
+  "huggingface_commit_sha": "d49462a9487464de69e2240d2bd65e50bb7d1cbc",
+  "precision": "8bit",
+  "parameters_billion": 27,
+  "license_declared": "Apache-2.0",
+  "gated": false,
+  "registry_path": "configs/v3/models.yaml"
+}

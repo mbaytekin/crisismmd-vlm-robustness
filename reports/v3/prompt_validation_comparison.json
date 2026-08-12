@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "status": "exploratory_post_hoc",
+  "model_id": "mlx-community/Qwen3.5-27B-8bit",
+  "split": {
+    "name": "prompt_validation",
+    "n": 180,
+    "per_class": 60,
+    "overlap_with_v3_experiment_clusters": 0,
+    "limitation": "All remaining independent little_or_no_damage clusters are from hurricane_irma; use this split for paired prompt comparison, not event-general performance estimation."
+  },
+  "zero_shot": {
+    "run_id": "v3_qwen35_27b_p5_rubric_zero_promptval_seed42",
+    "prompt_version": "p5_rubric_zero_shot",
+    "parsed": 180,
+    "correct": 115,
+    "accuracy": 0.6388888888888888,
+    "accuracy_wilson_95": [0.566494145176867, 0.7054793276226847],
+    "macro_f1": 0.6310569705918544,
+    "per_class_recall": {
+      "little_or_no_damage": 0.6666666666666666,
+      "mild_damage": 0.43333333333333335,
+      "severe_damage": 0.8166666666666667
+    },
+    "prediction_counts": {
+      "little_or_no_damage": 69,
+      "mild_damage": 45,
+      "severe_damage": 66
+    },
+    "mean_latency_seconds": 6.869887247027347
+  },
+  "few_shot": {
+    "run_id": "v3_qwen35_27b_p6_rubric_few_promptval_seed42",
+    "prompt_version": "p6_rubric_few_shot",
+    "parsed": 180,
+    "correct": 113,
+    "accuracy": 0.6277777777777778,
+    "accuracy_wilson_95": [0.5551804128163538, 0.695035182159234],
+    "macro_f1": 0.6211381768466033,
+    "per_class_recall": {
+      "little_or_no_damage": 0.7,
+      "mild_damage": 0.4166666666666667,
+      "severe_damage": 0.7666666666666667
+    },
+    "prediction_counts": {
+      "little_or_no_damage": 76,
+      "mild_damage": 43,
+      "severe_damage": 61
+    },
+    "mean_latency_seconds": 7.4342975835777505
+  },
+  "paired_few_minus_zero": {
+    "prediction_changed": 9,
+    "wrong_to_correct": 3,
+    "correct_to_wrong": 5,
+    "accuracy_difference": -0.011111111111111072,
+    "accuracy_difference_bootstrap_95": [-0.0444444444444444, 0.01666666666666672],
+    "macro_f1_difference_bootstrap_95": [-0.041587770858702355, 0.02104850235403919],
+    "exact_mcnemar_two_sided_p": 0.7265625,
+    "latency_increase_fraction": 0.08215714701789723
+  },
+  "source_annotation_confidence": {
+    "confidence_le_0_67": {"n": 51, "zero_accuracy": 0.5098039215686274, "few_accuracy": 0.49019607843137253},
+    "confidence_between_0_67_and_1": {"n": 51, "zero_accuracy": 0.6078431372549019, "few_accuracy": 0.6274509803921569},
+    "confidence_1": {"n": 78, "zero_accuracy": 0.7435897435897436, "few_accuracy": 0.717948717948718}
+  },
+  "selection": {
+    "selected_prompt": "p5_rubric_zero_shot",
+    "locked_copy": "configs/prompts/frozen_prompt_v4.yaml",
+    "prompt_hash": "1fa1a4a2b61c4aaadb95215385cd97915fd515ca4b19fc477ba98291cdf39ee6",
+    "reason": "Higher accuracy, macro-F1, mild recall, severe recall, and lower latency; the few-shot difference is small and not statistically distinguishable from zero."
+  }
+}

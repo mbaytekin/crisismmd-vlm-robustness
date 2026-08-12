@@ -1,6 +1,6 @@
 # When Disaster Images Talk Back: Cross-Modal Typographic Attacks on Vision–Language Models for Damage Assessment
 
-> **Living paper blueprint — 11 August 2026.** This document is the canonical writing guide for the project, not yet a submission-ready manuscript. It separates fixed methodology, preliminary evidence, and pending full-study results. Replace every `[PENDING]` field after the Mac Studio runs; do not present V2 or the Qwen 9B pilot as the final multi-model result.
+> **Living paper blueprint — 11 August 2026.** This document is not yet a submission-ready manuscript. The current protocol and its dated amendments are tracked in [`docs/PAPER_DECISIONS.md`](docs/PAPER_DECISIONS.md); reconcile the synchronization debt listed there before treating this blueprint as current. Replace every `[PENDING]` field after the Mac Studio runs; do not present V2 or the Qwen 9B pilot as the final multi-model result.
 
 Status labels used below:
 

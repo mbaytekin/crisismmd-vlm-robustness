@@ -1,12 +1,14 @@
 {
   "status": "passed",
-  "timestamp": "2026-08-10T16:51:45.909737+00:00",
-  "model_id": "qwen3.5-9b-awq",
+  "timestamp": "2026-08-12T10:28:33.741650+00:00",
+  "model_id": "mlx-community/Qwen3.5-27B-8bit",
   "backend": "vllm_openai_compatible",
-  "base_url": "http://127.0.0.1:8000/v1",
-  "latency_seconds": 3.6208672799984924,
-  "sample_id": "california_wildfires__917944458523566080__917944458523566080_0",
+  "base_url": "http://127.0.0.1:8091/v1",
+  "latency_seconds": 5.136037791991839,
+  "sample_id": "california_wildfires__917817013409583106__917817013409583106_0",
+  "split": "prompt_validation",
   "parse_status": "parsed",
   "parsed_label": "severe_damage",
-  "prompt_hash": "0f660e2d778d14d303463decc3e62a38712b5bac2636aa367c6c5e9add335733"
+  "prompt_config": "configs/prompts/frozen_prompt_v4.yaml",
+  "prompt_hash": "1fa1a4a2b61c4aaadb95215385cd97915fd515ca4b19fc477ba98291cdf39ee6"
 }

@@ -25,10 +25,12 @@ def autodetect(cfg: dict | None = None):
                 if r.ok:
                     data = r.json().get("data", [])
                     if data:
-                        model_id = data[0].get("id")
+                        available_ids = [item.get("id") for item in data if item.get("id")]
+                        expected_id = os.getenv("V3_EXPECTED_MODEL_ID")
+                        model_id = expected_id if expected_id in available_ids else available_ids[0]
                         client_base = base if endpoint == f"{base}/models" else f"{base.rstrip('/')}/v1"
                         client = VLLMClient(client_base, model_id, int(cfg.get("openai_timeout_seconds", 90)))
-                        return client, {**client.describe(), "discovery_endpoint": endpoint, "model_capabilities": "unknown_until_smoke_test"}
+                        return client, {**client.describe(), "discovery_endpoint": endpoint, "available_models": available_ids, "model_capabilities": "unknown_until_smoke_test"}
             except Exception:
                 continue
     host = os.getenv("OLLAMA_HOST") or cfg.get("ollama_host") or "http://127.0.0.1:11434"

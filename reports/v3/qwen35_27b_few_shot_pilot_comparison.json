@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "status": "exploratory_post_hoc",
+  "model_id": "mlx-community/Qwen3.5-27B-8bit",
+  "split": "pilot",
+  "n": 90,
+  "baseline": {
+    "run_id": "v3_qwen35_27b_8bit_pilot_seed42",
+    "prompt_version": "frozen_p3",
+    "correct": 44,
+    "accuracy": 0.4888888888888889,
+    "macro_f1": 0.4467406504233056,
+    "per_class_recall": {
+      "little_or_no_damage": 0.26666666666666666,
+      "mild_damage": 0.26666666666666666,
+      "severe_damage": 0.9333333333333333
+    },
+    "prediction_counts": {
+      "little_or_no_damage": 14,
+      "mild_damage": 23,
+      "severe_damage": 53
+    }
+  },
+  "few_shot": {
+    "run_id": "v3_qwen35_27b_8bit_p4_few_shot_pilot_seed42",
+    "prompt_version": "p4_few_shot",
+    "correct": 52,
+    "accuracy": 0.5777777777777777,
+    "macro_f1": 0.5566424770198356,
+    "per_class_recall": {
+      "little_or_no_damage": 0.5333333333333333,
+      "mild_damage": 0.3,
+      "severe_damage": 0.9
+    },
+    "prediction_counts": {
+      "little_or_no_damage": 23,
+      "mild_damage": 22,
+      "severe_damage": 45
+    },
+    "qualified": false,
+    "gate_checks": {
+      "parse_rate": true,
+      "accuracy": false,
+      "macro_f1": true,
+      "every_class_recall": false
+    }
+  },
+  "paired": {
+    "prediction_changed": 14,
+    "wrong_to_correct": 9,
+    "correct_to_wrong": 1,
+    "exact_mcnemar_two_sided_p": 0.021484375
+  },
+  "interpretation": "Few-shot prompting improved the clean pilot but did not pass the predeclared pilot gate; mild-damage recall remains the limiting metric."
+}

@@ -39,11 +39,17 @@ field = "mac_model_id" if platform == "mac" else "nvidia_model_id"
 model_id = model[field]
 cache_name = "models--" + model_id.replace("/", "--")
 cache_dir = Path.home() / ".cache" / "huggingface" / "hub" / cache_name
+snapshots_dir = cache_dir / "snapshots"
+incomplete_files = list(cache_dir.rglob("*.incomplete")) if cache_dir.exists() else []
+has_snapshot = snapshots_dir.is_dir() and any(path.is_dir() for path in snapshots_dir.iterdir())
 
-if cache_dir.exists() and any(cache_dir.iterdir()):
+if has_snapshot and not incomplete_files:
     print(f"Model already exists in Hugging Face cache: {model_id}")
     print(f"Cache path: {cache_dir}")
     raise SystemExit(0)
+
+if cache_dir.exists():
+    print(f"Model cache is partial; download will be resumed: {model_id}")
 
 print(f"Model is missing locally, downloading: {model_id}")
 if check_only:

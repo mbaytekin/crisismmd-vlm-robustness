@@ -12,6 +12,8 @@ if [[ ! -x .venv-mac/bin/python ]]; then
   exit 1
 fi
 
+.venv-mac/bin/python scripts/patch_mlx_vlm_mac_thread_stream.py
+
 exec .venv-mac/bin/python -m mlx_vlm.server \
   --model "$MODEL_ID" \
   --host 127.0.0.1 \

@@ -19,8 +19,8 @@ The standard 12B–32B tier uses MLX 8-bit checkpoints. The 235B and 397B ultra-
 
 ## Clean-first qualification
 
-1. Run only the 90 clean pilot examples. Stop below 60% accuracy, 55% macro-F1, 40% minimum class recall, or 99.5% parse rate.
-2. For pilot passers, run only the 720 clean main examples. Stop below 70% accuracy, 65% macro-F1, 50% minimum class recall, or 99.5% parse rate.
+1. Run the selected V4 zero-shot prompt on the 180-example prompt-validation split (60 per class). Stop below 60% accuracy, 55% macro-F1, 40% minimum class recall, or 99.5% parse rate.
+2. For screen passers, run only the 720 clean main examples. Stop below 70% accuracy, 65% macro-F1, 50% minimum class recall, or 99.5% parse rate.
 3. Run attack, benign, style, and size conditions only after both gates pass. Publish the clean screen for every rejected candidate to avoid selective reporting.
 
 The main gate is intentionally stricter and class-aware: high aggregate accuracy cannot hide collapse on `mild_damage` or another class. Clean qualification uses no attacked images and therefore cannot select models based on favorable attack outcomes.
@@ -36,7 +36,7 @@ The main gate is intentionally stricter and class-aware: high aggregate accuracy
 
 ## Precision policy
 
-Use 8-bit MLX weights for screening and primary full runs. If Qwen3.5 27B qualifies, run its BF16/8-bit/4-bit sensitivity on pilot + main. This prevents quantization from being silently mixed with model-family/size effects.
+Use 8-bit MLX weights for screening and primary full runs. If Qwen3.5 27B qualifies, run its BF16/8-bit/4-bit sensitivity on prompt-validation + main. This prevents quantization from being silently mixed with model-family/size effects.
 
 ## Sources
 

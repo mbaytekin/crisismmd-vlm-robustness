@@ -1,12 +1,13 @@
 {
   "schema_version": 1,
-  "created_at_utc": "2026-08-11T10:03:54.380091+00:00",
-  "git_commit": "966f1058778f55bba444a159cb35bd537356c639",
+  "created_at_utc": "2026-08-12T10:08:19.371884+00:00",
+  "git_commit": "0586fb872ce4785c6445ecbfd84731eff3c0862d",
+  "prompt_config": "configs/prompts/frozen_prompt_v4.yaml",
   "files": [
     {
-      "path": "configs/prompts/frozen_prompt.yaml",
-      "bytes": 1365,
-      "sha256": "4a935377eba16c181a85a835256ee02f927ff5d16096b43a98fcfe0811929356"
+      "path": "configs/prompts/frozen_prompt_v4.yaml",
+      "bytes": 2899,
+      "sha256": "2a455fa0999e1b398ebca08709bd15d8e3d7218e9cd94758eae571e073006927"
     },
     {
       "path": "configs/v3/attack_payloads.yaml",
@@ -15,13 +16,23 @@
     },
     {
       "path": "configs/v3/models.yaml",
-      "bytes": 5323,
-      "sha256": "2c92ed448c51745227048e093323c6c2049340d3f6350ea6889d10713274e6f8"
+      "bytes": 5529,
+      "sha256": "d8b52c1ee62c9f5fea435c13fdfc97d29941a59b51588e27ffd1b92d8a6a26a9"
     },
     {
       "path": "configs/v3/pipeline.yaml",
       "bytes": 871,
       "sha256": "949c94c3f82c4d43116ac5203ff709cedce2fc298602716ff7456b2477894dcf"
+    },
+    {
+      "path": "data/v3/splits/prompt_validation.csv",
+      "bytes": 104955,
+      "sha256": "33489ec951793e7f766d940ffdf58aedca0304d208af823ef72bd28f812087ff"
+    },
+    {
+      "path": "data/v3/manifests/prompt_validation_clean.csv",
+      "bytes": 134639,
+      "sha256": "1d986e54dbdd48629aaa236ab5d6211f53609298615166d066b8c6779848f30d"
     },
     {
       "path": "data/v3/splits/pilot.csv",

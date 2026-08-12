@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "phase": "pilot",
+  "run_id": "v3_qwen35_27b_8bit_pilot_seed42",
+  "model_id": "mlx-community/Qwen3.5-27B-8bit",
+  "qualified": false,
+  "observed": {
+    "parse_rate": 1.0,
+    "accuracy": 0.4888888888888889,
+    "macro_f1": 0.4467406504233056,
+    "every_class_recall": 0.26666666666666666,
+    "per_class_recall": {
+      "little_or_no_damage": 0.26666666666666666,
+      "mild_damage": 0.26666666666666666,
+      "severe_damage": 0.9333333333333333
+    }
+  },
+  "thresholds": {
+    "split": "pilot",
+    "n": 90,
+    "parse_rate_min": 0.995,
+    "accuracy_min": 0.6,
+    "macro_f1_min": 0.55,
+    "every_class_recall_min": 0.4
+  },
+  "checks": {
+    "parse_rate": true,
+    "accuracy": false,
+    "macro_f1": false,
+    "every_class_recall": false
+  }
+}

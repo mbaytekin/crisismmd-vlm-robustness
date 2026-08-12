@@ -59,7 +59,7 @@ without a separate backup.
 scripts/setup_macos.sh
 ```
 
-The script requires native `arm64` macOS, Python 3.12 through `uv`, and installs pinned `mlx-vlm==0.6.4` in `.venv-mac`.
+The script requires native `arm64` macOS, Python 3.12 through `uv`, and installs pinned `mlx-vlm==0.6.3` in `.venv-mac`. Version 0.6.4 is intentionally avoided because its Qwen3.5 generation path can produce incoherent byte-fallback output.
 
 ## 3. Build the pipeline container
 
@@ -93,7 +93,7 @@ docker compose -f docker/compose.mac.yml run --rm research \
   python -m src.v3_inference smoke
 ```
 
-## 5. Pilot gate, then full matrix
+## 5. 180-sample screen, then full matrix
 
 Clean-only screening (default):
 
@@ -104,7 +104,12 @@ V3_CONCURRENCY=1 \
 scripts/run_v3_model.sh qwen35_27b_8bit
 ```
 
-The runner stops immediately if the 90-image pilot gate fails. A pilot passer continues with 720 main clean images and stops if the stricter main gate fails. After reviewing `reports/v3/clean_gates/`, explicitly unlock attacks for a qualified model:
+The runner first evaluates the selected V4 zero-shot prompt on the balanced
+180-image prompt-validation split (60 examples per class). A passer continues
+with 720 untouched main clean images and stops if the stricter main gate fails.
+The V4 prompt was selected on this split with Qwen3.5 27B, so that model's
+first-stage score is post-hoc; its main result is confirmatory. After reviewing
+`reports/v3/clean_gates/`, explicitly unlock attacks for a qualified model:
 
 ```bash
 VLM_BASE_URL=http://127.0.0.1:8080/v1 \
@@ -115,6 +120,30 @@ scripts/run_v3_model.sh qwen35_27b_8bit
 ```
 
 Run IDs and SQLite caches are deterministic, so completed clean requests are reused.
+
+To screen every fully downloaded Mac checkpoint sequentially with the selected
+V4 prompt, run:
+
+```bash
+scripts/run_all_v3_mac_models.sh
+```
+
+The batch runner never downloads a model. It skips missing or partial caches,
+gracefully stops stale user-owned MLX servers, starts one server at a time on
+the first free port from 8090 onward, runs the 180-sample screen and conditional
+main clean gate, then stops that server before loading the next checkpoint. Stopping the
+server offloads the model from unified memory while retaining its checkpoint
+in the Hugging Face disk cache.
+Inspect the local inventory or select specific models with:
+
+```bash
+scripts/run_all_v3_mac_models.sh --list
+scripts/run_all_v3_mac_models.sh mistral31_24b_8bit qwen3vl_32b_8bit
+```
+
+Server logs, inference logs, and a tab-separated queue summary are written
+under `logs/v3/mac_model_runs/<UTC timestamp>/`. Set `V3_RUN_ATTACKS=1` only
+after reviewing the clean-gate results.
 
 ## 6. Operational checks
 
@@ -128,16 +157,19 @@ Run IDs and SQLite caches are deterministic, so completed clean requests are reu
 
 ## 7. Expected workload
 
-Each complete model has 9,900 condition predictions:
+Each qualified model has 9,180 predictions in the current protocol:
 
 | Split | Source samples | Conditions | Predictions |
 |---|---:|---:|---:|
-| Pilot | 90 | 10 | 900 |
+| Prompt validation | 180 | clean only | 180 |
 | Main | 720 | 10 | 7,200 |
 | Style | 120 | 10 | 1,200 |
 | Size | 60 | 10 | 600 |
-| Total | 990 | — | 9,900 |
+| Total | 1,080 | — | 9,180 |
 
-Each rejected candidate costs at most 90 or 810 clean predictions. Every model that passes both gates produces 9,900 full-matrix predictions. With eight candidates, the maximum is 79,200 full-matrix predictions, but the actual total depends on qualification. Estimate runtime from a 100-request benchmark rather than parameter count alone.
+Each first-stage rejection costs 180 clean predictions; a main-gate rejection
+costs 900 clean predictions in total. Every model that passes both gates
+produces 9,180 predictions including the screening set. Estimate runtime from
+a 100-request benchmark rather than parameter count alone.
 
 The 235B-A22B and 397B-A17B ultra tier uses 4-bit checkpoints (about 133 GB and 224 GB respectively); the standard tier remains 8-bit. Fully stop the previous server and confirm low memory pressure before loading either ultra model. Never pool the two precision tiers in an unqualified size regression.

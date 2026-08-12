@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "resolved_at": "2026-08-12T09:20:00.313427+00:00",
+  "slug": "qwen3vl_32b_8bit",
+  "platform": "mac",
+  "model_id": "mlx-community/Qwen3-VL-32B-Instruct-8bit",
+  "huggingface_commit_sha": "14fd4c76af6bd02d1f3dbe5ea7b03da5a1ae25cf",
+  "precision": "8bit",
+  "parameters_billion": 32,
+  "license_declared": "Apache-2.0",
+  "gated": false,
+  "registry_path": "configs/v3/models.yaml"
+}

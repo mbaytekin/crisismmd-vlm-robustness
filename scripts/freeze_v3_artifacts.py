@@ -12,17 +12,23 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "reports" / "v3" / "artifact_lock.json"
-INPUTS = [
-    "configs/prompts/frozen_prompt.yaml",
+DEFAULT_PROMPT_CONFIG = "configs/prompts/frozen_prompt_v4.yaml"
+BASE_INPUTS = [
     "configs/v3/attack_payloads.yaml",
     "configs/v3/models.yaml",
     "configs/v3/pipeline.yaml",
+    "data/v3/splits/prompt_validation.csv",
+    "data/v3/manifests/prompt_validation_clean.csv",
     "data/v3/splits/pilot.csv",
     "data/v3/splits/main.csv",
     "data/v3/splits/style_ablation.csv",
     "data/v3/splits/size_ablation.csv",
     "data/v3/manifests/all_conditions.csv",
 ]
+
+
+def inputs(prompt_config: str = DEFAULT_PROMPT_CONFIG) -> list[str]:
+    return [prompt_config, *BASE_INPUTS]
 
 
 def sha256(path: Path) -> str:
@@ -40,34 +46,40 @@ def git_commit() -> str:
     return result.stdout.strip() if result.returncode == 0 else "unavailable"
 
 
-def current_files() -> list[dict[str, object]]:
-    missing = [item for item in INPUTS if not (ROOT / item).is_file()]
+def current_files(prompt_config: str = DEFAULT_PROMPT_CONFIG) -> list[dict[str, object]]:
+    selected = inputs(prompt_config)
+    missing = [item for item in selected if not (ROOT / item).is_file()]
     if missing:
         raise FileNotFoundError(f"Missing V3 lock inputs: {missing}")
     return [
         {"path": item, "bytes": (ROOT / item).stat().st_size, "sha256": sha256(ROOT / item)}
-        for item in INPUTS
+        for item in selected
     ]
 
 
-def freeze() -> None:
+def freeze(prompt_config: str = DEFAULT_PROMPT_CONFIG) -> None:
     payload = {
         "schema_version": 1,
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
         "git_commit": git_commit(),
-        "files": current_files(),
+        "prompt_config": prompt_config,
+        "files": current_files(prompt_config),
     }
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps({"status": "written", "output": str(OUTPUT), "file_count": len(INPUTS)}))
+    print(json.dumps({"status": "written", "output": str(OUTPUT), "prompt_config": prompt_config, "file_count": len(inputs(prompt_config))}))
 
 
-def check() -> None:
+def check(prompt_config: str | None = None) -> None:
     if not OUTPUT.is_file():
         raise FileNotFoundError(f"Artifact lock not found: {OUTPUT}")
     expected = json.loads(OUTPUT.read_text(encoding="utf-8"))
+    locked_prompt = expected.get("prompt_config", DEFAULT_PROMPT_CONFIG)
+    if prompt_config and prompt_config != locked_prompt:
+        raise RuntimeError({"locked_prompt_config": locked_prompt, "requested_prompt_config": prompt_config})
+    prompt_config = prompt_config or locked_prompt
     expected_by_path = {item["path"]: item for item in expected["files"]}
-    current = current_files()
+    current = current_files(prompt_config)
     mismatches = [
         item["path"]
         for item in current
@@ -82,8 +94,9 @@ def check() -> None:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("command", choices=("freeze", "check"))
+    parser.add_argument("--prompt-config", default=None)
     args = parser.parse_args()
-    freeze() if args.command == "freeze" else check()
+    freeze(args.prompt_config or DEFAULT_PROMPT_CONFIG) if args.command == "freeze" else check(args.prompt_config)
 
 
 if __name__ == "__main__":
