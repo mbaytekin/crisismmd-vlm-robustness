@@ -1,3 +1,8 @@
+import json
+
+import numpy as np
+
+from src.evaluation.metrics import classification_metrics
 from src.v3_clean_gate import evaluate
 
 
@@ -45,3 +50,16 @@ def test_prompt_validation_gate_requires_180_balanced_samples():
     rejected=evaluate(candidate,"prompt_validation",thresholds)
     assert rejected["qualified"] is False
     assert rejected["checks"]["sample_count"] is False
+
+
+def test_classification_metrics_are_json_serializable():
+    result = classification_metrics(
+        np.array(["little_or_no_damage", "mild_damage", "severe_damage"]),
+        np.array(["little_or_no_damage", "severe_damage", "severe_damage"]),
+    )
+
+    assert json.dumps(result)
+    for values in result["per_class"].values():
+        assert type(values["precision"]) is float
+        assert type(values["recall"]) is float
+        assert type(values["f1"]) is float

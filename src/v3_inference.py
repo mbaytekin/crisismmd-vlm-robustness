@@ -38,10 +38,18 @@ def file_hash(path: Path) -> str:
 def runtime_identity() -> dict:
     revision=subprocess.run(["git","rev-parse","HEAD"],cwd=ROOT,text=True,capture_output=True,check=False)
     packages={}
-    for name in ("mlx-vlm","pandas","pyarrow","Pillow","PyYAML","requests"):
+    for name in ("mlx-vlm","vllm","torch","transformers","pandas","pyarrow","Pillow","PyYAML","requests"):
         try: packages[name]=importlib.metadata.version(name)
         except importlib.metadata.PackageNotFoundError: packages[name]="not-installed"
-    return {"git_commit":revision.stdout.strip() if revision.returncode==0 else "unavailable","platform":platform.platform(),"machine":platform.machine(),"python":sys.version.split()[0],"packages":packages}
+    return {
+        "git_commit":revision.stdout.strip() if revision.returncode==0 else "unavailable",
+        "platform":platform.platform(),
+        "machine":platform.machine(),
+        "python":sys.version.split()[0],
+        "packages":packages,
+        "execution_environment":os.environ.get("V3_EXECUTION_ENVIRONMENT", "local_unspecified"),
+        "accelerator":os.environ.get("V3_ACCELERATOR", "unspecified"),
+    }
 
 
 def prompt_cfg(prompt_config: str=DEFAULT_PROMPT_CONFIG) -> dict:
@@ -60,28 +68,29 @@ def server() -> tuple:
     return client,info
 
 
-def smoke(prompt_config: str=DEFAULT_PROMPT_CONFIG,manifest: str | Path=SCREEN_MANIFEST,split: str="prompt_validation") -> dict:
+def smoke(prompt_config: str=DEFAULT_PROMPT_CONFIG,manifest: str | Path=SCREEN_MANIFEST,split: str="prompt_validation",report_path: str | Path | None=None) -> dict:
     manifest_path=resolve(manifest); m=pd.read_csv(manifest_path,dtype=str).fillna(""); clean=m[(m.split_name==split)&(m.condition=="clean")]
     if clean.empty: raise RuntimeError(f"No clean smoke-test row for split {split!r} in {manifest_path}")
     row=clean.iloc[0]; client,info=server(); p=prompt_cfg(prompt_config)
     started=time.perf_counter(); raw=client.complete(resolve(row.condition_image_path),p["system_prompt"],p["user_prompt_template"].replace("<<TWEET>>",row.condition_tweet),temperature=0.0,top_p=1.0,max_tokens=150,seed=42); parsed=parse_response(raw.raw_response)
     result={"status":"passed" if parsed["parse_status"]=="parsed" else "failed","timestamp":datetime.now(timezone.utc).isoformat(),"model_id":client.model_id,"backend":client.backend,"base_url":info.get("base_url"),"latency_seconds":time.perf_counter()-started,"sample_id":row.sample_id,"split":split,"parse_status":parsed["parse_status"],"parsed_label":parsed.get("parsed_label"),"prompt_config":p["prompt_config"],"prompt_hash":p["prompt_hash"]}
-    (REPORT/"model_smoke_test.json").write_text(json.dumps(result,indent=2),encoding="utf-8")
+    report=resolve(report_path) if report_path else REPORT/"model_smoke_test.json"
+    report.parent.mkdir(parents=True,exist_ok=True); report.write_text(json.dumps(result,indent=2),encoding="utf-8")
     if result["status"]!="passed": raise RuntimeError(result)
     return result
 
 
-def inference(run_id: str,split: str,conditions: list[str],concurrency: int,prompt_config: str=DEFAULT_PROMPT_CONFIG,manifest: str | Path=MANIFEST) -> Path:
-    manifest_path=resolve(manifest); smoke_result=smoke(prompt_config,manifest_path,split); m=pd.read_csv(manifest_path,dtype=str).fillna(""); rows=m[(m.split_name==split)&m.condition.isin(conditions)].copy()
+def inference(run_id: str,split: str,conditions: list[str],concurrency: int,prompt_config: str=DEFAULT_PROMPT_CONFIG,manifest: str | Path=MANIFEST,output_dir: str | Path | None=None,smoke_report_path: str | Path | None=None) -> Path:
+    manifest_path=resolve(manifest); out_dir=resolve(output_dir) if output_dir else RESULT/run_id; smoke_path=resolve(smoke_report_path) if smoke_report_path else out_dir/"smoke_test.json"; smoke_result=smoke(prompt_config,manifest_path,split,smoke_path); m=pd.read_csv(manifest_path,dtype=str).fillna(""); rows=m[(m.split_name==split)&m.condition.isin(conditions)].copy()
     if not len(rows): raise RuntimeError("No manifest rows for requested split/conditions")
-    client,info=server(); p=prompt_cfg(prompt_config); out_dir=RESULT/run_id; out_dir.mkdir(parents=True,exist_ok=True); cache=InferenceCache(out_dir/"inference_cache.sqlite")
+    client,info=server(); p=prompt_cfg(prompt_config); out_dir.mkdir(parents=True,exist_ok=True); cache=InferenceCache(out_dir/"inference_cache.sqlite")
     manifest_name=str(manifest_path.relative_to(ROOT) if manifest_path.is_relative_to(ROOT) else manifest_path)
     snapshot={"run_id":run_id,"manifest":manifest_name,"manifest_sha256":file_hash(manifest_path),"split":split,"conditions":conditions,"model_id":client.model_id,"backend":client.backend,"base_url":info.get("base_url"),"prompt_config":p["prompt_config"],"prompt_version":p.get("version"),"prompt_hash":p["prompt_hash"],"temperature":0.0,"top_p":1.0,"seed":42,"thinking_enabled":False,"concurrency":concurrency,"runtime":runtime_identity(),"smoke_test":smoke_result}
     (out_dir/"resolved_config.yaml").write_text(yaml.safe_dump(snapshot,sort_keys=False),encoding="utf-8")
     def one(row):
         image=resolve(row.condition_image_path); request={"sample_id":row.sample_id,"condition":row.condition,"model_id":client.model_id,"prompt_hash":p["prompt_hash"],"image_path":str(image),"tweet":row.condition_tweet,"temperature":0.0,"top_p":1.0,"seed":42}
         cached=cache.get(request)
-        if cached: cached["cache_hit"]=True; return cached
+        if cached and cached.get("parse_status")=="parsed": cached["cache_hit"]=True; return cached
         started=time.perf_counter(); error=""; raw_text=""; parsed={"parse_status":"request_error","parsed_label":"","confidence":"","short_rationale":""}
         for attempt in range(2):
             try:
@@ -114,10 +123,10 @@ def inference(run_id: str,split: str,conditions: list[str],concurrency: int,prom
 
 def main() -> None:
     ap=argparse.ArgumentParser(); sub=ap.add_subparsers(dest="cmd",required=True)
-    smoke_parser=sub.add_parser("smoke"); smoke_parser.add_argument("--prompt-config",default=DEFAULT_PROMPT_CONFIG); smoke_parser.add_argument("--manifest",default=str(SCREEN_MANIFEST)); smoke_parser.add_argument("--split",default="prompt_validation")
-    p=sub.add_parser("run"); p.add_argument("--run-id",required=True); p.add_argument("--split",default="prompt_validation"); p.add_argument("--conditions",nargs="+",default=["clean"]); p.add_argument("--concurrency",type=int,default=1); p.add_argument("--prompt-config",default=DEFAULT_PROMPT_CONFIG); p.add_argument("--manifest",default=str(SCREEN_MANIFEST)); args=ap.parse_args()
-    if args.cmd=="smoke": print(json.dumps(smoke(args.prompt_config,args.manifest,args.split),indent=2))
-    else: inference(args.run_id,args.split,args.conditions,args.concurrency,args.prompt_config,args.manifest)
+    smoke_parser=sub.add_parser("smoke"); smoke_parser.add_argument("--prompt-config",default=DEFAULT_PROMPT_CONFIG); smoke_parser.add_argument("--manifest",default=str(SCREEN_MANIFEST)); smoke_parser.add_argument("--split",default="prompt_validation"); smoke_parser.add_argument("--report-path",default="")
+    p=sub.add_parser("run"); p.add_argument("--run-id",required=True); p.add_argument("--split",default="prompt_validation"); p.add_argument("--conditions",nargs="+",default=["clean"]); p.add_argument("--concurrency",type=int,default=1); p.add_argument("--prompt-config",default=DEFAULT_PROMPT_CONFIG); p.add_argument("--manifest",default=str(SCREEN_MANIFEST)); p.add_argument("--output-dir",default=""); p.add_argument("--smoke-report-path",default=""); args=ap.parse_args()
+    if args.cmd=="smoke": print(json.dumps(smoke(args.prompt_config,args.manifest,args.split,args.report_path or None),indent=2))
+    else: inference(args.run_id,args.split,args.conditions,args.concurrency,args.prompt_config,args.manifest,args.output_dir or None,args.smoke_report_path or None)
 
 
 if __name__=="__main__": main()

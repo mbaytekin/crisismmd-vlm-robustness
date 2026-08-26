@@ -13,8 +13,10 @@ common_inference:
   thinking: false
   single_image: true
 
-# No attack conditions are run until both clean gates pass. Parameter count is
-# only a candidate filter; qualification is based on CrisisMMD clean metrics.
+# These historical clean thresholds are retained as descriptive deployment-
+# readiness indicators. The final paper-facing protocol does not use them to
+# block the fixed attack matrix; every model's eligible clean-correct
+# denominator is reported instead.
 clean_gates:
   prompt_validation:
     split: prompt_validation

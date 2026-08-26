@@ -23,7 +23,12 @@ def classification_metrics(y_true, y_pred):
         precision = tp / (tp + fp) if tp + fp else 0.0
         recall = tp / (tp + fn) if tp + fn else 0.0
         f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0.0
-        per[label] = {"precision": precision, "recall": recall, "f1": f1, "support": int(cm[i, :].sum())}
+        per[label] = {
+            "precision": float(precision),
+            "recall": float(recall),
+            "f1": float(f1),
+            "support": int(cm[i, :].sum()),
+        }
         f1s.append(f1)
     return {"n": int(cm.sum()), "accuracy": float(np.trace(cm) / cm.sum()) if cm.sum() else 0.0, "macro_f1": float(np.mean(f1s)) if f1s else 0.0, "per_class": per, "confusion_matrix": cm.tolist()}
 
@@ -43,4 +48,3 @@ def under_triage(frame: pd.DataFrame, condition: str) -> dict:
     p = frame[frame.condition == condition]
     severe = p[p.ground_truth == "severe_damage"]
     return {"condition": condition, "severe_n": int(len(severe)), "under_triage_rate": float(severe.parsed_label.isin(["mild_damage", "little_or_no_damage"]).mean()) if len(severe) else None, "critical_under_triage_rate": float((severe.parsed_label == "little_or_no_damage").mean()) if len(severe) else None}
-

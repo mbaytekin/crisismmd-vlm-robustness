@@ -1,0 +1,2 @@
+# Optional Gemini Batch API client. Install inside the project environment.
+google-genai>=1.0.0

@@ -2,34 +2,37 @@
 
 Reproducible research codebase for evaluating whether typographic visual and multimodal interventions can alter a vision-language model’s disaster-damage severity assessment on CrisisMMD.
 
-Paper-facing decisions, amendments, current evidence, and unresolved questions
-are maintained in [`docs/PAPER_DECISIONS.md`](docs/PAPER_DECISIONS.md). Read it
-before editing [`paper.md`](paper.md) or interpreting historical V3 results.
+The single paper-writing reference is
+[`reports/v3/ALL_RESULTS.md`](reports/v3/ALL_RESULTS.md). It combines active
+decisions, dataset construction, completed BF16 + Gemini results, claim bounds,
+remaining work, and bibliography. The full decision history remains in
+[`docs/PAPER_DECISIONS.md`](docs/PAPER_DECISIONS.md).
 
 ## Paper and GPT workflow
 
 Use the following order for manuscript work or a new GPT conversation:
 
-1. Read [`docs/PAPER_DECISIONS.md`](docs/PAPER_DECISIONS.md) for the active
-   protocol, amendments, caveats, current evidence, and open questions.
-2. Read [`paper.md`](paper.md) as the manuscript blueprint, then check its
-   `Paper synchronization debt` against the decision log before editing it.
-3. Verify empirical claims using the evidence paths linked from the decision
-   log; conversation summaries alone are not evidence.
-4. Record a new dated decision in the log before changing a prompt, cohort,
+1. Read [`reports/v3/ALL_RESULTS.md`](reports/v3/ALL_RESULTS.md) as the canonical
+   manuscript reference.
+2. Use [`docs/PAPER_DECISIONS.md`](docs/PAPER_DECISIONS.md) only when the dated
+   history or a superseded protocol choice must be audited.
+3. Edit [`paper.md`](paper.md) from the canonical reference and preserve every
+   stated caveat.
+4. Verify empirical claims using the evidence paths linked from the reference;
+   conversation summaries alone are not evidence.
+5. Record a new dated decision in the log before changing a prompt, cohort,
    threshold, metric, model panel, exclusion, or manuscript claim. Preserve old
    decisions by marking them `SUPERSEDED` rather than deleting them.
 
-Give GPT both files and the following instruction:
+Give GPT `reports/v3/ALL_RESULTS.md` and the current `paper.md`, then use:
 
 ```text
-PAPER_DECISIONS.md içindeki ACCEPTED kararları güncel kabul et.
-SUPERSEDED kararları yalnızca tarihçe olarak değerlendir.
-OPEN maddeleri çözülmemiş sorular olarak ele al.
-paper.md ile çelişkileri bul, caveat'leri koru ve kanıtsız iddia ekleme.
+ALL_RESULTS.md dosyasını paper kararları, dataset yöntemi ve sonuçlar için
+kanonik referans kabul et. paper.md ile çelişkileri bul, caveat'leri koru,
+sonuç tablolarındaki paydaları değiştirme ve kanıtsız iddia ekleme.
 ```
 
-V2 is the completed historical experiment. V3 is the corrected primary pipeline: it removes tweet/near-image split leakage, excludes unusable text/images, matches visual dose across payload families, freezes size-ablation placement, and validates camouflage contrast after rendering. V3 uses one frozen prompt and clean-screens eight 12B–397B candidate models through one MLX-VLM backend on Apple Silicon before any attack inference.
+V2 is the completed historical experiment. V3 is the corrected primary pipeline: it removes tweet/near-image split leakage, excludes unusable text/images, matches visual dose across payload families, freezes size-ablation placement, and validates camouflage contrast after rendering. The final paper panel contains four BF16 open VLMs and Gemini 2.5 Flash under one frozen prompt; exact runtime provenance is recorded per run and is not treated as an experimental factor.
 
 ## Research question
 
@@ -58,6 +61,12 @@ This produces 9,000 model evaluations. Additional image-only ablations evaluate 
 
 ## Current results
 
+The paper-facing V3 matrix is complete for Qwen3.5 27B BF16, Qwen3.6 27B BF16,
+Qwen3-VL 32B BF16, Mistral Small 3.1 24B BF16, and Gemini 2.5 Flash. Read the
+single consolidated interpretation and tables in
+[`reports/v3/ALL_RESULTS.md`](reports/v3/ALL_RESULTS.md). The V2 and 9B summaries
+below are retained only as historical context.
+
 The main run is complete with 9,000/9,000 parsed predictions. The strongest main condition is `direct_image` (ASR 32.5%, severity drop 0.576), followed by `direct_joint` (30.5%, 0.422). Misleading image and joint conditions reach 23.5% and 26.1% ASR, respectively. Benign controls produce much smaller effects and are used to separate ordinary content sensitivity from adversarial behavior.
 
 The full tables, ablations, confidence intervals, error analysis, and audit materials are in [`reports/v2/`](reports/v2/), with the entry point at [`reports/v2/final_summary.md`](reports/v2/final_summary.md).
@@ -66,19 +75,32 @@ The corrected V3 Qwen 9B pilot contains 90 independent samples × 10 conditions 
 
 ## Corrected V3 workflow
 
-The full V3 study is designed for a 512 GB M3 Ultra Mac Studio. Start with [`docs/V3_TODO.md`](docs/V3_TODO.md), then use the [`Mac Studio runbook`](docs/MAC_STUDIO_RUNBOOK.md). External-disk export and Ubuntu restore instructions are in [`docs/UBUNTU_DATA_TRANSFER.md`](docs/UBUNTU_DATA_TRANSFER.md). Model choices and size-tier rationale are documented in [`docs/V3_MODEL_SELECTION.md`](docs/V3_MODEL_SELECTION.md); the executable registry is [`configs/v3/models.yaml`](configs/v3/models.yaml).
+The full V3 study is designed for a 512 GB M3 Ultra Mac Studio. The paper-facing protocol is [`configs/v3/final_analysis_protocol.yaml`](configs/v3/final_analysis_protocol.yaml), and the exact manual commands and log locations are documented in [`scripts/RUN_V3_FINAL_EXPERIMENTS.md`](scripts/RUN_V3_FINAL_EXPERIMENTS.md). External-disk export and Ubuntu restore instructions remain in [`docs/UBUNTU_DATA_TRANSFER.md`](docs/UBUNTU_DATA_TRANSFER.md).
 
 On the Mac, MLX-VLM runs natively so it can use Metal. The version-pinned Docker container runs the research pipeline and calls that native OpenAI-compatible endpoint. An NVIDIA/vLLM Compose profile is retained as a portability path, but results from different backends must not be pooled in the primary comparison.
 
 ```bash
 scripts/setup_macos.sh
-scripts/start_v3_mlx.sh mlx-community/Qwen3.5-27B-8bit
-python -m src.model_registry validate
-python scripts/freeze_v3_artifacts.py check
-scripts/run_v3_model.sh qwen35_27b_8bit
+bash scripts/run_v3_final_experiments.sh --list
+bash scripts/run_v3_final_experiments.sh --dry-run
+bash scripts/run_v3_final_experiments.sh
 ```
 
-The runner defaults to clean-only screening with the selected V4 zero-shot prompt: 180 balanced prompt-validation images followed by 720 main images if the screen passes. Review the gate reports, then rerun a qualified model with `V3_RUN_ATTACKS=1` to unlock adversarial, benign, style, and size conditions. The 180-image split selected V4 with Qwen3.5 27B, so that model's screen is post-hoc; the untouched main split remains its confirmatory gate.
+The final runner uses only complete checkpoints already present in the local cache, loads one model at a time, records the exact model ID and precision, resumes completed work, and never downloads a missing model. Qwen 9B and quantized runs remain historical. The untouched 720-image clean result is reported first without a pass/fail threshold; the fixed conditional robustness matrix uses each model's explicitly counted clean-correct mild/severe decisions.
+
+The 720-image main set is a custom class-balanced paired robustness cohort, not CrisisMMD's published 529-image test split. Dataset counts, duplicate checks, selection behavior, and the paper-facing interpretation are audited in [`reports/v3/dataset_protocol_audit.md`](reports/v3/dataset_protocol_audit.md). Build the ignored local clean manifests, inspect the queue, and then launch it manually:
+
+```bash
+.venv-mac/bin/python -m src.v3_dataset_protocol build
+scripts/run_v3_clean_benchmarks.sh --dry-run \
+  --model qwen27 --model mistral --model qwen32_8bit
+scripts/run_v3_clean_benchmarks.sh --cohort both \
+  --model qwen27 --model mistral --model qwen32_8bit
+```
+
+This secondary queue evaluates all 3,474 locally valid severity records under their natural distribution and the exact published 529-row test split, clean-only. It reports duplicate-cluster bootstrap intervals, event/event-by-class metrics, leave-one-event-out sensitivity, and exact-SHA label-conflict sensitivity. It uses port 8094 by default, supports the larger Qwen aliases listed by `--help`, resumes completed predictions, never downloads checkpoints, and stops only the server PID it starts.
+
+V3 splits, payloads, frozen V4/P5 prompt, and attack images are immutable for the final run. The commands below are retained only for pipeline reproduction and validation; do not regenerate artifacts during paper-facing inference.
 
 ```bash
 python -m src.v3_pipeline prepare
@@ -115,7 +137,7 @@ python -m src.v2_pipeline generate --split pilot
 python -m src.v2_pipeline validate --split pilot
 ```
 
-After the pilot gate passes, generate and validate the remaining splits:
+After pilot artifact validation succeeds, generate and validate the remaining splits:
 
 ```bash
 python -m src.v2_pipeline generate --split main

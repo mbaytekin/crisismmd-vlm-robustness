@@ -1,0 +1,164 @@
+schema_version: 1
+protocol_name: v3_paper_facing_conditional_robustness
+status: frozen_before_canonical_bf16_attacks
+paper_scope_amendment: d018_d021_2026_08_26
+seed: 42
+
+framing:
+  study: controlled_adversarial_robustness_audit_of_off_the_shelf_vlms
+  primary_question: >-
+    When an off-the-shelf VLM correctly assesses disaster damage, how
+    vulnerable is that decision to malicious information delivered through
+    the image, the accompanying text, or both?
+  deployment_readiness_is_not_attack_eligibility: true
+  paper_uses_clean_pass_fail_thresholds: false
+  clean_performance_reporting: continuous_descriptive_metrics
+  no_model_pooling: true
+
+artifacts:
+  condition_manifest: data/v3/manifests/all_conditions.csv
+  source_table: data/processed/all_valid_damage_samples.csv
+  prompt: configs/prompts/frozen_prompt_v4.yaml
+  main_split: data/v3/splits/main.csv
+  pilot_split: data/v3/splits/pilot.csv
+  style_split: data/v3/splits/style_ablation.csv
+  size_split: data/v3/splits/size_ablation.csv
+  expected_main_samples: 720
+  expected_conditions_per_main_sample: 10
+
+deployment_readiness_gate:
+  role: historical_audit_only_superseded_by_d018
+  active_in_manuscript: false
+  accuracy_min: 0.70
+  macro_f1_min: 0.65
+  every_class_recall_min: 0.50
+  parse_rate_min: 0.995
+
+inference:
+  temperature: 0.0
+  top_p: 1.0
+  max_tokens: 150
+  thinking: false
+  concurrency: 1
+  server_backend: mlx_vlm
+  server_port: 8091
+  startup_timeout_seconds: 3600
+  shutdown_timeout_seconds: 90
+  continue_on_model_failure: true
+  offline_only: true
+
+analysis:
+  labels: [little_or_no_damage, mild_damage, severe_damage]
+  severity_levels:
+    little_or_no_damage: 0
+    mild_damage: 1
+    severe_damage: 2
+  target_eligible_ground_truth: [mild_damage, severe_damage]
+  bootstrap_draws: 5000
+  bootstrap_seed: 42
+  confidence_level: 0.95
+  strict_visual_match_fields:
+    - text_bbox
+    - placement_region
+    - font_size_px
+    - line_count
+    - opacity
+    - occupied_area_ratio
+  comparison_families:
+    direct_modality:
+      - [direct_image, direct_text]
+      - [direct_image, direct_joint]
+      - [direct_text, direct_joint]
+    misleading_modality:
+      - [misleading_image, misleading_text]
+      - [misleading_image, misleading_joint]
+      - [misleading_text, misleading_joint]
+    semantics_within_modality:
+      - [direct_image, misleading_image]
+      - [direct_text, misleading_text]
+      - [direct_joint, misleading_joint]
+
+quantization_sensitivity:
+  - bf16_model_slug: qwen35_27b_bf16
+    historical_precision: 8bit
+    historical_model_id: mlx-community/Qwen3.5-27B-8bit
+    historical_metrics: results/v3/v3_qwen35_27b_8bit_main_seed42/metrics.json
+  - bf16_model_slug: qwen3vl_32b_bf16
+    historical_precision: 8bit
+    historical_model_id: mlx-community/Qwen3-VL-32B-Instruct-8bit
+    historical_metrics: results/v3/v3_qwen3vl_32b_8bit_main_seed42/metrics.json
+
+# Paths below were verified from the local Hugging Face cache on 2026-08-12.
+# Missing checkpoints are never downloaded by the final runner.
+models:
+  - slug: qwen35_27b_bf16
+    model_id: mlx-community/Qwen3.5-27B-bf16
+    local_model_path: /Users/can.baytekin/.cache/huggingface/hub/models--mlx-community--Qwen3.5-27B-bf16/snapshots/5ad6b65ac842d2d023621f1e892c49df478f2dce
+    precision: bf16
+    canonical_for_paper: true
+    default_run: true
+    role: primary_qwen_dense
+    result_dir: results/v3/final_bf16/qwen35_27b_bf16/main
+
+  - slug: mistral31_24b_8bit
+    model_id: mlx-community/Mistral-Small-3.1-24B-Instruct-2503-8bit
+    local_model_path: /Users/can.baytekin/.cache/huggingface/hub/models--mlx-community--Mistral-Small-3.1-24B-Instruct-2503-8bit/snapshots/357ea64f6a582fe66110e70ee0dafe180a418b25
+    precision: 8bit
+    canonical_for_paper: false
+    default_run: true
+    role: exploratory_lower_competence_cross_family
+    result_dir: results/v3/final_large_models/mistral31_24b_8bit/main
+
+  - slug: mistral31_24b_bf16
+    model_id: mlx-community/Mistral-Small-3.1-24B-Instruct-2503-bf16
+    local_model_path: /Users/can.baytekin/.cache/huggingface/hub/models--mlx-community--Mistral-Small-3.1-24B-Instruct-2503-bf16/snapshots/93f1ae32cb76d99ec94c12ab00e759b2465f2cf6
+    precision: bf16
+    canonical_for_paper: true
+    default_run: false
+    role: cross_family_dense_bf16
+    result_dir: results/v3/final_bf16/mistral31_24b_bf16/main
+
+  - slug: qwen3vl_32b_bf16
+    model_id: mlx-community/Qwen3-VL-32B-Instruct-bf16
+    local_model_path: /Users/can.baytekin/.cache/huggingface/hub/models--mlx-community--Qwen3-VL-32B-Instruct-bf16/snapshots/6c7eaa20028d308eed0cd54b0d38b919b44742e7
+    precision: bf16
+    canonical_for_paper: true
+    default_run: false
+    role: intended_primary_vision_specialist
+    result_dir: results/v3/final_bf16/qwen3vl_32b_bf16/main
+
+  - slug: qwen36_27b_bf16
+    model_id: mlx-community/Qwen3.6-27B-bf16
+    local_model_path: /Users/can.baytekin/.cache/huggingface/hub/models--mlx-community--Qwen3.6-27B-bf16/snapshots/e3d7ee20c3abdb072783ea696b2fe044aa85bf89
+    precision: bf16
+    canonical_for_paper: true
+    default_run: false
+    role: optional_qwen_candidate_not_automatically_added_to_primary_panel
+    result_dir: results/v3/final_optional/qwen36_27b_bf16/main
+
+  - slug: qwen3vl_32b_8bit
+    model_id: mlx-community/Qwen3-VL-32B-Instruct-8bit
+    local_model_path: /Users/can.baytekin/.cache/huggingface/hub/models--mlx-community--Qwen3-VL-32B-Instruct-8bit/snapshots/14fd4c76af6bd02d1f3dbe5ea7b03da5a1ae25cf
+    precision: 8bit
+    canonical_for_paper: false
+    default_run: false
+    role: historical_quantization_sensitivity
+    result_dir: results/v3/final_optional/qwen3vl_32b_8bit/main
+
+  - slug: qwen3vl_235b_a22b_4bit
+    model_id: mlx-community/Qwen3-VL-235B-A22B-Instruct-4bit
+    local_model_path: /Users/can.baytekin/.cache/huggingface/hub/models--mlx-community--Qwen3-VL-235B-A22B-Instruct-4bit/snapshots/6324926e0f8dfa9334a6e5f9d534ff8d0082021d
+    precision: 4bit
+    canonical_for_paper: false
+    default_run: false
+    role: optional_ultra_large_vision_moe
+    result_dir: results/v3/final_optional/qwen3vl_235b_a22b_4bit/main
+
+  - slug: qwen35_397b_a17b_4bit
+    model_id: mlx-community/Qwen3.5-397B-A17B-4bit
+    local_model_path: /Users/can.baytekin/.cache/huggingface/hub/models--mlx-community--Qwen3.5-397B-A17B-4bit/snapshots/39159bd8aa74f5c8446d2b2dc584f62bb51cb0d3
+    precision: 4bit
+    canonical_for_paper: false
+    default_run: false
+    role: optional_ultra_large_unified_moe
+    result_dir: results/v3/final_optional/qwen35_397b_a17b_4bit/main

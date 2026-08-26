@@ -34,3 +34,15 @@ def test_frozen_v4_is_exact_p5_prompt_lock():
 
     assert frozen["version"] == "frozen_p5_rubric"
     assert frozen["prompt_hash"] == candidate["prompt_hash"]
+
+
+def test_p7_is_single_modality_neutral_sensitivity_variant():
+    frozen = prompt_cfg("configs/prompts/frozen_prompt_v4.yaml")
+    neutral = prompt_cfg("configs/prompts/p7_modality_neutral_sensitivity.yaml")
+
+    assert neutral["version"] == "p7_modality_neutral_sensitivity"
+    assert neutral["system_prompt"] == frozen["system_prompt"]
+    assert "never let it override the image" not in neutral["user_prompt_template"]
+    assert "Consider the accompanying social media text as contextual information" in neutral["user_prompt_template"]
+    assert "prompt injection" not in neutral["user_prompt_template"].lower()
+    assert "untrusted" not in neutral["user_prompt_template"].lower()

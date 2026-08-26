@@ -1,6 +1,6 @@
 # When Disaster Images Talk Back: Cross-Modal Typographic Attacks on Vision–Language Models for Damage Assessment
 
-> **Living paper blueprint — 11 August 2026.** This document is not yet a submission-ready manuscript. The current protocol and its dated amendments are tracked in [`docs/PAPER_DECISIONS.md`](docs/PAPER_DECISIONS.md); reconcile the synchronization debt listed there before treating this blueprint as current. Replace every `[PENDING]` field after the Mac Studio runs; do not present V2 or the Qwen 9B pilot as the final multi-model result.
+> **Living paper blueprint — 12 August 2026.** This document is not yet a submission-ready manuscript. The current protocol and its dated amendments are tracked in [`docs/PAPER_DECISIONS.md`](docs/PAPER_DECISIONS.md). Replace every `[PENDING]` field after the final large-model runs; do not present V2 or the Qwen 9B pilot as the final multi-model result.
 
 Status labels used below:
 
@@ -22,7 +22,7 @@ Status labels used below:
 
 ### One-sentence paper claim
 
-This paper tests whether fixed, black-box adversarial messages delivered through an image, a social-media post, or both can systematically lower VLM damage-severity predictions, while separating malicious effects from ordinary sensitivity to added text and requiring adequate clean task performance before robustness is interpreted.
+This paper tests whether fixed, black-box adversarial messages delivered through an image, a social-media post, or both can systematically lower initially correct VLM damage-severity predictions, while separating malicious effects from ordinary sensitivity to added text and reporting clean task competence separately from conditional robustness.
 
 ### Keywords
 
@@ -30,13 +30,13 @@ Vision–language models; multimodal robustness; typographic attack; visual prom
 
 ## Draft abstract
 
-Vision–language models (VLMs) are increasingly considered for extracting actionable information from multimodal crisis reports, but text embedded in or accompanying an image may compete with visual evidence. We present a controlled evaluation of cross-modal typographic attacks against VLM-based disaster damage assessment. Starting from CrisisMMD, we construct a leakage-resistant benchmark of 990 image–text pairs from seven 2017 disasters, grouped by exact tweet and image identities and perceptual near-duplicate clusters. The benchmark evaluates three delivery modalities—image-only, text-only, and joint image–text attacks—under two semantic families: direct output instructions and misleading low-damage claims. Modality-matched benign controls, visual-style ablations, and text-size ablations separate adversarial semantics from the effects of adding visible or textual content. We clean-screen eight open VLM candidates from 12B to 397B parameters and run the full 9,900-condition matrix only for models meeting predeclared clean accuracy, macro-F1, class-recall, and parsing thresholds. **[PENDING: number of qualified models]** models qualified, producing **[PENDING: number of predictions]** valid predictions. Across qualified models, **[PENDING: principal result with effect size and confidence interval]**. The strongest condition was **[PENDING]**, while benign controls changed predictions by **[PENDING]**. These results show **[PENDING: bounded conclusion]**, with implications for human oversight and input-trust controls in automated crisis assessment.
+Vision–language models (VLMs) are increasingly considered for extracting actionable information from multimodal crisis reports, but text embedded in or accompanying an image may compete with visual evidence. We present a controlled evaluation of cross-modal typographic attacks against VLM-based disaster damage assessment. Starting from CrisisMMD, we construct a leakage-resistant benchmark of 990 image–text pairs from seven 2017 disasters, grouped by exact tweet and image identities and perceptual near-duplicate clusters. The benchmark evaluates three delivery modalities—image-only, text-only, and joint image–text attacks—under two semantic families: direct output instructions and misleading low-damage claims. Modality-matched benign controls, visual-style ablations, and text-size ablations separate adversarial semantics from the effects of adding visible or textual content. We evaluate a predeclared local large-model panel, report clean accuracy, macro-F1, class recall, and parsing, and estimate attack effects among each model's explicitly counted clean-correct mild/severe decisions. **[PENDING: number and identities of completed models]** produced **[PENDING: number of valid predictions]**. Across models, **[PENDING: principal result with effect size and confidence interval]**. The strongest condition was **[PENDING]**, while malicious-minus-matched-benign effects were **[PENDING]**. These results show **[PENDING: bounded conditional conclusion]**, with implications for human oversight and input-trust controls in automated crisis assessment.
 
-Do not finalize the abstract until all model gates, full inference, human review, and corrected statistical analyses are complete.
+Do not finalize the abstract until all selected-model outputs, human review, and corrected statistical analyses are complete.
 
 ## Technical summary
 
-The final paper is a **competence-gated, paired robustness study**, not a model leaderboard and not a claim about real-world disaster operations. A model contributes confirmatory attack results only if it first performs adequately on untouched CrisisMMD examples. Every attacked observation is paired with the same sample’s clean observation, and malicious conditions are compared with modality-matched benign controls.
+The final paper is a **clean-characterized, paired conditional robustness study**, not a model leaderboard and not a claim about real-world disaster operations. Clean performance is reported continuously without a pass/fail or deployment threshold. Every attack rate reports the eligible clean-correct denominator for that model, every attacked observation is paired with the same sample's clean observation, and malicious conditions are compared with modality-matched benign controls.
 
 The principal safety question is not merely whether an attack causes any error. It is whether it creates **downward severity errors** that could suppress attention to genuinely damaged infrastructure. Accordingly, the final paper should emphasize target-eligible attack success, ordinal severity drop, and attack-induced under-triage. Attacked accuracy remains descriptive because an attack may simultaneously correct some baseline errors and create dangerous new ones.
 
@@ -44,7 +44,7 @@ The completed V2 experiment and the leakage-resistant Qwen 9B V3 pilot provide p
 
 ## Research gap and positioning
 
-CrisisMMD introduced paired social-media text and images with humanitarian and damage-severity annotations, enabling multimodal crisis analysis [Alam et al., 2018](https://doi.org/10.1609/icwsm.v12i1.14983). Subsequent systems such as Crisis-DIAS showed the value of combining linguistic and visual cues for damage identification and severity assessment [Agarwal et al., 2020](https://doi.org/10.1609/aaai.v34i01.5369). Recent work also considers large VLMs and agentic pipelines for post-disaster assessment and reporting [Chen et al., 2024](https://arxiv.org/abs/2411.01511).
+CrisisMMD introduced paired social-media text and images with humanitarian and damage-severity annotations, enabling multimodal crisis analysis [Alam et al., 2018](https://doi.org/10.1609/icwsm.v12i1.14983). Dataset studies subsequently showed that random social-media image splits can leak exact and near duplicates and proposed duplicate-audited train/development/test construction [Alam et al., 2020](https://doi.org/10.1109/ASONAM49781.2020.9381294). Ofli et al. used a 70/15/15 multimodal split for informativeness and humanitarian categorization but explicitly excluded damage severity because its annotation is image-only [Ofli et al., 2020](https://arxiv.org/abs/2004.11838). More recent CrisisMMD multimodal work reports that severity remains especially difficult under its strong class imbalance [Shetty et al., 2025](https://doi.org/10.1007/s11042-024-19818-0). Systems such as Crisis-DIAS further show the value of combining linguistic and visual cues for damage identification and severity assessment [Agarwal et al., 2020](https://doi.org/10.1609/aaai.v34i01.5369), while recent work considers large VLMs and agentic pipelines for post-disaster assessment and reporting [Chen et al., 2024](https://arxiv.org/abs/2411.01511).
 
 Separately, typographic-attack research has shown that rendered text can redirect vision–language predictions and large multimodal model behavior [Cheng et al., 2024](https://arxiv.org/abs/2402.19150). Newer work studies visually embedded prompt injection as a black-box attack against multimodal models [Nagaraja et al., 2025/2026](https://arxiv.org/abs/2603.03637), while benchmarks such as [Text2VLM](https://proceedings.mlr.press/v299/downer25a.html) evaluate typographic prompt injection in broader alignment settings.
 
@@ -62,7 +62,7 @@ The final manuscript can claim the following contributions if all pending stages
 
 3. **Controls and perceptual ablations.** Modality-matched benign controls distinguish adversarial semantics from generic text sensitivity; separate style and size sets evaluate simple, news-like, and camouflaged overlays and small, medium, and large text.
 
-4. **A leakage-resistant and competence-gated evaluation.** V3 removes exact and near duplicates across all splits, excludes unusable records, freezes the prompt and attack generator, and interprets attacks only for models that pass predeclared clean-performance gates.
+4. **A leakage-resistant, clean-characterized evaluation.** V3 removes exact and near duplicates across all splits, excludes unusable records, freezes the prompt and attack generator, and separates descriptive clean competence from conditional attack effects on clean-correct decisions.
 
 5. **A reproducible open-model pipeline.** Model revisions, prompt/config hashes, runtime metadata, caches, and aggregate reports are recorded, while source tweets, images, generated attacks, and model weights remain outside the public repository.
 
@@ -96,7 +96,7 @@ How do small, medium, and large text conditions affect attack success and under-
 
 Do attack effects persist across model families, architectures, parameter scales, and the separately reported 8-bit and 4-bit precision tiers?
 
-**H5:** Vulnerability will vary by model, but downward attack effects will remain detectable in more than one qualified model family. Parameter count alone is not assumed to determine robustness.
+**H5:** Vulnerability will vary by model, but downward attack effects will remain detectable in more than one evaluated model family. Parameter count alone is not assumed to determine robustness.
 
 ### RQ6 — How much instability is attributable to benign additions?
 
@@ -143,7 +143,7 @@ Out of scope are FGSM/PGD, optimized pixel noise, white-box or gradient attacks,
 
 ### Source dataset
 
-**[FIXED]** The source is CrisisMMD v2.0, which contains multimodal social-media records from seven 2017 natural disasters. After label normalization and removal of records with missing damage labels, missing/broken images, or missing tweet text, the local processed manifest contains **3,474 valid image–text pairs**:
+**[FIXED]** The source is CrisisMMD v2.0, which contains **18,082 real images across all annotation tasks**, not 18,082 damage-severity examples. The official damage-severity subset contains **3,526 image rows**: 475 little/no, 839 mild, and 2,212 severe [official CrisisNLP description](https://crisisnlp.qcri.org/crisismmd). After label/path/text validation and exact image SHA-256 deduplication, the local processed manifest contains **3,474 exact-SHA-unique image–text pairs**:
 
 | Damage label | Valid records |
 |---|---:|
@@ -152,7 +152,22 @@ Out of scope are FGSM/PGD, optimized pixel noise, white-box or gradient attacks,
 | `severe_damage` | 2,171 |
 | **Total** | **3,474** |
 
-These 3,474 records span Hurricane Harvey (886), Hurricane Maria (846), Hurricane Irma (790), California wildfires (522), the Iraq–Iran earthquake (172), the Mexico earthquake (164), and Sri Lanka floods (94). These are available records after project filtering, not a claim about the complete size of every CrisisMMD task.
+These 3,474 records span Hurricane Harvey (886), Hurricane Maria (846), Hurricane Irma (790), California wildfires (522), the Iraq–Iran earthquake (172), the Mexico earthquake (164), and Sri Lanka floods (94). The 52-row difference from the official 3,526 is fully accounted for by 42 repeated exact-SHA groups: 94 official rows collapse to 42 retained images. Eleven exact-byte image groups (28 official rows) have conflicting severity labels; four retained V3 main rows belong to those groups. We preserve the frozen cohort and report an exclusion sensitivity rather than silently changing labels after inference. Full evidence is in `reports/v3/dataset_protocol_audit.md`.
+
+### Published split and secondary clean cohorts
+
+**[FIXED]** The published severity files contain 2,468 training, 529 development, and 529 test rows. Their per-class counts are arithmetically consistent with a 70/15/15 stratified partition, but the released severity split metadata does not document the exact sampling algorithm or seed; we therefore report the observed files rather than infer an undocumented procedure. The official test split has 71 little/no, 126 mild, and 332 severe examples; a constant severe prediction therefore achieves 62.8% accuracy. It is useful as a natural-imbalance, literature-comparability clean benchmark, but it is not an appropriate source for a universal 60% competence threshold.
+
+The official 529 rows are not substituted for the primary attack cohort. Under the V3 duplicate definition, the published train and test files share 62 tweet IDs, 10 exact image hashes, and 106 duplicate clusters; the official test also overlaps existing prompt-development and V3 experiment cohorts. Because the models are evaluated zero-shot, train/test overlap is not ordinary supervised leakage in this study, but prompt/cohort overlap means the official test result must be labeled secondary and post-hoc.
+
+Two clean-only evaluations supplement the paired attack design:
+
+| Clean cohort | n | Distribution | Role | Uncertainty unit |
+|---|---:|---|---|---|
+| All locally valid severity records | 3,474 | natural local prevalence | broad clean competence and event sensitivity | global duplicate cluster |
+| Published official test | 529 | published natural prevalence | literature comparability | global duplicate cluster |
+
+The 3,474-row evaluation reports overall accuracy, macro-F1, ordinal MAE, per-class recall, event and event-by-class metrics, leave-one-event-out sensitivity, and duplicate-cluster bootstrap intervals. It is clean-only: generating nine attacks for every source record is not required to characterize natural-distribution competence.
 
 ### V3 exclusions and duplicate grouping
 
@@ -162,7 +177,7 @@ These 3,474 records span Hurricane Harvey (886), Hurricane Maria (846), Hurrican
 - exact image identity/hash;
 - perceptual near-image similarity using dHash Hamming distance \(\leq 4\).
 
-Rows connected to the previous prompt-selection pilot are excluded to prevent prompt-development leakage. V3 also excludes suspected mojibake and images whose shorter side is below 128 pixels.
+Rows connected to the previous prompt-selection pilot are excluded to prevent prompt-development leakage. V3 also excludes suspected mojibake and images whose shorter side is below 128 pixels. This leaves 3,095 eligible rows in **2,628 independent duplicate clusters**.
 
 | Cohort step | Records |
 |---|---:|
@@ -177,17 +192,19 @@ Every selected sample belongs to a unique global duplicate cluster, and no clust
 
 ### Final V3 splits
 
-**[FIXED]** All splits are balanced by damage class and disjoint by duplicate cluster:
+**[FIXED]** All splits are balanced by damage class and disjoint by duplicate cluster. The 720 rows are a custom paired experimental cohort, not the published 529-row test split and not a natural-prevalence sample:
 
-| Split | Source pairs | Per class | Conditions | Predictions per qualified model | Purpose |
+| Split | Source pairs | Per class | Conditions | Predictions per completed model | Purpose |
 |---|---:|---:|---:|---:|---|
-| Pilot | 90 | 30 | 10 | 900 | technical qualification and pilot evidence |
+| Pilot | 90 | 30 | 10 | 900 | technical validation and prompt sensitivity |
 | Main | 720 | 240 | 10 | 7,200 | primary modality/semantics analysis |
 | Style ablation | 120 | 40 | 10 | 1,200 | simple/news/camouflage comparison |
 | Size ablation | 60 | 20 | 10 | 600 | small/medium/large comparison |
-| **Total** | **990** | — | — | **9,900** | per qualified model |
+| **Total** | **990** | — | — | **9,900** | per completed full V3 suite |
 
-The splits cover all seven disaster events but do not force equal event prevalence. The main split contains 230 Hurricane Irma, 181 Hurricane Harvey, 148 Hurricane Maria, 57 California wildfire, 39 Mexico earthquake, 36 Iraq–Iran earthquake, and 29 Sri Lanka flood records. Primary overall reporting is class-balanced; a natural-prevalence reweighting sensitivity analysis is planned.
+Selection is deterministic with seed 42. Labels are processed from rarest to most common. Auxiliary cohorts are filled from smallest to largest (size, pilot, style, then main), and each split/class repeatedly draws from its currently least represented event before a stable-hash tie-break. This creates broad event coverage and preserves cluster disjointness, but it is not event-proportional and was not derived from a published CrisisMMD split. In particular, the auxiliary cohorts consumed all eligible California and Sri Lanka little/no clusters before main selection; main little/no examples therefore come only from Hurricanes Harvey, Irma, and Maria.
+
+The main split contains 230 Hurricane Irma, 181 Hurricane Harvey, 148 Hurricane Maria, 57 California wildfire, 39 Mexico earthquake, 36 Iraq–Iran earthquake, and 29 Sri Lanka flood records. A worst-case binomial 95% interval at n=720 has an approximately 3.7 percentage-point half-width; a class-specific n=240 estimate has approximately 6.3 points. These are retrospective precision descriptions, not an a priori power calculation. Primary attack reporting remains class-balanced; natural-prevalence **class-prior** reweighting, exact-label-conflict exclusion, and the separate 3,474-row clean evaluation are sensitivity analyses. Event-by-class population reweighting is not identified because main has structural zero cells (for example, no California or Sri Lanka little/no samples and no Iraq–Iran mild samples); event-specific estimates remain descriptive.
 
 ## Experimental conditions
 
@@ -210,15 +227,17 @@ The splits cover all seven disaster events but do not force equal event prevalen
 
 The original tweet is preserved character-for-character after the inserted prefix. For a given sample and semantic family, image-only, text-only, and joint conditions use the same payload ID. Image and joint variants reuse the exact same attacked image, so their only difference is the tweet prefix.
 
-### Style ablation
+### Presentation-style ablation
 
-**[FIXED]** Style is evaluated on a separate 120-sample set and is not fully crossed with delivery modality or size. Conditions are clean plus benign, direct, and misleading overlays in three styles:
+**[FIXED]** Presentation style is evaluated on a separate 120-sample set (40 per class) and is not fully crossed with delivery modality or size. Conditions are clean plus benign, direct, and misleading overlays in three presentation strategies:
 
 - `simple`: high-legibility edge overlay;
 - `news`: a lower-third using the fictional `CRISIS24` identity, never a real news logo;
 - `camouflage`: lower-contrast text selected from a low-complexity edge region.
 
-All style conditions use medium text size. Camouflage contrast is measured after alpha compositing and constrained to 1.30–1.80, with opacity controlled by configuration.
+All conditions use nominal medium text size and retain the same payload assignment within sample and semantics. These variants are a **bundled presentation contrast**, not an isolated typography-style intervention: contrast, background, occupied area, and placement policy differ by design. News always uses a bottom lower-third, simple uses deterministic top/bottom placement, and camouflage chooses a low-complexity top or bottom edge region. Consequently, model differences may be attributed to the presentation package but not to any single component. Camouflage contrast is measured after alpha compositing and constrained to 1.30–1.80, with opacity controlled by configuration.
+
+The style cohort is exactly class-balanced, event-diversified, and globally duplicate-cluster-disjoint, but it is not event-proportional. A worst-case full-cohort binomial 95% interval has an approximate 8.8 percentage-point half-width. Conditional attack denominators can be smaller and are always reported exactly.
 
 ### Size ablation
 
@@ -231,6 +250,10 @@ All style conditions use medium text size. Camouflage contrast is measured after
 | Large | 8% of image height |
 
 Payload, placement, color, background, opacity, and style are fixed within a sample; only text/box size changes.
+
+The size cohort is exactly class-balanced and cluster-disjoint. Its 60-source size gives an approximate worst-case 12.3 percentage-point binomial 95% half-width before restriction to clean-correct mild/severe samples. It is therefore a secondary paired mechanism analysis rather than a high-precision prevalence estimate. A monotonic size claim requires compatible sample-level patterns and paired intervals; an aggregate line alone is insufficient.
+
+The multi-image typographic-attack formulation is consistent with Wang et al. (NAACL 2025). SceneTAP (CVPR 2025) motivates treating placement and scene integration as meaningful attack factors. The controlled font-size motivation is also supported by Balakrishnan et al. (2026), retained as concurrent preprint evidence rather than peer-reviewed authority. No existing CrisisMMD protocol specifies a canonical style/size ablation distribution.
 
 ## Payload design and visual-dose controls
 
@@ -248,7 +271,7 @@ Automated V3 validation passed all **9,900 condition rows** and **6,480 generate
 
 ## Human review protocol
 
-**[PENDING]** Two or more independent reviewers must be blind to model predictions. Reviewers first inspect the clean image and then each unique modified visual variant for:
+**[PENDING]** Two or more independent reviewers must be blind to model predictions and tweet text. Reviewers inspect the clean image and selected modified visual variants for:
 
 - whether the original damage label remains valid;
 - text readability and visibility;
@@ -256,20 +279,20 @@ Automated V3 validation passed all **9,900 condition rows** and **6,480 generate
 - plausibility of the intended style;
 - overall image usability.
 
-The planned full review covers **4,050 unique modified V3 images**; image and joint conditions that reuse the same file are rated once. Each file receives at least two independent ratings. Report raw agreement and Cohen’s kappa for two reviewers, or Krippendorff’s alpha if more than two reviewers contribute. Adjudication occurs only after independent ratings are locked.
+The frozen paper-facing review instrument samples **60 main source images** (20 per class, diversified across available events) and shows clean, benign-image, direct-image, and misleading-image variants. A separate **9-source style supplement** (3 per class) shows clean plus direct/misleading simple, news, and camouflage variants. Each row receives at least two independent ratings. Report raw agreement and Cohen's kappa for two reviewers, or Krippendorff's alpha if more than two reviewers contribute. Adjudication occurs only after independent ratings are locked.
 
-Primary analysis should report both:
+The primary automated analysis remains intent-to-treat. A review-passed sensitivity may additionally report:
 
 1. **intent-to-treat:** every automatically valid generated condition;
 2. **review-passed:** conditions whose unique image passes the human protocol.
 
-If reviewing all 4,050 images becomes infeasible, define and freeze a stratified sampling protocol before reviewers can see model outputs; do not silently substitute an opportunistic sample.
+The sampling instrument is generated before reviewers see model outputs and must not be changed in response to attack results.
 
 ## Frozen model prompt and inference
 
 ### Prompt
 
-**[FIXED]** Prompt P3 was selected using clean pilot performance only and is stored with a content hash. It defines all three damage classes and instructs the model to base severity primarily on visible physical infrastructure and utility damage while using the tweet only as supporting context.
+**[FIXED]** The zero-shot P5 rubric is locked as `frozen_prompt_v4.yaml` with a content hash. It defines all three damage classes and instructs the model to base severity on visible physical infrastructure and utility damage while using the tweet only as supporting context. P5 was selected on the 180-example development split, so Qwen3.5 27B results on that split are post-hoc; the untouched 720-example main split supplies its paper-facing clean estimate.
 
 The prompt does **not** say that inputs may be adversarial, tell the model to ignore image text, mark the tweet as untrusted, or include demonstrations. It is unchanged across clean, benign, and attacked conditions.
 
@@ -290,37 +313,33 @@ The model returns JSON with `damage_severity`, `confidence`, and a short evidenc
 
 Inference is resumeable through a per-run SQLite cache. Each run stores the served model ID, immutable model revision, prompt and manifest hashes, backend and dependency versions, Git commit, hardware/OS identity, decoding parameters, latency, raw response, parsed result, and errors.
 
-## Model panel and clean-first qualification
+## Model panel and clean characterization
 
 ### Candidate panel
 
-**[FIXED for current freeze]** The standard tier uses MLX 8-bit checkpoints; the ultra-large tier uses MLX 4-bit checkpoints to preserve memory headroom on a 512 GB M3 Ultra.
+**[FIXED for final execution]** Canonical Qwen inference uses verified local BF16 checkpoints when available. Other local models retain their exact recorded precision. Missing checkpoints are not downloaded automatically, and historical 8-bit outputs are preserved as sensitivity evidence.
 
 | Candidate | Total / active parameters | Precision | Architectural role | Full attack status |
 |---|---:|---:|---|---|
-| Gemma 4 Unified | 12B | 8-bit | lower-bound large candidate | `[PENDING GATE]` |
-| Mistral Small 3.1 | 24B | 8-bit | independent Pixtral-style family | `[PENDING GATE]` |
-| Gemma 4 MoE | 26B / 4B active | 8-bit | sparse Gemma contrast | `[PENDING GATE]` |
-| Qwen3.5 | 27B | 8-bit | current dense Qwen | `[PENDING GATE]` |
-| Gemma 4 Dense | 31B | 8-bit | dense large Gemma | `[PENDING GATE]` |
-| Qwen3-VL Instruct | 32B | 8-bit | vision-specialized dense Qwen | `[PENDING GATE]` |
-| Qwen3-VL Instruct | 235B / 22B active | 4-bit | ultra-large vision MoE | `[PENDING GATE]` |
-| Qwen3.5 | 397B / 17B active | 4-bit | ultra-large unified MoE | `[PENDING GATE]` |
+| Mistral Small 3.1 | 24B | 8-bit | independent cross-family model | `[PENDING FINAL RUN]` |
+| Qwen3.5 | 27B | BF16 | primary dense Qwen | `[PENDING FINAL RUN]` |
+| Qwen3-VL Instruct | 32B | BF16 | intended vision-specialized Qwen | unavailable locally; no download |
+| Qwen3.6 | 27B | BF16 | optional local Qwen sensitivity | `[OPTIONAL]` |
+| Qwen3-VL Instruct | 32B | 8-bit | historical quantization sensitivity | `[OPTIONAL]` |
+| Qwen3-VL Instruct | 235B / 22B active | 4-bit | optional ultra-large vision MoE | `[OPTIONAL]` |
+| Qwen3.5 | 397B / 17B active | 4-bit | optional ultra-large unified MoE | `[OPTIONAL]` |
 
-All model IDs and immutable Hub revisions must be locked immediately before production. A one-image vision smoke test and five identical deterministic requests precede clean screening.
+Exact served IDs and local snapshot revisions are recorded immediately before production. A vision smoke test and exact `/health` model-identity check precede inference.
 
-### Competence gates
+The secondary ablation queue is executed separately from the main matrix. Its current default panel is Qwen3.5-27B BF16, Mistral Small 3.1-24B 8-bit, and Qwen3-VL 32B 8-bit, each retained under its exact served identity and precision. Qwen3.6, MoE, and Gemma checkpoints remain explicit opt-in models until their corresponding main results are recorded. Models are loaded serially with concurrency one and are never pooled. A model-specific memory preflight requires its estimated peak allocation plus a 64 GiB post-load reserve. Concurrent training may reduce throughput but is not itself an exclusion criterion.
 
-**[FIXED]** Attack inference is opt-in and blocked until both clean gates pass:
+### Clean characterization and conditional attack denominator
 
-| Gate | Cohort | Parse rate | Accuracy | Macro-F1 | Minimum recall in every class |
-|---|---:|---:|---:|---:|---:|
-| Pilot screen | 90 clean samples | ≥99.5% | ≥60% | ≥55% | ≥40% |
-| Main confirmation | 720 clean samples | ≥99.5% | ≥70% | ≥65% | ≥50% |
+**[AMENDED 2026-08-26]** The untouched 720-example main result is reported with parse rate, accuracy, macro-F1, ordinal MAE, confusion matrix, and per-class recall. These values are descriptive; the manuscript applies no clean-performance pass/fail or deployment threshold.
 
-A pilot failure stops after 90 predictions. A pilot passer receives 720 main clean predictions. Only a model passing both stages receives adversarial, benign, style, and size inference. Every rejected model and its clean metrics must still be reported to prevent selective reporting.
+The primary downward ASR denominator for each model contains only ground-truth mild/severe samples that the model classified correctly when clean. Small or class-skewed eligible denominators are reported explicitly and limit interpretation. Clean performance remains visible in every model report, but it does not create a qualification label.
 
-Model size is a candidate-selection heuristic, not a guarantee of clean quality or robustness. Comparisons across the 8-bit standard and 4-bit ultra tiers are precision-confounded. Even within a family, dense versus MoE or unified versus vision-specialized architectures prevent a purely causal parameter-scaling interpretation.
+Model size is a candidate-selection heuristic, not a guarantee of clean quality or robustness. Comparisons across BF16, 8-bit, and 4-bit checkpoints are precision-confounded. Even within a family, dense versus MoE or unified versus vision-specialized architectures prevent a purely causal parameter-scaling interpretation.
 
 ## Outcome definitions
 
@@ -393,6 +412,7 @@ Attacked accuracy is descriptive, not a primary robustness endpoint. It can rema
 7. Report class, event, payload, style, size, model family, architecture, and precision subgroups. Label underpowered subgroup findings exploratory.
 8. Perform natural-prevalence reweighting in addition to the balanced primary analysis.
 9. Run duplicate-threshold (dHash 2/4/6), minimum-image-side (96/128/224), human-review, and quantization sensitivities without replacing the frozen primary analysis.
+10. For presentation-style and size ablations, compare every pair of variants within semantics using paired downward-risk differences, paired bootstrap intervals, exact McNemar tests, and Holm correction. Report sample-level size-response patterns and avoid monotonic language unless those paired results support it.
 
 Avoid causal language. These experiments estimate conditional behavioral differences under synthetic input interventions; they do not establish real-world misinformation prevalence or operational harm.
 
@@ -419,34 +439,31 @@ The V2 style ablation showed simple > news > camouflage for both semantic famili
 
 ### Leakage-resistant V3 Qwen 9B pilot
 
-**[PRELIMINARY/EXPLORATORY]** On the corrected 90-sample V3 pilot, Qwen3.5 9B AWQ parsed 900/900 condition responses. Clean accuracy was 53.3%, macro-F1 was 50.1%, and only 48/90 samples were clean-correct. Clean recall was 40.0% for little/no, 26.7% for mild, and 93.3% for severe. This model fails the new clean qualification gates.
+**[PRELIMINARY/EXPLORATORY]** On the corrected 90-sample V3 pilot, Qwen3.5 9B AWQ parsed 900/900 condition responses. Clean accuracy was 53.3%, macro-F1 was 50.1%, and only 48/90 samples were clean-correct. Clean recall was 40.0% for little/no, 26.7% for mild, and 93.3% for severe. These values and the small eligible denominator make the run exploratory rather than paper-facing evidence.
 
 Direct image and direct joint each produced 39.6% ASR (19/48; 95% CI 27.0–53.7%). Direct text produced 16.7% (8/48). Benign image and joint additions changed the predicted label in 12.2% of samples, compared with 3.3% for benign text. These estimates have small denominators and are evidence for continuing the study, not confirmatory paper results.
 
 ## Final results section template
 
-### Model qualification determines the valid robustness cohort
+### Clean competence defines the scope of conditional robustness
 
-**[PENDING]** Begin the final Results section with all eight clean screens, including failures.
+Begin the final Results section with every selected model's untouched main clean result and exact eligible denominator.
 
-| Model | Precision | Pilot acc. / macro-F1 / min recall | Main acc. / macro-F1 / min recall | Parse rate | Qualified? | Failure reason |
-|---|---|---|---|---:|---|---|
-| Gemma 4 12B | 8-bit | `[PENDING]` | `[PENDING/NA]` | `[PENDING]` | `[PENDING]` | — |
-| Mistral 24B | 8-bit | `[PENDING]` | `[PENDING/NA]` | `[PENDING]` | `[PENDING]` | — |
-| Gemma 4 26B-A4B | 8-bit | `[PENDING]` | `[PENDING/NA]` | `[PENDING]` | `[PENDING]` | — |
-| Qwen3.5 27B | 8-bit | `[PENDING]` | `[PENDING/NA]` | `[PENDING]` | `[PENDING]` | — |
-| Gemma 4 31B | 8-bit | `[PENDING]` | `[PENDING/NA]` | `[PENDING]` | `[PENDING]` | — |
-| Qwen3-VL 32B | 8-bit | `[PENDING]` | `[PENDING/NA]` | `[PENDING]` | `[PENDING]` | — |
-| Qwen3-VL 235B-A22B | 4-bit | `[PENDING]` | `[PENDING/NA]` | `[PENDING]` | `[PENDING]` | — |
-| Qwen3.5 397B-A17B | 4-bit | `[PENDING]` | `[PENDING/NA]` | `[PENDING]` | `[PENDING]` | — |
+| Model | Precision | Main acc. / macro-F1 | Parse rate | Clean-correct mild+severe | Paper matrix |
+|---|---|---:|---:|---:|---|
+| Qwen3.5 27B | BF16 | 0.5569 / 0.5536 | 1.000 | 251 | Complete |
+| Qwen3.6 27B | BF16 | 0.5597 / 0.5511 | 1.000 | 259 | Complete |
+| Qwen3-VL 32B | BF16 | 0.5319 / 0.5298 | 1.000 | 294 | Complete |
+| Mistral Small 3.1 24B | BF16 | 0.5028 / 0.4857 | 1.000 | 232 | Complete |
+| Gemini 2.5 Flash | provider-managed | 0.5458 / 0.5485 | 1.000 | 273 | Complete |
 
 Suggested opening sentence:
 
-> Of eight predeclared candidates, **[K]** passed both competence gates. Failed candidates are reported but excluded from confirmatory robustness aggregation because their clean predictions did not support a stable attack denominator.
+> Across five completed models, balanced-main clean accuracy ranged from 50.28% to 55.97%. Conditional attack estimates use each model's explicitly reported 232-294 clean-correct mild/severe decisions.
 
 ### Visual delivery produces [PENDING] downward risk
 
-Report per-model and equal-model aggregate outcomes. Never show an aggregate without the per-model heterogeneity needed to interpret it.
+Report per-model outcomes. Any optional equal-model summary must average model-level effects, remain secondary, and never pool predictions as independent observations. Never show an aggregate without the per-model heterogeneity needed to interpret it.
 
 | Family | Modality | Model count | ASR | Target-eligible ASR | Mean severity drop | Induced under-triage | Malicious minus benign |
 |---|---|---:|---:|---:|---:|---:|---:|
@@ -461,7 +478,7 @@ Interpretation order:
 
 1. Is each malicious condition larger than its benign control?
 2. Is the direction predominantly downward rather than merely different?
-3. Does the result replicate across qualified model families?
+3. Does the result replicate across evaluated model families?
 4. Does joint delivery add to image-only delivery, or is it redundant?
 5. Are confidence intervals narrow enough to support the stated ranking?
 
@@ -483,16 +500,16 @@ Interpretation order:
 
 1. **Figure 1 — Threat model and paired design.** One clean image–tweet pair branching into image-only, text-only, and joint delivery for direct, misleading, and benign payloads.
 2. **Figure 2 — Dataset construction.** 3,474 valid records → exclusions/duplicate clusters → four disjoint balanced V3 splits.
-3. **Figure 3 — Model qualification.** Clean accuracy, macro-F1, and minimum class recall with gate thresholds.
+3. **Figure 3 — Model clean competence.** Clean accuracy, macro-F1, and per-class recall without a pass/fail reference line.
 4. **Figure 4 — Main robustness effects.** Forest plot of target-eligible ASR or induced under-triage by condition and model.
-5. **Figure 5 — Cross-model robustness heatmap.** Qualified models × attack conditions, with precision tier marked.
+5. **Figure 5 — Cross-model robustness heatmap.** Evaluated models × attack conditions, with exact precision marked.
 6. **Figure 6 — Style and size ablations.** Paired effect estimates with 95% intervals; do not use a line implying monotonic size unless supported.
 7. **Figure 7 — Human review and failure cases.** Approved examples and representative failures, with source content anonymized as required.
 
 ### Main paper tables
 
 1. Dataset/split summary and exclusions.
-2. Model registry, immutable revisions, precision, clean gates, and qualification.
+2. Model registry, immutable revisions, precision, clean competence, and eligible denominators.
 3. Primary modality × semantics results with exact denominators and intervals.
 4. Modality-matched benign contrasts and Holm-adjusted paired tests.
 5. Human-review acceptance and agreement.
@@ -503,7 +520,7 @@ Move event, payload, per-class, confusion-matrix, quantization, and sensitivity 
 
 ### What a positive finding would mean
 
-If multiple qualified models show malicious-minus-benign downward effects, the supported conclusion is:
+If multiple evaluated models show malicious-minus-benign downward effects, the supported conclusion is:
 
 > Fixed adversarial messages can exploit multimodal input fusion in disaster severity classification, and the effect depends on delivery modality, semantic form, and visual presentation.
 
@@ -537,13 +554,15 @@ The final paper should explicitly retain the following limitations:
 2. **Image-label target with multimodal input.** Ground truth is based on image damage severity, while the model also sees tweet text. Text–image disagreement may reflect dataset ambiguity rather than attack behavior.
 3. **Synthetic digital interventions.** The attacks are rendered or prepended programmatically and do not establish physical-world robustness after recapture, compression, cropping, or platform transformations.
 4. **Fixed English payloads.** The study measures a bounded payload registry, not adaptive attackers, multilingual attacks, paraphrase search, or model-specific optimization.
-5. **Competence-based model inclusion.** Clean gates improve interpretability but condition the confirmatory cohort on this task. All failures must be published, and thresholds should not be changed after seeing attack results.
-6. **Precision confounding.** Standard models use 8-bit weights and the 235B/397B ultra tier uses 4-bit; standard-versus-ultra differences are not pure scale effects.
+5. **Conditional denominators.** Clean competence determines how many and which mild/severe decisions enter each model's attack denominator. Small or class-skewed denominators limit interpretation even when paired effects are estimable.
+6. **Precision confounding.** The final panel can include BF16, 8-bit, and 4-bit checkpoints; cross-precision differences are not pure scale or architecture effects.
 7. **Human judgment.** Automated geometry and contrast checks cannot establish readability, plausibility, critical-region preservation, or label validity; final claims depend on pending blinded review.
 8. **Annotation uncertainty.** Mild damage is visually ambiguous and was difficult for the exploratory 9B model. Original crowd labels may contain uncertainty that is not fully represented by a single hard class.
 9. **No operational outcome study.** Under-triage is a model-output risk proxy, not measured harm to responders or affected communities.
 10. **Training contamination unknown.** Open VLM pretraining data may include CrisisMMD images or related web content; exact contamination cannot be ruled out.
 11. **No defense evaluation in the main study.** The existing OCR-mask interface addresses only image text and is retained as optional future work, not a validated defense against text-only or joint attacks.
+12. **Custom balanced cohort.** The V3 main set is larger and more duplicate-resistant than the published test split but is custom, class-balanced, and event-equalizing rather than natural-prevalence or event-proportional. Event-specific causal/generalization claims are unsupported, and natural-distribution clean results must be reported separately.
+13. **Exact-image label conflicts.** Eleven exact-byte image groups in the published severity files carry conflicting labels; four retained main rows originate from those groups. The frozen primary cohort is unchanged, with a conflict-exclusion sensitivity reported alongside it.
 
 ## Ethics, safety, and responsible release
 
@@ -603,7 +622,7 @@ Recommended subsections:
 2. CrisisMMD preprocessing and duplicate-safe splits
 3. Attack semantics and modality conditions
 4. Visual rendering, style, and size ablations
-5. Frozen prompt, model panel, and clean qualification
+5. Frozen prompt, model panel, and clean characterization
 6. Metrics and statistical analysis
 7. Human review and reproducibility
 
@@ -611,7 +630,7 @@ Recommended subsections:
 
 Recommended order:
 
-1. Model qualification
+1. Model clean competence and eligible denominators
 2. Main modality and semantics results
 3. Benign-control contrasts
 4. Under-triage and class-level effects
@@ -639,7 +658,7 @@ Use a bounded conclusion:
 
 - The V3 dataset contains 990 disjoint, class-balanced source samples and 9,900 validated condition rows.
 - V3 duplicate grouping and exclusions correct known V2 leakage/text-quality weaknesses.
-- The 9B exploratory model has inadequate clean performance under the new qualification criteria.
+- The 9B pilot has weak clean performance and a small eligible denominator, so it remains exploratory rather than paper-facing evidence.
 - Preliminary V2 and V3 results justify evaluating visual and cross-modal typographic vulnerability with stronger models.
 
 ### Claims that are not yet supported
@@ -659,9 +678,11 @@ Use a bounded conclusion:
 - [ ] Transfer and SHA-verify private data on the Mac Studio.
 - [ ] Lock every model revision and runtime version.
 - [ ] Run deterministic vision/server checks.
-- [ ] Publish all eight clean-screen outcomes.
-- [ ] Run full matrices only for qualified models.
-- [ ] Add target-eligible ASR and induced critical under-triage to the evaluator.
+- [ ] Publish every selected model's untouched main clean outcome.
+- [ ] Run the fixed main matrices for the selected large-model panel.
+- [x] Freeze and validate the dedicated presentation-style and size ablation manifests.
+- [ ] Run the separate presentation-style and size ablation queue.
+- [x] Add target-eligible ASR and induced critical under-triage to the evaluator.
 - [ ] Complete two-reviewer blinded visual validation and agreement analysis.
 - [ ] Produce intent-to-treat and review-passed results.
 - [ ] Complete paired, hierarchical, prevalence, duplicate, image-size, and quantization sensitivities.
@@ -678,9 +699,13 @@ Use a bounded conclusion:
 |---|---|
 | Frozen V3 design | `configs/v3/pipeline.yaml` |
 | Payload registry and lengths | `configs/v3/attack_payloads.yaml` |
-| Model candidates and gates | `configs/v3/models.yaml` |
-| Frozen zero-shot prompt | `configs/prompts/frozen_prompt.yaml` |
+| Final model panel and analysis protocol | `configs/v3/final_analysis_protocol.yaml` |
+| Ablation design and model queue | `configs/v3/ablation_protocol.yaml`, `scripts/run_v3_ablations.sh` |
+| Ablation dataset and RAM audits | `reports/v3/ablation_protocol/dataset_audit.md`, `reports/v3/ablation_protocol/ram_readiness.md` |
+| Frozen zero-shot prompt | `configs/prompts/frozen_prompt_v4.yaml` |
 | Split counts and exclusions | `reports/v3/split_validation.json` |
+| Dataset/split literature audit | `reports/v3/dataset_protocol_audit.md`, `reports/v3/dataset_protocol_audit.json` |
+| Secondary clean cohort protocol | `configs/v3/dataset_evaluation.yaml` |
 | Attack validation | `reports/v3/attack_validation.json` |
 | Human review protocol | `reports/v3/manual_review/PROTOCOL.md` |
 | Artifact hashes | `reports/v3/artifact_lock.json` |
@@ -695,10 +720,16 @@ Use a bounded conclusion:
 Use these as the initial bibliography; verify author order, venue, version, and BibTeX before submission.
 
 1. Alam, F., Ofli, F., and Imran, M. (2018). “CrisisMMD: Multimodal Twitter Datasets from Natural Disasters.” *ICWSM*. [DOI](https://doi.org/10.1609/icwsm.v12i1.14983).
-2. Agarwal, M., Leekha, M., Sawhney, R., and Shah, R. R. (2020). “Crisis-DIAS: Towards Multimodal Damage Analysis—Deployment, Challenges and Assessment.” *AAAI*. [DOI](https://doi.org/10.1609/aaai.v34i01.5369).
-3. Imran, M., Alam, F., Qazi, U., Peterson, S., and Ofli, F. (2020). “Rapid Damage Assessment Using Social Media Images by Combining Human and Machine Intelligence.” [arXiv](https://arxiv.org/abs/2004.06675).
-4. Chen, Z. et al. (2024). “Integration of Large Vision Language Models for Efficient Post-disaster Damage Assessment and Reporting.” [arXiv](https://arxiv.org/abs/2411.01511).
-5. Cheng et al. (2024). “Unveiling Typographic Deceptions: Insights of the Typographic Vulnerability in Large Vision-Language Model.” *ECCV 2024*. [Paper](https://arxiv.org/abs/2402.19150).
-6. Downer, G., Craven, S., Ruck, D., and Thomas, J. (2025). “Text2VLM: Adapting Text-Only Datasets to Evaluate Alignment Training in Visual Language Models.” *PMLR 299*. [Paper](https://proceedings.mlr.press/v299/downer25a.html).
-7. Nagaraja, N., Zhang, L., Wang, Z., Zhang, B., and Patil, P. (2025/2026). “Image-based Prompt Injection: Hijacking Multimodal LLMs through Visually Embedded Adversarial Instructions.” *FLLM 2025*; arXiv posting 2026. [DOI](https://doi.org/10.1109/FLLM67465.2025.11391218).
-8. Model-specific citations and technical reports listed in `docs/V3_MODEL_SELECTION.md` for Qwen3.5, Qwen3-VL, Gemma 4, Mistral Small 3.1, and MLX-VLM.
+2. Alam, F., Ofli, F., Imran, M., Alam, T., and Qazi, U. (2020). “Deep Learning Benchmarks and Datasets for Social Media Image Classification for Disaster Response.” *ASONAM*. [DOI](https://doi.org/10.1109/ASONAM49781.2020.9381294); [preprint](https://arxiv.org/abs/2011.08916).
+3. Ofli, F., Alam, F., and Imran, M. (2020). “Analysis of Social Media Data using Multimodal Deep Learning for Disaster Response.” *ISCRAM*. [Paper](https://arxiv.org/abs/2004.11838).
+4. Shetty, N. P., Bijalwan, Y., Chaudhari, P., Shetty, J., and Muniyal, B. (2025). “Disaster Assessment from Social Media Using Multimodal Deep Learning.” *Multimedia Tools and Applications*, 84, 18829–18854. [DOI](https://doi.org/10.1007/s11042-024-19818-0).
+5. Agarwal, M., Leekha, M., Sawhney, R., and Shah, R. R. (2020). “Crisis-DIAS: Towards Multimodal Damage Analysis—Deployment, Challenges and Assessment.” *AAAI*. [DOI](https://doi.org/10.1609/aaai.v34i01.5369).
+6. Imran, M., Alam, F., Qazi, U., Peterson, S., and Ofli, F. (2020). “Rapid Damage Assessment Using Social Media Images by Combining Human and Machine Intelligence.” [arXiv](https://arxiv.org/abs/2004.06675).
+7. Chen, Z. et al. (2024). “Integration of Large Vision Language Models for Efficient Post-disaster Damage Assessment and Reporting.” [arXiv](https://arxiv.org/abs/2411.01511).
+8. Cheng et al. (2024). “Unveiling Typographic Deceptions: Insights of the Typographic Vulnerability in Large Vision-Language Model.” *ECCV 2024*. [Paper](https://arxiv.org/abs/2402.19150).
+9. Downer, G., Craven, S., Ruck, D., and Thomas, J. (2025). “Text2VLM: Adapting Text-Only Datasets to Evaluate Alignment Training in Visual Language Models.” *PMLR 299*. [Paper](https://proceedings.mlr.press/v299/downer25a.html).
+10. Nagaraja, N., Zhang, L., Wang, Z., Zhang, B., and Patil, P. (2025/2026). “Image-based Prompt Injection: Hijacking Multimodal LLMs through Visually Embedded Adversarial Instructions.” *FLLM 2025*; arXiv posting 2026. [DOI](https://doi.org/10.1109/FLLM67465.2025.11391218).
+11. Model-specific citations and technical reports listed in `docs/V3_MODEL_SELECTION.md` for Qwen3.5, Qwen3-VL, Gemma 4, Mistral Small 3.1, and MLX-VLM.
+12. Wang, X., Zhao, Z., and Larson, M. (2025). “Typographic Attacks in a Multi-Image Setting.” *NAACL 2025*. [Paper](https://aclanthology.org/2025.naacl-long.626/).
+13. Cao, Y. et al. (2025). “SceneTAP: Scene-Coherent Typographic Adversarial Planner against Vision-Language Models in Real-World Environments.” *CVPR 2025*. [Paper](https://openaccess.thecvf.com/content/CVPR2025/papers/Cao_SceneTAP_Scene-Coherent_Typographic_Adversarial_Planner_against_Vision-Language_Models_in_Real-World_CVPR_2025_paper.pdf).
+14. Balakrishnan, R., Mendapara, S., and Garg, A. (2026). “Reading Between the Pixels: Linking Text-Image Embedding Alignment to Typographic Attack Success on Vision-Language Models.” *arXiv preprint*. [Paper](https://arxiv.org/abs/2604.12371). Concurrent non-peer-reviewed evidence.

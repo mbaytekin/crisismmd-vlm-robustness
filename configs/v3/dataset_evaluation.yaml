@@ -1,0 +1,42 @@
+schema_version: 1
+protocol_name: v3_dataset_evaluation_extension
+status: secondary_clean_benchmarks_added_before_inference
+seed: 42
+
+cohorts:
+  natural_clean_all:
+    manifest: data/v3/manifests/natural_clean_all.csv
+    split_name: natural_clean_all
+    expected_samples: 3474
+    role: natural_prevalence_clean_only
+    interpretation: >-
+      Clean competence on every exact-SHA-unique, locally valid CrisisMMD
+      damage-severity record. Near-duplicate dependence is retained and handled
+      with duplicate-cluster bootstrap intervals.
+  official_test:
+    manifest: data/v3/manifests/official_test_clean.csv
+    split_name: official_test
+    expected_samples: 529
+    role: literature_comparability_clean_only
+    interpretation: >-
+      Exact published CrisisMMD damage-severity test split. This cohort is
+      secondary because it overlaps prompt-development/V3 cohorts and its
+      published train/dev/test files are not near-duplicate-disjoint under the
+      V3 clustering rule.
+
+analysis:
+  bootstrap_unit: duplicate_cluster_id
+  bootstrap_draws: 5000
+  bootstrap_seed: 42
+  confidence_level: 0.95
+  report_event_metrics: true
+  report_event_by_class_metrics: true
+  report_leave_one_event_out_sensitivity: true
+  report_exact_sha_label_conflict_sensitivity: true
+
+sources:
+  crisisnlp: https://crisisnlp.qcri.org/crisismmd
+  official_dataset_card: https://huggingface.co/datasets/QCRI/CrisisMMD
+  original_paper: https://doi.org/10.1609/icwsm.v12i1.14983
+  duplicate_safe_benchmark: https://doi.org/10.1109/ASONAM49781.2020.9381294
+  multimodal_follow_up: https://doi.org/10.1007/s11042-024-19818-0

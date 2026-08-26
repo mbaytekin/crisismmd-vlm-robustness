@@ -1,6 +1,6 @@
 # Paper decision log
 
-Last updated: 2026-08-12
+Last updated: 2026-08-26
 
 This is the single living record of decisions that can affect the manuscript.
 It records what was decided, why, where the evidence lives, what changed, and
@@ -38,29 +38,32 @@ For an external GPT session, provide the GitHub links to this file and
 | Scope | Visible physical damage to man-made infrastructure and utilities |
 | Prompt | `frozen_prompt_v4.yaml`, zero-shot P5 rubric |
 | Prompt hash | `1fa1a4a2b61c4aaadb95215385cd97915fd515ca4b19fc477ba98291cdf39ee6` |
-| First clean screen | 180 examples, balanced 60 per class |
-| First gate | Parse >= 99.5%, accuracy >= 60%, macro-F1 >= 55%, every class recall >= 40% |
-| Confirmatory clean gate | Untouched 720-example main split, balanced 240 per class |
-| Main gate | Parse >= 99.5%, accuracy >= 70%, macro-F1 >= 65%, every class recall >= 50% |
-| Attack eligibility | A model must pass both clean gates |
+| Prompt development evidence | 180 examples, balanced 60 per class; post-hoc routing/history only, not a model gate |
+| Main clean evaluation | Frozen 720-example main split, balanced 240 per class; descriptive clean characterization |
+| Secondary clean evaluation | All 3,474 exact-SHA-unique valid rows plus the published 529-row test split |
+| Dataset interpretation | Main-720 is a custom balanced paired cohort; official-529 is natural but secondary/post-hoc |
+| Clean-performance interpretation | Report parse rate, accuracy, macro-F1, ordinal MAE, and per-class recall without a pass/fail or deployment threshold |
+| Robustness denominator | Predeclared clean-correct mild/severe decisions for each model |
+| Attack eligibility | The fixed five-model paper panel is analyzed separately; lower clean competence narrows interpretation rather than invalidating paired estimates |
 | Decoding | Temperature 0, top-p 1, seed 42, max 150 tokens, thinking disabled |
-| Primary runtime | Native MLX-VLM 0.6.3 on Apple Silicon; one model at a time |
-| Precision | Standard 12B-32B panel at 8-bit; 235B/397B ultra tier at 4-bit |
+| Runtime | Exact backend is reported per model/run; MLX, CUDA/vLLM, and Gemini Batch API outputs are not treated as a backend comparison |
+| Paper panel | Qwen3.5 27B BF16, Qwen3.6 27B BF16, Qwen3-VL 32B BF16, Mistral Small 3.1 24B BF16, Gemini 2.5 Flash |
+| Precision | Four open checkpoints use BF16; Gemini is a hosted model with provider-managed precision |
 | Primary safety focus | Downward severity shifts and induced under-triage |
 
 Executable sources:
 
 - [`configs/v3/models.yaml`](../configs/v3/models.yaml)
+- [`configs/v3/final_analysis_protocol.yaml`](../configs/v3/final_analysis_protocol.yaml)
 - [`configs/prompts/frozen_prompt_v4.yaml`](../configs/prompts/frozen_prompt_v4.yaml)
 - [`reports/v3/artifact_lock.json`](../reports/v3/artifact_lock.json)
-- [`scripts/run_v3_model.sh`](../scripts/run_v3_model.sh)
-- [`scripts/run_all_v3_mac_models.sh`](../scripts/run_all_v3_mac_models.sh)
+- [`scripts/run_v3_final_experiments.sh`](../scripts/run_v3_final_experiments.sh)
 
 ## Active decisions
 
 ### D001 - Paper framing
 
-- **Status:** ACCEPTED
+- **Status:** SUPERSEDED IN PART by D012 and D018; paired-study framing remains active, competence-gated wording does not
 - **Date:** 2026-08-11
 - **Decision:** Frame the paper as a competence-gated, paired robustness study,
   not a general model leaderboard or an operational disaster-response trial.
@@ -105,7 +108,7 @@ Executable sources:
 
 ### D004 - First-stage clean screen uses 180 examples
 
-- **Status:** ACCEPTED WITH CAVEAT
+- **Status:** SUPERSEDED IN PART by D018; the cohort remains prompt-development history, while its model pass/fail thresholds are inactive
 - **Date:** 2026-08-12
 - **Decision:** Replace the former 90-example production pilot with the
   180-example `prompt_validation` clean screen, balanced at 60 per class. The
@@ -118,23 +121,27 @@ Executable sources:
   addition, all remaining independent little/no examples in this split are
   from Hurricane Irma, creating a class-event confound. Use this split for
   screening/model routing, not event-general performance claims.
-- **Paper impact:** The untouched 720-example main gate must carry confirmatory
-  clean-performance claims, especially for Qwen3.5 27B.
+- **Paper impact:** Report this cohort only as prompt-development/routing history.
+  Final clean characterization comes from the 720 main, 3,474 natural, and 529
+  official-test evaluations without a qualification label.
 - **Supersedes:** D004-H1 below.
 - **Evidence:** [`configs/v3/models.yaml`](../configs/v3/models.yaml),
   [`reports/v3/prompt_validation_split.json`](../reports/v3/prompt_validation_split.json).
 
 ### D005 - Main clean confirmation remains untouched
 
-- **Status:** ACCEPTED
+- **Status:** SUPERSEDED by D018 for thresholds and by D016 for the cohort's current role
 - **Date:** 2026-08-12
-- **Decision:** A first-stage passer must also pass the balanced 720-example
-  main clean gate: 70% accuracy, 65% macro-F1, 50% recall in every class, and
-  99.5% parse rate.
+- **Historical decision:** A first-stage passer had to pass the balanced
+  720-example main clean gate before receiving attack inference.
+- **Preserved history:** The 720-example cohort and original thresholds remain
+  recorded in historical artifacts. D016 preserves the cohort as the primary
+  balanced paired experiment; D018 removes threshold-based paper reporting.
 - **Reason:** A stricter untouched cohort prevents prompt-development results
   and aggregate accuracy from hiding class collapse.
-- **Paper impact:** No attack result is confirmatory unless its model passes
-  this gate. Publish clean failures to avoid selective reporting.
+- **Historical paper impact (superseded by D012):** This gate originally
+  blocked confirmatory attack results. It is now reported as a descriptive
+  deployment-readiness indicator, and clean failures remain visible.
 - **Evidence:** [`configs/v3/models.yaml`](../configs/v3/models.yaml),
   [`src/v3_clean_gate.py`](../src/v3_clean_gate.py).
 
@@ -155,7 +162,7 @@ Executable sources:
 
 ### D007 - Primary robustness outcomes
 
-- **Status:** ACCEPTED; IMPLEMENTATION PARTLY PENDING
+- **Status:** ACCEPTED; IMPLEMENTED BEFORE CANONICAL ATTACK INFERENCE
 - **Date:** 2026-08-11
 - **Decision:** Emphasize target-eligible attack success, ordinal severity drop,
   induced under-triage, induced critical under-triage, and malicious-minus-
@@ -163,8 +170,7 @@ Executable sources:
 - **Reason:** Downward errors are the safety-relevant direction, while aggregate
   accuracy can hide corrections and newly induced failures in the same run.
 - **Paper impact:** Exact numerators/denominators and uncertainty must accompany
-  percentages. The final evaluator still needs target-eligible ASR and induced
-  critical under-triage before submission.
+  percentages. Generic ASR remains supplementary.
 - **Evidence:** [`paper.md`](../paper.md),
   [`reports/v3/methodology_summary.md`](../reports/v3/methodology_summary.md).
 
@@ -182,7 +188,7 @@ Executable sources:
 
 ### D009 - Model panel and precision tiers
 
-- **Status:** ACCEPTED
+- **Status:** SUPERSEDED IN PART by D013; historical 8-bit results are retained
 - **Date:** 2026-08-11
 - **Decision:** Screen eight open VLM candidates from Gemma, Mistral, Qwen3-VL,
   and Qwen3.5. Use 8-bit MLX for 12B-32B models and separately label the 235B
@@ -196,7 +202,7 @@ Executable sources:
 
 ### D010 - Runtime and reproducibility
 
-- **Status:** ACCEPTED
+- **Status:** SUPERSEDED IN PART by D020; deterministic provenance remains active, MLX-only runtime scope does not
 - **Date:** 2026-08-12
 - **Decision:** Run MLX-VLM 0.6.3 natively on Apple Silicon, one model server at
   a time, with deterministic settings and immutable model locks. Stop each
@@ -227,6 +233,250 @@ Executable sources:
 - **Evidence:** Research-gap and claims-discipline sections in
   [`paper.md`](../paper.md). Citation verification remains OPEN-003.
 
+### D012 - Separate deployment readiness from conditional robustness
+
+- **Status:** SUPERSEDED IN PART by D018; conditional clean-correct estimation remains active, deployment-threshold reporting does not
+- **Date:** 2026-08-12
+- **Decision:** Keep the frozen 720-example thresholds as a descriptive
+  deployment-readiness gate, but do not use them to block the fixed attack
+  matrix. Estimate robustness separately for each model among predeclared
+  clean-correct target-eligible decisions and report every denominator.
+- **Reason:** A model can be unsuitable for deployment yet still provide a
+  valid conditional estimate of whether an initially correct mild/severe
+  judgment is pushed downward by malicious content.
+- **Caveat:** Low clean competence can make the eligible denominator small or
+  class-skewed. Such estimates are conditional security audits, not evidence
+  that the model is operationally useful.
+- **Paper impact:** Remove statements that equate gate failure with invalid
+  attack inference. Report clean competence first and keep models separate.
+- **Supersedes:** The attack-blocking parts of D001 and D005.
+- **Evidence:** [`configs/v3/final_analysis_protocol.yaml`](../configs/v3/final_analysis_protocol.yaml),
+  [`src/v3_final_analysis.py`](../src/v3_final_analysis.py).
+
+### D013 - Canonical Qwen precision and local model identity
+
+- **Status:** SUPERSEDED by D019 for the final paper panel; retained as execution history
+- **Date:** 2026-08-12
+- **Decision:** Use the verified local
+  `mlx-community/Qwen3.5-27B-bf16` checkpoint for the primary dense-Qwen run.
+  Treat `mlx-community/Qwen3-VL-32B-Instruct-bf16` as unavailable because that
+  checkpoint is not present locally; do not download it automatically. Keep
+  Mistral 24B 8-bit as a cross-family run and preserve every historical 8-bit
+  result without overwrite.
+- **Caveat:** Precision, architecture, and family differ across some models;
+  comparisons are descriptive, not pure parameter- or precision effects.
+- **Paper impact:** Always report exact model ID and precision. A clean-only
+  BF16-versus-8-bit table is secondary sensitivity evidence.
+- **Evidence:** [`configs/v3/final_analysis_protocol.yaml`](../configs/v3/final_analysis_protocol.yaml),
+  [`scripts/run_v3_final_experiments.sh`](../scripts/run_v3_final_experiments.sh).
+
+### D014 - Single modality-neutral prompt sensitivity
+
+- **Status:** SUPERSEDED by D021; no P7 inference was run
+- **Date:** 2026-08-12
+- **Decision:** Keep frozen V4/P5 unchanged for primary results. After the main
+  experiment, compare it on the same 90-sample pilot with one predeclared P7
+  variant that preserves the rubric and output format but uses modality-neutral
+  context wording. Do not add attack-aware or prompt-injection language.
+- **Paper impact:** Label P7 secondary. If modality ordering changes, describe
+  it as prompt-sensitive rather than replacing the primary prompt.
+- **Evidence:** [`configs/prompts/p7_modality_neutral_sensitivity.yaml`](../configs/prompts/p7_modality_neutral_sensitivity.yaml).
+
+### D015 - Final analysis definitions are frozen before new attack outputs
+
+- **Status:** ACCEPTED
+- **Date:** 2026-08-12
+- **Decision:** Primary outcomes are downward ASR, severity drop on three
+  declared cohorts, induced severe and critical under-triage, corrected direct
+  target-eligible ASR, malicious-minus-matched-benign paired effects, class
+  transitions, and predeclared modality interaction patterns. Use 5,000 paired
+  bootstrap draws with seed 42, exact two-sided McNemar, and Holm correction
+  within comparison families.
+- **Caveat:** `joint_only_synergy`, `persistent_visual`, and related labels are
+  observational pattern names, not mechanistic causal proof.
+- **Evidence:** [`configs/v3/final_analysis_protocol.yaml`](../configs/v3/final_analysis_protocol.yaml),
+  [`tests/test_v3_final_analysis.py`](../tests/test_v3_final_analysis.py).
+
+### D016 - Preserve V3 main and add natural/official clean benchmarks
+
+- **Status:** ACCEPTED WITH CAVEAT BEFORE SECONDARY CLEAN INFERENCE
+- **Date:** 2026-08-14
+- **Decision:** Keep the frozen 720-row, class-balanced V3 main cohort as the
+  primary paired robustness experiment. Add clean-only evaluation on all 3,474
+  locally valid exact-SHA-unique severity rows and on the exact published
+  529-row CrisisMMD test split. Do not relabel either secondary cohort as a new
+  untouched confirmatory test.
+- **Reason:** Main-720 follows the literature-supported principle of
+  exact/near-duplicate separation and gives equal class precision for paired
+  under-triage analysis. Natural-3,474 characterizes local class/event
+  prevalence, while official-529 enables split-named literature comparability.
+  No single cohort serves all three purposes.
+- **Caveat:** Main-720 is custom, event-equalizing, and allocated after smaller
+  V3 cohorts; it is neither event-proportional nor the official split. Under
+  the V3 clustering rule, official train/test share 106 duplicate clusters and
+  only 319/529 official-test rows are independent of every existing V3 cohort.
+  The official test is severe-majority (332/529; 62.8%), so accuracy must be
+  paired with macro-F1 and per-class recall. Main event-by-class structural
+  zeros prevent source-population event-by-class reweighting; only class-prior
+  reweighting is supported, and event results remain descriptive.
+- **Label-quality amendment:** The published severity files contain 11
+  exact-byte image groups with conflicting severity labels. Four retained main
+  rows belong to those groups. Preserve the frozen main result and report an
+  exclusion sensitivity; do not silently overwrite labels or samples.
+- **Versioning rule:** Any replacement sample design must be introduced as V4,
+  allocate its main cohort before auxiliary cohorts, predeclare its precision
+  target, regenerate all attacks, and rerun every model. Existing V3 artifacts
+  and results remain immutable.
+- **Paper impact:** State explicitly what 18,082, 3,526, 3,474, 529, and 720
+  count. Report natural-clean event/event-by-class metrics and cluster-bootstrap
+  intervals separately from balanced paired attack effects.
+- **Evidence:** [`reports/v3/dataset_protocol_audit.md`](../reports/v3/dataset_protocol_audit.md),
+  [`configs/v3/dataset_evaluation.yaml`](../configs/v3/dataset_evaluation.yaml),
+  [`src/v3_dataset_protocol.py`](../src/v3_dataset_protocol.py),
+  [Alam et al. 2020](https://doi.org/10.1109/ASONAM49781.2020.9381294).
+
+### D017 - Freeze paired presentation-style and text-size ablations
+
+- **Status:** ACCEPTED FOR DESIGN AND ANALYSIS; model-panel/runtime clauses superseded by D019-D020
+- **Date:** 2026-08-14
+- **Decision:** Preserve the existing V3 style (120 sources; 40 per class) and
+  size (60 sources; 20 per class) cohorts. Run them as separate, secondary,
+  within-sample paired experiments on locally complete checkpoints. The current
+  default panel is Qwen3.5-27B BF16, Mistral Small 3.1 24B 8-bit, and Qwen3-VL
+  32B 8-bit. Keep models serial, inference concurrency one, and report every
+  model and precision separately.
+- **Terminology:** Rename the paper-facing style analysis to
+  **presentation-style ablation**. Simple, fictional-news, and camouflage
+  variants change a bundled presentation strategy that includes contrast,
+  background, occupied area, and placement policy. Do not attribute their
+  contrast to a single isolated style component. The size experiment is a
+  cleaner one-factor contrast: within sample and semantics, payload, simple
+  renderer, placement, colors, and opacity are fixed while target relative font
+  height changes from 3% to 5% to 8%.
+- **Sampling rationale:** Both cohorts are class-balanced, event-diversified,
+  deterministic, globally duplicate-cluster-disjoint, and complete across ten
+  paired conditions. They are mechanism-analysis cohorts, not estimates of the
+  natural CrisisMMD event/class prevalence. No published CrisisMMD protocol
+  defines a canonical visual-ablation distribution.
+- **Metrics:** Primary reporting is downward ASR among clean-correct
+  mild/severe samples. Report exact numerators/denominators, Wilson intervals,
+  malicious-minus-matched-benign paired risk differences, target-eligible
+  severity drop, induced severe/critical under-triage, 5,000-draw paired
+  bootstrap intervals, exact McNemar tests, and Holm correction within each
+  semantics/ablation family. Add direct pairwise variant contrasts and retain
+  sample-level size patterns; do not claim monotonicity from an aggregate line
+  alone.
+- **Precision caveat:** At the full-cohort worst case, a binomial 95% interval
+  has an approximate half-width of 8.8 percentage points for style and 12.3
+  points for size. Model-specific clean-correct mild/severe denominators can be
+  smaller, so exact denominators and intervals determine claim strength.
+- **Data caveat:** News banners always render at the bottom, while 171 news rows
+  retain the deterministic simple-overlay `placement_region=top_edge` metadata.
+  Use actual geometry for auditing and preserve the presentation-package
+  interpretation; do not silently rewrite frozen images or metadata after
+  model outputs are observed.
+- **Runtime decision:** Other VLM training/inference processes may remain active
+  when capacity permits. The ablation runner only warns about them, uses a
+  separate port, checks model-specific peak plus a 64 GiB reserve before every
+  load, and never stops an unrelated process or downloads a model.
+- **Paper impact:** Methods must define the paired cohorts, factor isolation,
+  bundled-style caveat, precision limits, and human-review dependency. Results
+  must keep these ablations secondary and model-specific.
+- **Evidence:** [`configs/v3/ablation_protocol.yaml`](../configs/v3/ablation_protocol.yaml),
+  [`reports/v3/ablation_protocol/dataset_audit.md`](../reports/v3/ablation_protocol/dataset_audit.md),
+  [`reports/v3/ablation_protocol/ram_readiness.md`](../reports/v3/ablation_protocol/ram_readiness.md),
+  [Wang et al., NAACL 2025](https://aclanthology.org/2025.naacl-long.626/),
+  [SceneTAP, CVPR 2025](https://openaccess.thecvf.com/content/CVPR2025/papers/Cao_SceneTAP_Scene-Coherent_Typographic_Adversarial_Planner_against_Vision-Language_Models_in_Real-World_CVPR_2025_paper.pdf),
+  and [Balakrishnan et al. 2026](https://arxiv.org/abs/2604.12371) as concurrent
+  preprint evidence.
+
+### D018 - Remove deployment and clean pass/fail thresholds from the manuscript
+
+- **Status:** ACCEPTED AFTER COMPLETION OF THE FIVE-MODEL MATRIX; REPORTING AMENDMENT
+- **Date:** 2026-08-26
+- **Decision:** The manuscript will report clean parse rate, accuracy, macro-F1,
+  ordinal MAE, confusion matrices, and per-class recall as continuous descriptive
+  measurements. It will not label models as deployment-ready, qualified, failed,
+  or passed, and it will not display the former 60%/55% development or 70%/65%
+  main thresholds as current criteria.
+- **Reason:** The thresholds were investigator-defined routing and caution rules,
+  not externally validated operating points for CrisisMMD deployment. No model
+  was blocked from the fixed attack matrix, and the paper's primary estimand is
+  the paired downward effect among each model's clean-correct mild/severe cases.
+  Keeping a pass/fail label would add an unsupported operational interpretation
+  without changing that estimand.
+- **Post-result amendment disclosure:** This change was made after all five
+  paper-panel results were available. It changes manuscript framing only; it
+  does not alter the frozen main cohort, prompt, payloads, predictions, eligible
+  denominators, statistical tests, or any attack effect. Historical gate JSONs
+  and numeric thresholds remain in the repository for auditability.
+- **Caveat:** Low clean competence remains a central limitation. The paper must
+  report the 50.28%-55.97% balanced-main accuracy range and must describe all
+  robustness estimates as conditional rather than operational.
+- **Paper impact:** Replace every gate/pass/fail figure, column, and sentence
+  with clean-characterization metrics and exact eligible denominators.
+- **Supersedes:** Threshold/pass-fail portions of D001, D004, D005, and D012.
+- **Evidence:** [`reports/v3/ALL_RESULTS.md`](../reports/v3/ALL_RESULTS.md),
+  [`reports/v3/final_analysis/`](../reports/v3/final_analysis/).
+
+### D019 - Final paper model panel is four BF16 open VLMs plus Gemini
+
+- **Status:** ACCEPTED AFTER COMPLETION; SCOPE CONSOLIDATION
+- **Date:** 2026-08-26
+- **Decision:** The paper-facing panel is Qwen3.5 27B BF16, Qwen3.6 27B BF16,
+  Qwen3-VL 32B BF16, Mistral Small 3.1 24B BF16, and Gemini 2.5 Flash. Include a
+  model only if the full main matrix, natural clean, official-test clean,
+  presentation-style, and size outputs are complete. Historical 8-bit, 4-bit,
+  V2, and Qwen 9B outputs are excluded from the primary paper tables.
+- **Reason:** This rule yields the complete common experiment matrix requested
+  for the manuscript, aligns the open-model panel at BF16, adds one hosted model,
+  and does not select models by observed attack effect.
+- **Caveat:** Gemini's internal precision is provider-managed, model families and
+  architectures differ, and Qwen3.6 was originally optional. Cross-model
+  comparisons are descriptive; no scale, family, or precision effect is causal.
+- **Paper impact:** Present all five models separately and never pool their
+  predictions as independent observations.
+- **Supersedes:** D009, D013, and the model-panel clauses of D017.
+- **Evidence:** [`reports/v3/ALL_RESULTS.md`](../reports/v3/ALL_RESULTS.md).
+
+### D020 - Mixed runtime provenance is recorded, not studied as an effect
+
+- **Status:** ACCEPTED AFTER COMPLETION; EXECUTION AMENDMENT
+- **Date:** 2026-08-26
+- **Decision:** Accept completed runs from local MLX-VLM, GCP A100/CUDA-vLLM,
+  and Gemini Batch API. Record the exact backend and model identity for each run,
+  but do not perform, imply, or require a runtime-equivalence comparison.
+- **Reason:** Runtime was an execution constraint, not a research factor. Each
+  model uses the same frozen prompt, input records, decoding targets, parsing,
+  and analysis, and all models are interpreted separately.
+- **Caveat:** Backend-dependent preprocessing or numerical behavior cannot be
+  fully excluded. Therefore architecture or runtime cannot be assigned as the
+  cause of cross-model effect differences.
+- **Paper impact:** Put backend provenance in the model/reproducibility table and
+  keep runtime claims out of the findings.
+- **Supersedes:** The MLX-only scope of D010 and runtime clauses of D017.
+- **Evidence:** Model-level resolved configs and locks linked from
+  [`reports/v3/ALL_RESULTS.md`](../reports/v3/ALL_RESULTS.md).
+
+### D021 - Retire the unrun P7 prompt sensitivity from required paper scope
+
+- **Status:** ACCEPTED AFTER COMPLETION; DOCUMENTED PROTOCOL DEVIATION
+- **Date:** 2026-08-26
+- **Decision:** Do not run or present the 90-sample P7 modality-neutral prompt
+  sensitivity as part of the final paper. Retain its config and D014 as a record
+  of the predeclared secondary analysis.
+- **Reason:** V4/P5 remained unchanged across the complete five-model matrix,
+  and P7 was never part of the primary estimand. Adding a small prompt comparison
+  after inspecting the completed outcomes would increase researcher degrees of
+  freedom without changing the fixed main result.
+- **Caveat:** The paper must disclose that this secondary sensitivity was
+  predeclared but not executed. Prompt dependence therefore remains a limitation.
+- **Paper impact:** Remove P7 from the submission checklist and add one sentence
+  to protocol deviations/limitations; do not claim prompt invariance.
+- **Supersedes:** D014.
+- **Evidence:** [`configs/prompts/p7_modality_neutral_sensitivity.yaml`](../configs/prompts/p7_modality_neutral_sensitivity.yaml),
+  [`reports/v3/ALL_RESULTS.md`](../reports/v3/ALL_RESULTS.md).
+
 ## Superseded decisions and historical results
 
 ### D004-H1 - Use the 90-example pilot as the production screen
@@ -254,46 +504,41 @@ Historical results:
 
 ## Current empirical status
 
-| Model/configuration | Current evidence | Status |
-|---|---|---|
-| Qwen3.5 27B + P5/V4 | 115/180 correct; accuracy 0.639; macro-F1 0.631; minimum recall 0.433 | Passes the 180 numerical gate, but post-hoc; main pending |
-| Qwen3.5 27B + P6 few-shot | 113/180 correct; accuracy 0.628; macro-F1 0.621 | Sensitivity only; not selected |
-| Mistral Small 3.1 24B + V4 | Model load and one-image 180-manifest smoke test passed | Full 180 screen pending |
-| Qwen3-VL 32B + V4 | Only superseded 90-example result exists | New 180 screen pending |
-| Qwen3-VL 235B-A22B + V4 | Checkpoint present | Screen pending |
-| Qwen3.5 397B-A17B + V4 | Checkpoint present | Screen pending |
-| Gemma 4 candidates | Gated checkpoints absent from standard local cache | Download/access pending |
+| Paper model | Precision | Main clean accuracy / macro-F1 | Eligible mild+severe n | Complete paper matrix |
+|---|---|---:|---:|---|
+| Qwen3.5 27B | BF16 | 0.5569 / 0.5536 | 251 | Yes |
+| Qwen3.6 27B | BF16 | 0.5597 / 0.5511 | 259 | Yes |
+| Qwen3-VL 32B | BF16 | 0.5319 / 0.5298 | 294 | Yes |
+| Mistral Small 3.1 24B | BF16 | 0.5028 / 0.4857 | 232 | Yes |
+| Gemini 2.5 Flash | provider-managed | 0.5458 / 0.5485 | 273 | Yes |
 
-The Qwen3.5 P5 gate artifact is
-[`reports/v3/clean_gates/v3_qwen35_27b_p5_rubric_zero_promptval_seed42.json`](../reports/v3/clean_gates/v3_qwen35_27b_p5_rubric_zero_promptval_seed42.json).
+The canonical interpretation, complete result tables, dataset construction, and
+paper-writing guidance are in
+[`reports/v3/ALL_RESULTS.md`](../reports/v3/ALL_RESULTS.md). Historical 8-bit,
+4-bit, V2, and 9B outputs remain available but are outside the paper panel.
 
 ## Paper synchronization debt
 
-`paper.md` predates D003 and D004 in several places. Before treating it as a
-current manuscript snapshot, update all of the following:
+The methodology predates the completed matrix. Synchronize `paper.md` from the
+canonical paper-writing reference before submission:
 
-- Draft abstract: distinguish the 180-example screen from the attack cohorts;
-  remove the old implication that all 990 V3 pairs receive ten conditions.
-- Final V3 split table: retain the generated 90-example historical pilot but
-  explain that current production screening uses a separate 180-example split.
-- Frozen prompt section: replace P3 as the active prompt with V4/P5 and disclose
-  post-hoc selection.
-- Competence gate section: replace the 90-example active gate with the
-  180-example screen and retain the 720-example main confirmation.
-- Qualification-results template: rename the `Pilot` column to `180-screen`.
-- Workload/reproducibility counts: current qualified-model protocol produces
-  180 screening predictions plus 9,000 main/style/size condition predictions.
+- replace final model and result placeholders only from saved canonical run artifacts;
+- insert completed presentation-style and size results with exact denominators;
+- remove deployment/pass/fail threshold language under D018;
+- disclose the unrun P7 sensitivity under D021 rather than presenting prompt invariance;
+- complete the blinded visual review before final perceptual claims;
+- leave V2 and Qwen 9B findings explicitly historical/exploratory.
 
-Until that reconciliation is complete, this decision log is authoritative for
-the active protocol and `paper.md` remains authoritative for unchanged threat
-model, outcome, and statistical-analysis sections.
+This decision log and executable YAML remain authoritative if a future result
+edit introduces a conflict with the paper blueprint.
 
-## Open decisions
+## Resolved and open decisions
 
-### OPEN-001 - Main qualification outcomes
+### RESOLVED-001 - Canonical main clean and attack outcomes
 
-Run all locally available candidates through the 180 screen and then the
-untouched 720 main gate. Do not alter thresholds in response to these results.
+**Resolved 2026-08-26.** The five-model panel has complete main clean and fixed
+attack matrices. D018 changes reporting language only; prompt, payloads,
+exclusions, predictions, and metric denominators remain unchanged.
 
 ### OPEN-002 - Human visual review
 
@@ -307,15 +552,23 @@ Complete a primary-source literature table separating zero-shot generative
 VLMs, supervised VLM/CLIP classifiers, caption-augmentation pipelines, data
 splits, class distributions, and reported metrics.
 
-### OPEN-004 - Evaluator completion
+### RESOLVED-004 - Secondary natural and official clean outcomes
 
-Implement target-eligible ASR and induced critical under-triage, then verify
-paired confidence intervals and Holm families before full attack inference.
+**Resolved 2026-08-26.** Natural-3,474 and official-test-529 clean outputs exist
+for all five paper models. The two formerly empty GCP label-conflict sensitivity
+tables were regenerated locally from saved predictions without new inference.
 
 ### OPEN-005 - Paper protocol synchronization
 
 Resolve every item in `Paper synchronization debt` and date the resulting
 `paper.md` snapshot before pushing a manuscript-facing release.
+
+### RESOLVED-006 - Ablation outcomes; visual validation remains OPEN-002
+
+**Resolved for inference 2026-08-26.** Presentation-style and size outputs and
+paired analyses exist for all five paper models. Blinded readability,
+plausibility, and critical-damage-occlusion review remains OPEN-002 and bounds
+perceptual claims.
 
 ## New entry template
 

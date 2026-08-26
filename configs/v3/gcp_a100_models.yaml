@@ -1,0 +1,44 @@
+schema_version: 1
+runtime_name: gcp_a100_80gb_vllm
+status: execution_runtime_only
+
+runtime:
+  python: /home/can.baytekin/venvs/crisismmd-py312/bin/python
+  host: 127.0.0.1
+  port: 8000
+  dtype: bfloat16
+  gpu_memory_utilization: 0.92
+  max_model_len: 4096
+  max_num_seqs: 1
+  concurrency: 1
+  startup_timeout_seconds: 3600
+
+models:
+  - slug: qwen35_27b_bf16
+    aliases: [qwen35, qwen27]
+    model_id: Qwen/Qwen3.5-27B
+    precision: bf16
+    role: primary_qwen_dense_bf16
+
+  - slug: qwen36_27b_bf16
+    aliases: [qwen36]
+    model_id: Qwen/Qwen3.6-27B
+    precision: bf16
+    role: qwen_release_sensitivity
+
+  - slug: mistral31_24b_bf16
+    aliases: [mistral, mistral_bf16]
+    model_id: mistralai/Mistral-Small-3.1-24B-Instruct-2503
+    precision: bf16
+    role: cross_family_dense_bf16
+
+  - slug: qwen3vl_32b_bf16
+    aliases: [qwen32, qwen3vl]
+    model_id: Qwen/Qwen3-VL-32B-Instruct
+    precision: bf16
+    role: intended_primary_vision_specialist
+
+notes:
+  - These are the upstream CUDA checkpoints, not mlx-community conversions.
+  - CUDA and MLX predictions must remain separate model-runtime configurations.
+  - All runs use the same frozen prompt, split manifests, decoding settings, and analysis definitions.

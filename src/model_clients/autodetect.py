@@ -29,7 +29,8 @@ def autodetect(cfg: dict | None = None):
                         expected_id = os.getenv("V3_EXPECTED_MODEL_ID")
                         model_id = expected_id if expected_id in available_ids else available_ids[0]
                         client_base = base if endpoint == f"{base}/models" else f"{base.rstrip('/')}/v1"
-                        client = VLLMClient(client_base, model_id, int(cfg.get("openai_timeout_seconds", 90)))
+                        timeout = int(os.getenv("V3_OPENAI_TIMEOUT_SECONDS", cfg.get("openai_timeout_seconds", 90)))
+                        client = VLLMClient(client_base, model_id, timeout)
                         return client, {**client.describe(), "discovery_endpoint": endpoint, "available_models": available_ids, "model_capabilities": "unknown_until_smoke_test"}
             except Exception:
                 continue
