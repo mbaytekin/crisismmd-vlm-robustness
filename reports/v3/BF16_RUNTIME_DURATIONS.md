@@ -10,16 +10,28 @@ The durations below are reconstructed from the first and last `request_timestamp
 in each completed `predictions.jsonl`. They measure the inference request span;
 model download, model loading, and post-inference analysis are not included.
 
-| Model | Main | Style | Size | Natural clean | Official test | Completed total |
-|---|---:|---:|---:|---:|---:|---:|
-| Mistral 24B BF16 | 4h 22m | 47m | 23m | 2h 13m | 20m | **8h 05m** |
-| Qwen3.5 27B BF16 | running | 1h | 30m | 2h 53m | 26m | **4h 49m completed** |
-| Qwen3.6 27B BF16 | running | 59m | 29m | 2h 51m | 26m | **4h 45m completed** |
-| Qwen3-VL 32B BF16 | 6h 58m | 1h 10m | 34m | 3h 28m | 32m | **12h 42m** |
-
-The sum of the rounded completed totals is **30h 21m**. This excludes the
-currently running Qwen3.5 and Qwen3.6 main tracks. The exact unrounded sum of
-the completed request spans is approximately 30h 20m.
+| Model | Experiment | Duration | Status |
+|---|---|---:|---|
+| Mistral 24B BF16 | Main | 4h 22m | completed |
+| Mistral 24B BF16 | Style ablation | 47m | completed |
+| Mistral 24B BF16 | Size ablation | 23m | completed |
+| Mistral 24B BF16 | Natural clean | 2h 13m | completed |
+| Mistral 24B BF16 | Official test | 20m | completed |
+| Qwen3.5 27B BF16 | Main | running | in progress at snapshot |
+| Qwen3.5 27B BF16 | Style ablation | 1h | completed |
+| Qwen3.5 27B BF16 | Size ablation | 30m | completed |
+| Qwen3.5 27B BF16 | Natural clean | 2h 53m | completed |
+| Qwen3.5 27B BF16 | Official test | 26m | completed |
+| Qwen3.6 27B BF16 | Main | running | in progress at snapshot |
+| Qwen3.6 27B BF16 | Style ablation | 59m | completed |
+| Qwen3.6 27B BF16 | Size ablation | 29m | completed |
+| Qwen3.6 27B BF16 | Natural clean | 2h 51m | completed |
+| Qwen3.6 27B BF16 | Official test | 26m | completed |
+| Qwen3-VL 32B BF16 | Main | 6h 58m | completed |
+| Qwen3-VL 32B BF16 | Style ablation | 1h 10m | completed |
+| Qwen3-VL 32B BF16 | Size ablation | 34m | completed |
+| Qwen3-VL 32B BF16 | Natural clean | 3h 28m | completed |
+| Qwen3-VL 32B BF16 | Official test | 32m | completed |
 
 ## Current missing runs
 
