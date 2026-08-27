@@ -52,6 +52,9 @@ __pycache__/
 .cache/
 .model-lock/
 
+# Local manuscript builds and submission sources
+manuscript/
+
 # Legacy V1 generated reports; reports/v2 remains the publication-facing report set
 reports/baseline_revision/
 reports/before_text_fix/
