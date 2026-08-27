@@ -1,15 +1,15 @@
 # CrisisMMD VLM Robustness: Canonical Paper-Writing Reference
 
-**Status date:** 2026-08-26
+**Status date:** 2026-08-27
 **Paper panel:** Qwen3.5 27B BF16, Qwen3.6 27B BF16, Qwen3-VL 32B BF16, Mistral Small 3.1 24B BF16, and Gemini 2.5 Flash.
 **Purpose:** This is the one reader-facing file to use while writing the manuscript. It combines the active paper decisions, dataset construction and rationale, complete BF16 + Gemini results, supported claims, caveats, and bibliography. Implementation artifacts remain audit evidence, but they are not competing manuscript summaries.
 **Interpretation rule:** Decisions D018-D021 govern post-result manuscript scope. Historical 8-bit, 4-bit, V2, 9B pilot, pass/fail gates, and deployment thresholds are excluded from paper-facing conclusions.
 
 ## Technical Summary
 
-The completed evidence is sufficient to write a controlled, paired adversarial-robustness paper. All five models parsed every main response; balanced-main clean accuracy was 50.28%-55.97%. Clean performance is reported continuously without a pass/fail or deployment threshold. Robustness is estimated separately for each model among its predeclared clean-correct mild/severe decisions, so the result is a conditional security estimate rather than evidence of operational utility.
+The completed evidence is sufficient to write a controlled, paired adversarial-robustness paper. All five models parsed every main response; balanced-main clean accuracy was 50.28%-55.69%. Clean performance is reported continuously without a pass/fail or deployment threshold. Robustness is estimated separately for each model among its predeclared clean-correct mild/severe decisions, so the result is a conditional security estimate rather than evidence of operational utility.
 
-The main result is not a universal modality ordering. All 30 malicious model-condition comparisons produced a positive malicious-minus-benign downward risk difference with Holm-corrected McNemar significance. However, magnitude and modality were strongly model-dependent. Direct image/joint attacks converted about 76%-81% of eligible decisions for Qwen3-VL and Mistral, while the dense Qwen models were between 18%-31%. Gemini was moderate for direct image (24.91%) but rose to 64.84% for direct joint. Thus joint delivery was dramatically stronger only for Gemini; it was approximately equal to image-only for Qwen3-VL and the dense Qwens, and lower than image-only for Mistral.
+The main result is not a universal modality ordering. All 30 malicious model-condition comparisons produced a positive malicious-minus-benign downward risk difference with Holm-corrected McNemar significance. However, magnitude and modality were strongly model-dependent. Direct image/joint attacks converted about 76%-81% of eligible decisions for Qwen3-VL and Mistral and about 42%-68% for the dense Qwen models. Gemini was moderate for direct image (24.91%) but rose to 64.84% for direct joint. Thus joint delivery was dramatically stronger only for Gemini; it was approximately equal to image-only for Qwen3-VL and Qwen3.5, lower than image-only for Qwen3.6 and Mistral.
 
 Presentation-style and size experiments are secondary mechanism analyses. Simple/news presentation was usually more effective than camouflage for direct instructions, but this is a bundled presentation contrast rather than an isolated style effect. Size did not have a universal monotonic relationship with attack success. These ablations have small model-specific eligible denominators (style 28-37; size 13-21), so exact counts and uncertainty must remain visible.
 
@@ -35,7 +35,7 @@ The central contribution is meaningful for the literature because it combines fo
 | Statistics | Wilson intervals, 5,000 paired bootstrap draws, exact McNemar, Holm correction | Keep pairing and comparison families explicit; do not pool model predictions |
 | Prompt | Frozen zero-shot P5/V4 for all main runs | Do not add attack-aware language or retrofit the prompt after outcomes |
 | P7 sensitivity | Predeclared but not run; retired from required scope | Disclose this protocol deviation and do not claim prompt invariance |
-| Runtimes | Record MLX, CUDA/vLLM, and Gemini API provenance | Do not interpret cross-model differences as backend effects |
+| Runtimes | Canonical open-model results use GCP A100/CUDA-vLLM; Gemini uses its hosted API | Do not interpret cross-service differences as backend effects |
 | Main cohort | Preserve custom balanced V3 main-720 | Use it for paired effects, not natural-prevalence or event-general claims |
 | Secondary clean cohorts | Natural-3,474 and official-test-529 | Use them for competence context and literature comparability, not attack prevalence |
 | Ablations | Separate presentation-style-120 and size-60 cohorts | Treat as secondary mechanism analyses with small eligible denominators |
@@ -47,7 +47,7 @@ These changes are amendments to reporting scope, not silent rewrites of the froz
 
 1. **Deployment and clean pass/fail thresholds are retired (D018).** The old 180-screen and 720-main numeric cutoffs were investigator-defined and not externally calibrated for an operational use case. They remain in historical artifacts but are absent from manuscript claims and figures.
 2. **The 8-bit/4-bit candidate panel is retired from primary reporting (D019).** The final common panel is selected by completion of the same paper matrix, not by favorable attack outcomes: four BF16 open models plus Gemini 2.5 Flash.
-3. **The MLX-only runtime rule is narrowed to provenance (D020).** Final outputs came from MLX, CUDA/vLLM, and Gemini Batch API. Runtime is recorded but is not an experimental factor and will not receive a backend-comparison section.
+3. **The MLX-only runtime rule is superseded by a common A100 runtime (D020).** Canonical open-model outputs use GCP A100/CUDA-vLLM and Gemini uses its hosted Batch API. Repeated MLX runs remain noncanonical audit evidence and are not mixed into the primary tables.
 4. **The P7 prompt sensitivity is retired from required scope (D021).** It was predeclared as secondary but never run. The paper must disclose this deviation and list prompt dependence as a limitation; it must not imply that V4 results are prompt-invariant.
 5. **The 90-sample pilot is historical only.** It helped debug the pipeline but does not enter the five-model paper evidence.
 6. **Human visual review is not retired.** It is still needed for claims about readability, plausibility, camouflage, or critical-region occlusion. Omitting it requires removing those perceptual claims, not pretending the validation occurred.
@@ -140,13 +140,13 @@ The primary prompt is the frozen zero-shot P5 rubric in `configs/prompts/frozen_
 
 | Paper label | Exact model identity | Precision/service | Result provenance |
 |---|---|---|---|
-| Qwen3.5 27B BF16 | `mlx-community/Qwen3.5-27B-bf16` | BF16 | Main/style/size on local MLX; secondary clean on GCP |
-| Qwen3.6 27B BF16 | `mlx-community/Qwen3.6-27B-bf16` / official BF16 equivalent | BF16 | Main on local MLX; style/size/secondary clean on GCP |
+| Qwen3.5 27B BF16 | `Qwen/Qwen3.5-27B` | BF16 | GCP A100 / vLLM |
+| Qwen3.6 27B BF16 | `Qwen/Qwen3.6-27B` | BF16 | GCP A100 / vLLM |
 | Qwen3-VL 32B BF16 | `Qwen/Qwen3-VL-32B-Instruct` | BF16 | GCP A100 / vLLM |
 | Mistral 24B BF16 | `mistralai/Mistral-Small-3.1-24B-Instruct-2503` | BF16 | GCP A100 / vLLM |
 | Gemini 2.5 Flash | `gemini-2.5-flash` | Hosted service | Gemini Batch API |
 
-Backend provenance is reported, but no runtime-equivalence claim is made and predictions are never pooled across models as independent observations.
+All four open models use the same GCP A100/CUDA-vLLM execution family for the canonical tables. Gemini remains a separate hosted service. Predictions are never pooled across models as independent observations, and runtime is not treated as a causal factor.
 
 ## Metric Definitions
 
@@ -165,8 +165,8 @@ All values after the eligible denominator are downward ASR. Clean accuracy and m
 
 | Model | Clean acc. | Macro-F1 | Eligible n | Direct image | Direct text | Direct joint | Misleading image | Misleading text | Misleading joint |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| Qwen3.5 27B BF16 | 55.69% | 55.36% | 251 | 18.33% | 13.55% | 19.52% | 16.73% | 11.16% | 20.32% |
-| Qwen3.6 27B BF16 | 55.97% | 55.11% | 259 | 29.73% | 19.31% | 30.89% | 21.24% | 11.97% | 24.71% |
+| Qwen3.5 27B BF16 | 55.69% | 54.94% | 245 | 43.67% | 14.29% | 42.45% | 18.78% | 11.02% | 22.45% |
+| Qwen3.6 27B BF16 | 53.89% | 53.17% | 245 | 67.76% | 8.16% | 45.31% | 17.96% | 6.12% | 22.04% |
 | Qwen3-VL 32B BF16 | 53.19% | 52.98% | 294 | 79.93% | 11.56% | 80.61% | 24.15% | 9.18% | 23.13% |
 | Mistral 24B BF16 | 50.28% | 48.57% | 232 | 81.47% | 26.72% | 76.29% | 31.47% | 8.62% | 35.78% |
 | Gemini 2.5 Flash | 54.58% | 54.85% | 273 | 24.91% | 16.12% | 64.84% | 17.58% | 15.75% | 28.57% |
@@ -179,13 +179,27 @@ MAE uses the ordinal mapping little/no=0, mild=1, severe=2. Recall columns show 
 
 | Model | Accuracy | Macro-F1 | Ordinal MAE | Little recall | Mild recall | Severe recall | Correct mild+severe |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| Qwen3.5 27B BF16 | 55.69% | 55.36% | 0.5542 | 62.50% | 40.00% | 64.58% | 251 |
-| Qwen3.6 27B BF16 | 55.97% | 55.11% | 0.5403 | 60.00% | 36.67% | 71.25% | 259 |
+| Qwen3.5 27B BF16 | 55.69% | 54.94% | 0.5486 | 65.00% | 35.83% | 66.25% | 245 |
+| Qwen3.6 27B BF16 | 53.89% | 53.17% | 0.5833 | 59.58% | 35.83% | 66.25% | 245 |
 | Qwen3-VL 32B BF16 | 53.19% | 52.98% | 0.5319 | 37.08% | 56.67% | 65.83% | 294 |
 | Mistral 24B BF16 | 50.28% | 48.57% | 0.5778 | 54.17% | 71.67% | 25.00% | 232 |
 | Gemini 2.5 Flash | 54.58% | 54.85% | 0.5597 | 50.00% | 50.83% | 62.92% | 273 |
 
-Mistral's 25% severe recall is the clearest class-level weakness, while Qwen3.6 has the highest severe recall but the lowest mild recall among the dense Qwens. These differences explain why all conditional attack denominators and severe-case denominators must remain model-specific.
+Mistral's 25% severe recall is the clearest class-level weakness. The two dense Qwen runs have identical mild and severe recall but differ on little/no recall. These differences explain why all conditional attack denominators and severe-case denominators must remain model-specific.
+
+## Matched Benign-Control Instability
+
+These are downward rates for benign additions alone on each model's clean-correct mild/severe cohort. The same image/text/joint benign rates are subtracted from direct and misleading conditions in the paired primary analysis.
+
+| Model | Benign image | Benign text | Benign joint |
+|---|---:|---:|---:|
+| Qwen3.5 27B BF16 | 3.67% | 1.63% | 4.49% |
+| Qwen3.6 27B BF16 | 5.71% | 0.41% | 5.31% |
+| Qwen3-VL 32B BF16 | 3.40% | 1.36% | 3.74% |
+| Mistral 24B BF16 | 7.76% | 1.72% | 9.05% |
+| Gemini 2.5 Flash | 5.49% | 4.40% | 5.86% |
+
+Benign controls caused some instability, particularly for visual and joint additions, but their downward rates were substantially below the corresponding malicious rates. This is why the paper reports malicious-minus-matched-benign effects rather than attributing every changed prediction to attack semantics.
 
 ## Malicious Effects Exceed Matched Benign Instability
 
@@ -193,8 +207,8 @@ Values are paired malicious-minus-benign downward risk differences on the eligib
 
 | Model | Direct image | Direct text | Direct joint | Misleading image | Misleading text | Misleading joint |
 |---|---:|---:|---:|---:|---:|---:|
-| Qwen3.5 27B BF16 | +11.16 pp | +11.55 pp | +12.75 pp | +9.56 pp | +9.16 pp | +13.55 pp |
-| Qwen3.6 27B BF16 | +25.87 pp | +18.53 pp | +26.25 pp | +17.37 pp | +11.20 pp | +20.08 pp |
+| Qwen3.5 27B BF16 | +40.00 pp | +12.65 pp | +37.96 pp | +15.10 pp | +9.39 pp | +17.96 pp |
+| Qwen3.6 27B BF16 | +62.04 pp | +7.76 pp | +40.00 pp | +12.24 pp | +5.71 pp | +16.73 pp |
 | Qwen3-VL 32B BF16 | +76.53 pp | +10.20 pp | +76.87 pp | +20.75 pp | +7.82 pp | +19.39 pp |
 | Mistral 24B BF16 | +73.71 pp | +25.00 pp | +67.24 pp | +23.71 pp | +6.90 pp | +26.72 pp |
 | Gemini 2.5 Flash | +19.41 pp | +11.72 pp | +58.97 pp | +12.09 pp | +11.36 pp | +22.71 pp |
@@ -207,8 +221,8 @@ Each cell is induced severe under-triage / induced critical under-triage among c
 
 | Model | Direct image | Direct text | Direct joint |
 |---|---:|---:|---:|
-| Qwen3.5 27B BF16 | 7.10% / 4.52% | 6.45% / 2.58% | 8.39% / 5.81% |
-| Qwen3.6 27B BF16 | 13.45% / 11.11% | 9.94% / 7.02% | 17.54% / 13.45% |
+| Qwen3.5 27B BF16 | 28.93% / 28.30% | 7.55% / 3.77% | 33.96% / 33.96% |
+| Qwen3.6 27B BF16 | 55.97% / 54.72% | 1.89% / 1.26% | 32.70% / 32.08% |
 | Qwen3-VL 32B BF16 | 67.72% / 67.09% | 4.43% / 1.90% | 73.42% / 73.42% |
 | Mistral 24B BF16 | 83.33% / 76.67% | 3.33% / 1.67% | 73.33% / 65.00% |
 | Gemini 2.5 Flash | 12.58% / 11.26% | 5.96% / 3.31% | 55.63% / 51.66% |
@@ -235,13 +249,13 @@ Values are downward ASR; eligible n is model-specific. Simple/news/camouflage ar
 
 | Model | Eligible n | Direct simple | Direct news | Direct camouflage | Misleading simple | Misleading news | Misleading camouflage |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| Qwen3.5 27B BF16 | 34 | 14.71% | 20.59% | 14.71% | 14.71% | 20.59% | 11.76% |
+| Qwen3.5 27B BF16 | 31 | 41.94% | 32.26% | 12.90% | 19.35% | 22.58% | 9.68% |
 | Qwen3.6 27B BF16 | 32 | 56.25% | 34.38% | 15.62% | 12.50% | 18.75% | 9.38% |
 | Qwen3-VL 32B BF16 | 37 | 81.08% | 83.78% | 21.62% | 24.32% | 29.73% | 16.22% |
 | Mistral 24B BF16 | 28 | 67.86% | 53.57% | 32.14% | 32.14% | 39.29% | 17.86% |
 | Gemini 2.5 Flash | 36 | 25.00% | 16.67% | 8.33% | 22.22% | 16.67% | 13.89% |
 
-Direct simple/news attacks are especially strong for Qwen3-VL and Mistral. Camouflage usually reduces efficacy but does not eliminate it. Benign-adjusted evidence is strongest for Qwen3-VL, Qwen3.6 direct simple/news, and Mistral direct simple; the smaller denominators make model-wide style rankings less certain for Qwen3.5 and Gemini.
+Direct simple/news attacks are especially strong for Qwen3-VL and Mistral, while both dense Qwen models also show larger direct effects for simple/news than camouflage. Camouflage usually reduces efficacy but does not eliminate it. Small denominators and several individually non-significant ablation contrasts make these rankings descriptive rather than confirmatory.
 
 ## Size Ablation
 
@@ -249,23 +263,23 @@ Values are downward ASR. Target relative font heights are small=3%, medium=5%, a
 
 | Model | Eligible n | Direct small | Direct medium | Direct large | Misleading small | Misleading medium | Misleading large |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| Qwen3.5 27B BF16 | 19 | 21.05% | 26.32% | 26.32% | 31.58% | 26.32% | 26.32% |
+| Qwen3.5 27B BF16 | 20 | 70.00% | 70.00% | 50.00% | 25.00% | 25.00% | 35.00% |
 | Qwen3.6 27B BF16 | 19 | 68.42% | 78.95% | 63.16% | 15.79% | 21.05% | 15.79% |
 | Qwen3-VL 32B BF16 | 21 | 76.19% | 90.48% | 85.71% | 28.57% | 33.33% | 33.33% |
 | Mistral 24B BF16 | 13 | 53.85% | 61.54% | 76.92% | 15.38% | 38.46% | 38.46% |
 | Gemini 2.5 Flash | 18 | 22.22% | 27.78% | 44.44% | 11.11% | 16.67% | 22.22% |
 
-Mistral and Gemini show increasing direct ASR across the three observed sizes, but Qwen3.6 and Qwen3-VL peak at medium and Qwen3.5 is nearly flat. The paper must reject a universal monotonic-size hypothesis. With only 13-21 eligible observations per model, individual percentage-point differences are imprecise and should be reported with intervals rather than as a deterministic law.
+Mistral and Gemini show increasing direct ASR across the three observed sizes, Qwen3.6 and Qwen3-VL peak at medium, and Qwen3.5 ties at small/medium before falling at large. The paper must reject a universal monotonic-size hypothesis. With only 13-21 eligible observations per model, individual percentage-point differences are imprecise and should be reported with intervals rather than as a deterministic law.
 
 ## Answers to the Research Questions
 
 ### RQ1: Delivery modality matters, but the ordering is model-dependent
 
-Image/joint delivery is far stronger than text-only for Qwen3-VL and Mistral. Dense Qwen models show smaller differences. Gemini uniquely shows a large direct joint amplification over both image and text. A single universal ordering is unsupported.
+Image/joint delivery is much stronger than text-only for all four open models. Qwen3.5 and Qwen3-VL have similar direct image and joint effects, while Qwen3.6 and Mistral are more vulnerable to image-only delivery. Gemini uniquely shows a large direct joint amplification over both image and text. A single universal ordering is unsupported.
 
 ### RQ2: Direct instructions are generally more damaging than misleading claims
 
-Direct image/joint attacks dominate for Qwen3.6, Qwen3-VL, and Mistral. Differences are smaller for Qwen3.5, while Gemini's direct-joint condition is the clearest semantic contrast. Misleading claims remain effective and significantly exceed matched benign controls in every modality for every model.
+Direct image/joint attacks dominate for all four open models, while Gemini's direct-joint condition is the clearest semantic contrast. Misleading claims remain effective and significantly exceed matched benign controls in every modality for every model.
 
 ### RQ3: Low-salience camouflage can remain effective, but realism is not established
 
@@ -298,7 +312,7 @@ Benign downward rates are generally low, and all malicious-minus-benign paired e
 3. Visual and joint delivery can be much more harmful than accompanying-text delivery, but this relationship is model-dependent.
 4. Joint delivery is not universally additive: Gemini shows strong amplification, Qwen3-VL is approximately image-dominated, and Mistral's direct joint condition is weaker than image-only.
 5. Presentation and size alter vulnerability, but neither a universal style ranking nor a universal monotonic size law is supported.
-6. Clean competence and conditional robustness are separate: balanced-main clean accuracy is 50.28%-55.97%, while initially correct mild/severe decisions can still be audited conditionally.
+6. Clean competence and conditional robustness are separate: balanced-main clean accuracy is 50.28%-55.69%, while initially correct mild/severe decisions can still be audited conditionally.
 
 ## What the Paper Must Not Claim
 
@@ -320,7 +334,7 @@ Recommended one-sentence claim:
 
 > Across four BF16 open VLM configurations and Gemini 2.5 Flash, fixed image, text, and joint messages significantly increased downward damage-severity errors relative to matched benign controls, but modality, semantic, presentation, and size effects varied sharply by model.
 
-The abstract should lead with the paired benchmark and benign-adjusted downward risk, then report the heterogeneity: direct image/joint ASR ranged from roughly 18%-81% across models, with a distinct Gemini joint amplification. It should immediately state that balanced-main clean accuracy was 50%-56%, so results are conditional security estimates rather than evidence of operational competence.
+The abstract should lead with the paired benchmark and benign-adjusted downward risk, then report the heterogeneity: direct image/joint ASR ranged from roughly 25%-81% across models, with a distinct Gemini joint amplification. It should immediately state that balanced-main clean accuracy was 50%-56%, so results are conditional security estimates rather than evidence of operational competence.
 
 ## Manuscript Writing Map
 
@@ -331,12 +345,12 @@ The abstract should lead with the paired benchmark and benign-adjusted downward 
 | Related work | Separate supervised disaster classifiers, zero-shot generative VLM assessment, typographic attacks, and multimodal prompt injection | Regime-aware references below; do not compare raw scores across unlike splits |
 | Dataset | Explain 18,082 -> 3,526 -> 3,474 -> 3,095/2,628 -> V3 cohorts; distinguish custom main from official test | Dataset construction and literature-basis sections above |
 | Threat model | Fixed benign/direct/misleading payloads delivered by image, text, or both; attacker does not change ground truth | Fixed experimental design above and payload YAML |
-| Models and prompt | Four BF16 open VLMs plus Gemini; frozen P5/V4; deterministic decoding; mixed runtime provenance | Prompt/inference table above and model locks |
+| Models and prompt | Four BF16 open VLMs on GCP A100/vLLM plus Gemini; frozen P5/V4; deterministic decoding | Prompt/inference table above and model locks |
 | Metrics | Downward ASR, induced severe/critical under-triage, benign-adjusted paired risk difference | Metric definitions above |
 | Main results | Clean context first, then malicious effects, benign controls, severe-case risk, and cross-model heterogeneity | Main result tables above |
 | Secondary results | Natural/official clean context, presentation-style, and size mechanisms | Three secondary tables above |
 | Discussion | No universal modality order; direct usually stronger; joint is model-dependent; camouflage persists but realism is unvalidated; size is non-monotonic | RQ answers above |
-| Limitations | Conditional denominators, custom cohort, event/class confounding, synthetic English payloads, mixed runtimes, training contamination, no operational outcomes, pending visual review | Claims boundaries and active decisions above |
+| Limitations | Conditional denominators, custom cohort, event/class confounding, synthetic English payloads, cross-service preprocessing, training contamination, no operational outcomes, pending visual review | Claims boundaries and active decisions above |
 | Conclusion | Matched benign controls reveal direction-sensitive vulnerability across five models, with large model-specific variation | Recommended one-sentence claim above |
 
 ### Recommended Research Questions
@@ -408,4 +422,4 @@ Before submission, convert these entries to the target venue's BibTeX style and 
 
 ## Evidence Boundary
 
-This document is the single reader-facing synthesis. Its numerical evidence comes from the completed model-specific CSV reports under `reports/v3/final_analysis/` and `reports/v3/gcp_a100/`, the dataset audit in `reports/v3/dataset_protocol_audit.md`, split validation in `reports/v3/split_validation.json`, and accepted protocol decisions in `docs/PAPER_DECISIONS.md`. It does not import V2, 8-bit, 4-bit, or exploratory 9B results into the paper-facing conclusions.
+This document is the single reader-facing synthesis. Canonical open-model numerical evidence comes from the completed model-specific CSV reports under `reports/v3/gcp_a100/`; Gemini evidence remains under `reports/v3/final_analysis/models/gemini_2_5_flash/`. Dataset evidence comes from `reports/v3/dataset_protocol_audit.md`, split validation from `reports/v3/split_validation.json`, and accepted protocol decisions from `docs/PAPER_DECISIONS.md`. Historical MLX repeats, V2, 8-bit, 4-bit, and exploratory 9B results are not imported into the paper-facing conclusions.

@@ -46,7 +46,7 @@ For an external GPT session, provide the GitHub links to this file and
 | Robustness denominator | Predeclared clean-correct mild/severe decisions for each model |
 | Attack eligibility | The fixed five-model paper panel is analyzed separately; lower clean competence narrows interpretation rather than invalidating paired estimates |
 | Decoding | Temperature 0, top-p 1, seed 42, max 150 tokens, thinking disabled |
-| Runtime | Exact backend is reported per model/run; MLX, CUDA/vLLM, and Gemini Batch API outputs are not treated as a backend comparison |
+| Runtime | Canonical open-model outputs use GCP A100/CUDA-vLLM; Gemini uses its hosted Batch API; MLX repeats are noncanonical audit evidence |
 | Paper panel | Qwen3.5 27B BF16, Qwen3.6 27B BF16, Qwen3-VL 32B BF16, Mistral Small 3.1 24B BF16, Gemini 2.5 Flash |
 | Precision | Four open checkpoints use BF16; Gemini is a hosted model with provider-managed precision |
 | Primary safety focus | Downward severity shifts and induced under-triage |
@@ -411,7 +411,7 @@ Executable sources:
   denominators, statistical tests, or any attack effect. Historical gate JSONs
   and numeric thresholds remain in the repository for auditability.
 - **Caveat:** Low clean competence remains a central limitation. The paper must
-  report the 50.28%-55.97% balanced-main accuracy range and must describe all
+  report the 50.28%-55.69% balanced-main accuracy range and must describe all
   robustness estimates as conditional rather than operational.
 - **Paper impact:** Replace every gate/pass/fail figure, column, and sentence
   with clean-characterization metrics and exact eligible denominators.
@@ -439,21 +439,24 @@ Executable sources:
 - **Supersedes:** D009, D013, and the model-panel clauses of D017.
 - **Evidence:** [`reports/v3/ALL_RESULTS.md`](../reports/v3/ALL_RESULTS.md).
 
-### D020 - Mixed runtime provenance is recorded, not studied as an effect
+### D020 - Canonical open-model results use the common A100/vLLM runtime
 
 - **Status:** ACCEPTED AFTER COMPLETION; EXECUTION AMENDMENT
-- **Date:** 2026-08-26
-- **Decision:** Accept completed runs from local MLX-VLM, GCP A100/CUDA-vLLM,
-  and Gemini Batch API. Record the exact backend and model identity for each run,
-  but do not perform, imply, or require a runtime-equivalence comparison.
-- **Reason:** Runtime was an execution constraint, not a research factor. Each
-  model uses the same frozen prompt, input records, decoding targets, parsing,
-  and analysis, and all models are interpreted separately.
-- **Caveat:** Backend-dependent preprocessing or numerical behavior cannot be
-  fully excluded. Therefore architecture or runtime cannot be assigned as the
-  cause of cross-model effect differences.
-- **Paper impact:** Put backend provenance in the model/reproducibility table and
-  keep runtime claims out of the findings.
+- **Date:** 2026-08-27
+- **Decision:** Use the completed GCP A100/CUDA-vLLM runs as the canonical
+  paper-facing outputs for all four open models. Gemini remains a hosted Batch
+  API model. Retain local MLX-VLM repeats as noncanonical audit evidence, but do
+  not mix their predictions or percentages into primary tables.
+- **Reason:** The repeated Qwen3.5 and Qwen3.6 A100 runs complete a common open-
+  model execution family while preserving the frozen prompt, input records,
+  decoding targets, parsing, and analysis. Runtime remains an execution choice,
+  not a research factor.
+- **Caveat:** Gemini remains a separate hosted service, and checkpoint/runtime
+  preprocessing can still differ across model families. Architecture or runtime
+  therefore cannot be assigned as the cause of cross-model effect differences.
+- **Paper impact:** Put A100/vLLM and Gemini provenance in the reproducibility
+  table, use only A100 percentages for the four open models, and keep runtime
+  claims out of the findings.
 - **Supersedes:** The MLX-only scope of D010 and runtime clauses of D017.
 - **Evidence:** Model-level resolved configs and locks linked from
   [`reports/v3/ALL_RESULTS.md`](../reports/v3/ALL_RESULTS.md).
@@ -506,8 +509,8 @@ Historical results:
 
 | Paper model | Precision | Main clean accuracy / macro-F1 | Eligible mild+severe n | Complete paper matrix |
 |---|---|---:|---:|---|
-| Qwen3.5 27B | BF16 | 0.5569 / 0.5536 | 251 | Yes |
-| Qwen3.6 27B | BF16 | 0.5597 / 0.5511 | 259 | Yes |
+| Qwen3.5 27B | BF16 | 0.5569 / 0.5494 | 245 | Yes |
+| Qwen3.6 27B | BF16 | 0.5389 / 0.5317 | 245 | Yes |
 | Qwen3-VL 32B | BF16 | 0.5319 / 0.5298 | 294 | Yes |
 | Mistral Small 3.1 24B | BF16 | 0.5028 / 0.4857 | 232 | Yes |
 | Gemini 2.5 Flash | provider-managed | 0.5458 / 0.5485 | 273 | Yes |
