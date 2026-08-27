@@ -310,7 +310,9 @@ Executable sources:
   exact/near-duplicate separation and gives equal class precision for paired
   under-triage analysis. Natural-3,474 characterizes local class/event
   prevalence, while official-529 enables split-named literature comparability.
-  No single cohort serves all three purposes.
+  No single cohort serves all three purposes. The exact 720/120/60 allocation
+  is an investigator-chosen V3 protocol decision, not a CrisisMMD or literature
+  standard and not the result of an a priori power calculation.
 - **Caveat:** Main-720 is custom, event-equalizing, and allocated after smaller
   V3 cohorts; it is neither event-proportional nor the official split. Under
   the V3 clustering rule, official train/test share 106 duplicate clusters and

@@ -79,11 +79,42 @@ This procedure yields 990 globally disjoint attack-benchmark sources: 90 pilot +
 
 The 720 main cohort is scientifically defensible for balanced paired estimation, but it is custom rather than official or natural-prevalence. Auxiliary cohorts were allocated first and event equalization created event-by-class structural zeros; all main little/no examples come from three hurricane events. Event-specific results are therefore descriptive, and only class-prior reweighting is supported.
 
+### Why 720, 120, and 60?
+
+These exact values are **not CrisisMMD conventions and are not sample sizes copied from a prior paper**. Repository history shows that 240, 40, and 20 sources per class were introduced in the initial V3 protocol and fixed before the canonical five-model paper-facing runs. The repository contains no derivation from a published rule, no predeclared minimum detectable effect, and no a priori power calculation for these values. They must therefore be reported as investigator-chosen protocol allocations, not as literature-standard sample sizes.
+
+The allocation is nevertheless coherent with the experiments' different roles. Main received the largest cohort because it estimates the primary paired attack effects across ten conditions. Presentation-style received a smaller, separate cohort because it is a secondary bundled-mechanism comparison. Size received the smallest cohort because it is a secondary ordered one-factor comparison. Every cohort remains exactly class-balanced and fully paired within source, so enlarging a cohort increases cost by ten model requests per added source while preserving equal class contribution.
+
+| Cohort | Fixed sources | Per class | Predictions per model | Retrospective worst-case Wilson 95% half-width | Interpretation |
+|---|---:|---:|---:|---:|---|
+| Main | 720 | 240 | 7,200 | 3.6 points overall; 6.3 per class | Primary paired experiment |
+| Presentation style | 120 | 40 | 1,200 | 8.8 points overall | Secondary mechanism analysis |
+| Size | 60 | 20 | 600 | 12.3 points overall | Secondary mechanism analysis |
+
+The half-widths above describe full-cohort binomial precision at the conservative 50% proportion. They are retrospective diagnostics, not evidence that the sample sizes were prospectively powered. The primary downward-ASR denominators are smaller and model-specific because eligibility requires a correct clean prediction on a mild/severe example; their reported Wilson intervals, rather than the nominal cohort sizes, govern the strength of each claim.
+
+Formal prospective sizing would have required assumptions that were unavailable when V3 was frozen. Confidence-interval sizing requires a target width and an anticipated proportion, while McNemar power for paired binary outcomes requires expected discordant-pair probabilities or an anticipated paired effect. Wei and Hutson describe interval-width-based binomial sizing, and Lachin describes power/sample-size calculations for McNemar's matched proportions. Those references justify how sample size should be planned or evaluated; they do not retroactively generate `720/120/60`.
+
+### Main Event-by-Class Composition
+
+| Event | Little/no | Mild | Severe | Total |
+|---|---:|---:|---:|---:|
+| California wildfires | 0 | 21 | 36 | 57 |
+| Hurricane Harvey | 75 | 70 | 36 | 181 |
+| Hurricane Irma | 124 | 70 | 36 | 230 |
+| Hurricane Maria | 41 | 71 | 36 | 148 |
+| Iraq-Iran earthquake | 0 | 0 | 36 | 36 |
+| Mexico earthquake | 0 | 3 | 36 | 39 |
+| Sri Lanka floods | 0 | 5 | 24 | 29 |
+| **Total** | **240** | **240** | **240** | **720** |
+
+This table makes the trade-off visible: the cohort is class-balanced globally but not event-balanced within class. Event and class are partly confounded, so event-specific comparisons cannot be interpreted as clean disaster-type effects.
+
 The published 529-row test split is also not an untouched confirmatory set for this project. It is severe-majority (62.8%), shares 106 duplicate clusters across official train/test under the V3 rule, and only 319 of 529 rows are independent of every existing V3 cohort. It is retained only as a named secondary clean benchmark, with accuracy reported alongside macro-F1.
 
 ## Why the Dataset Design Is Scientifically Defensible
 
-The original CrisisMMD release established a multimodal social-media dataset across seven 2017 disasters with humanitarian and damage annotations. The later disaster-image benchmark by Alam et al. explicitly identified exact and near duplicates and constructed non-overlapping evaluation splits. V3 follows that literature-supported leakage-control principle more strictly by clustering globally before allocating any experimental cohort. The official CrisisMMD resources are still evaluated separately so readers can compare against a named released split rather than only a custom sample.
+The original CrisisMMD release established a multimodal social-media dataset across seven 2017 disasters with humanitarian and damage annotations. The later disaster-image benchmark by Alam et al. explicitly identified exact and near duplicates and constructed non-overlapping evaluation splits. V3 follows that literature-supported leakage-control principle by clustering globally before allocating any experimental cohort. It does not copy Alam et al.'s numerical duplicate threshold or split ratio: V3's dHash <= 4 threshold, event-equalizing selector, allocation order, and `720/120/60` counts are study-specific implementation choices. The official CrisisMMD resources are still evaluated separately so readers can compare against a named released split rather than only a custom sample.
 
 The 720-source main cohort is not claimed to be a canonical CrisisMMD test set. It is an experimental sample designed for paired estimation: every source supplies clean, benign, direct, and misleading observations; classes contribute equally; and duplicate clusters cannot cross cohorts. Its 240 examples per class give a retrospective worst-case binomial 95% half-width of about 6.3 percentage points for a class-specific proportion, while the full 720-source estimate is about 3.7 points. These are precision descriptions, not an a priori power calculation. The actual primary attack denominators are smaller because they include only clean-correct mild/severe cases.
 
@@ -101,6 +132,8 @@ No one cohort can serve all three purposes without tradeoffs. The natural and of
 - State every local exclusion and the resulting 3,095 eligible rows / 2,628 independent duplicate clusters.
 - Describe the cluster keys and dHash <= 4 rule before describing split sizes.
 - Name main-720 as a **custom, class-balanced, duplicate-cluster-disjoint paired cohort**.
+- State that `720/120/60` are fixed investigator-chosen V3 allocations, not CrisisMMD or literature standards and not a priori powered sample sizes.
+- Explain the role-based allocation: main is primary; presentation style and size are smaller secondary mechanism cohorts. Report their retrospective precision and all model-specific eligible denominators.
 - State that auxiliary cohorts were allocated before main and that this induced event-by-class structural zeros.
 - Report the exact main event distribution and avoid event-general or disaster-type causal claims.
 - Describe official-test-529 as a secondary natural-imbalance benchmark; pair accuracy with macro-F1 and class recall.
@@ -114,6 +147,8 @@ No one cohort can serve all three purposes without tradeoffs. The natural and of
 - [Alam et al. (2020), ASONAM](https://doi.org/10.1109/ASONAM49781.2020.9381294) motivates exact/near-duplicate detection and non-overlapping disaster-image evaluation splits.
 - [Ofli, Alam, and Imran (2020), ISCRAM](https://arxiv.org/abs/2004.11838) provides multimodal disaster-response context and the released multimodal baseline split.
 - [Shetty et al. (2025), Multimedia Tools and Applications](https://doi.org/10.1007/s11042-024-19818-0) is a supervised multimodal disaster-assessment reference. Its regime and metrics are contextual rather than directly comparable with zero-shot generative VLM scores.
+- [Wei and Hutson (2013)](https://doi.org/10.1080/02664763.2012.740629) supports planning binomial samples against an explicit interval-width target; it does not prescribe a CrisisMMD cohort size.
+- [Lachin (1992)](https://doi.org/10.1002/sim.4780110909) supports prospective power analysis for paired binary/McNemar outcomes when anticipated discordant-pair probabilities are available; those assumptions were not predeclared for V3.
 
 ## Fixed Experimental Design
 
@@ -215,6 +250,20 @@ Values are paired malicious-minus-benign downward risk differences on the eligib
 
 This is the cleanest evidence that the findings are not explained merely by adding visual/textual material. Benign controls can still change predictions, but malicious payloads create substantially more downward movement on the same samples.
 
+## Ordinal Severity Drop
+
+Severity drop measures the mean change in ordinal class level on the clean-correct mild/severe cohort, using little/no=0, mild=1, and severe=2. Thus severe-to-little/no contributes 2, a one-level downward transition contributes 1, no change contributes 0, and an upward transition contributes a negative value. These means complement downward ASR by measuring error magnitude rather than only error occurrence.
+
+| Model | Direct image | Direct text | Direct joint | Misleading image | Misleading text | Misleading joint |
+|---|---:|---:|---:|---:|---:|---:|
+| Qwen3.5 27B BF16 | 0.596 | 0.163 | 0.624 | 0.200 | 0.114 | 0.253 |
+| Qwen3.6 27B BF16 | 1.029 | 0.082 | 0.633 | 0.196 | 0.057 | 0.229 |
+| Qwen3-VL 32B BF16 | 1.160 | 0.116 | 1.201 | 0.262 | 0.092 | 0.248 |
+| Mistral 24B BF16 | 1.013 | 0.267 | 0.931 | 0.319 | 0.082 | 0.366 |
+| Gemini 2.5 Flash | 0.275 | 0.158 | 0.930 | 0.183 | 0.165 | 0.300 |
+
+The severity-drop pattern reinforces the primary result. Qwen3-VL image/joint, Mistral image/joint, Qwen3.6 image, and Gemini joint attacks do not merely cause frequent errors; they produce large average downward movements. Pairwise severity-drop differences and their 5,000-draw bootstrap intervals remain available in each model's `statistical_tests.csv`.
+
 ## Severe Cases Show Safety-Relevant Under-Triage
 
 Each cell is induced severe under-triage / induced critical under-triage among clean-correct severe cases. The table focuses on direct attacks because they produce the largest safety effects.
@@ -228,6 +277,58 @@ Each cell is induced severe under-triage / induced critical under-triage among c
 | Gemini 2.5 Flash | 12.58% / 11.26% | 5.96% / 3.31% | 55.63% / 51.66% |
 
 The Qwen3-VL, Mistral, and Gemini joint findings are not only generic label changes: many initially correct severe judgments are moved directly to little/no damage.
+
+## Class-Conditional Downward Transitions
+
+Each cell reports `mild->little/no / severe->mild / severe->little/no`. Percentages are followed by exact `n/N`; mild and severe denominators differ because they are anchored to the model's clean-correct examples in that ground-truth class.
+
+### Direct transitions
+
+| Model | Image M->L / S->M / S->L | Text M->L / S->M / S->L | Joint M->L / S->M / S->L |
+|---|---:|---:|---:|
+| Qwen3.5 27B BF16 | 70.93% (61/86) / 0.63% (1/159) / 28.30% (45/159) | 26.74% (23/86) / 3.77% (6/159) / 3.77% (6/159) | 58.14% (50/86) / 0.00% (0/159) / 33.96% (54/159) |
+| Qwen3.6 27B BF16 | 89.53% (77/86) / 1.26% (2/159) / 54.72% (87/159) | 19.77% (17/86) / 0.63% (1/159) / 1.26% (2/159) | 68.60% (59/86) / 0.63% (1/159) / 32.08% (51/159) |
+| Qwen3-VL 32B BF16 | 94.12% (128/136) / 0.63% (1/158) / 67.09% (106/158) | 19.85% (27/136) / 2.53% (4/158) / 1.90% (3/158) | 88.97% (121/136) / 0.00% (0/158) / 73.42% (116/158) |
+| Mistral 24B BF16 | 80.81% (139/172) / 6.67% (4/60) / 76.67% (46/60) | 34.88% (60/172) / 1.67% (1/60) / 1.67% (1/60) | 77.33% (133/172) / 8.33% (5/60) / 65.00% (39/60) |
+| Gemini 2.5 Flash | 40.16% (49/122) / 1.32% (2/151) / 11.26% (17/151) | 28.69% (35/122) / 2.65% (4/151) / 3.31% (5/151) | 76.23% (93/122) / 3.97% (6/151) / 51.66% (78/151) |
+
+### Misleading transitions
+
+| Model | Image M->L / S->M / S->L | Text M->L / S->M / S->L | Joint M->L / S->M / S->L |
+|---|---:|---:|---:|
+| Qwen3.5 27B BF16 | 27.91% (24/86) / 10.69% (17/159) / 3.14% (5/159) | 19.77% (17/86) / 5.66% (9/159) / 0.63% (1/159) | 33.72% (29/86) / 11.95% (19/159) / 4.40% (7/159) |
+| Qwen3.6 27B BF16 | 29.07% (25/86) / 8.81% (14/159) / 3.14% (5/159) | 13.95% (12/86) / 1.89% (3/159) / 0.00% (0/159) | 33.72% (29/86) / 13.21% (21/159) / 2.52% (4/159) |
+| Qwen3-VL 32B BF16 | 29.41% (40/136) / 15.82% (25/158) / 3.80% (6/158) | 13.97% (19/136) / 5.06% (8/158) / 0.00% (0/158) | 27.94% (38/136) / 15.82% (25/158) / 3.16% (5/158) |
+| Mistral 24B BF16 | 35.47% (61/172) / 16.67% (10/60) / 3.33% (2/60) | 8.72% (15/172) / 8.33% (5/60) / 0.00% (0/60) | 39.53% (68/172) / 20.00% (12/60) / 5.00% (3/60) |
+| Gemini 2.5 Flash | 24.59% (30/122) / 10.60% (16/151) / 1.32% (2/151) | 23.77% (29/122) / 7.28% (11/151) / 1.99% (3/151) | 38.52% (47/122) / 17.22% (26/151) / 3.31% (5/151) |
+
+Direct image/joint instructions frequently push mild cases all the way to little/no and, for several models, push severe cases directly to little/no rather than merely to mild. Misleading claims produce smaller critical transitions and relatively more severe-to-mild movement. Wilson intervals for every transition are retained in each model's `class_transitions.csv`.
+
+## Modality Interaction Patterns
+
+Patterns are defined on the same eligible samples using image/text/joint downward-success indicators. `Robust` means no modality succeeded; `joint-only` means only joint succeeded; `persistent visual` means both image and joint succeeded; and `all modalities` means all three succeeded. Derived groups overlap and therefore do not sum to 100%. In particular, `joint-only` is an observational pattern, not causal proof of multimodal synergy.
+
+### Direct interaction patterns
+
+| Model | Robust | Joint-only | Image-only | Text-only | Persistent visual | All modalities |
+|---|---:|---:|---:|---:|---:|---:|
+| Qwen3.5 27B BF16 | 37.96% (93/245) | 13.06% (32/245) | 18.78% (46/245) | 0.41% (1/245) | 24.49% (60/245) | 8.57% (21/245) |
+| Qwen3.6 27B BF16 | 20.41% (50/245) | 11.02% (27/245) | 34.29% (84/245) | 0.00% (0/245) | 33.47% (82/245) | 7.35% (18/245) |
+| Qwen3-VL 32B BF16 | 15.99% (47/294) | 3.74% (11/294) | 3.06% (9/294) | 0.34% (1/294) | 76.87% (226/294) | 11.22% (33/294) |
+| Mistral 24B BF16 | 16.38% (38/232) | 0.86% (2/232) | 6.03% (14/232) | 1.29% (3/232) | 75.43% (175/232) | 25.43% (59/232) |
+| Gemini 2.5 Flash | 32.23% (88/273) | 39.93% (109/273) | 2.93% (8/273) | 0.00% (0/273) | 21.98% (60/273) | 13.19% (36/273) |
+
+### Misleading interaction patterns
+
+| Model | Robust | Joint-only | Image-only | Text-only | Persistent visual | All modalities |
+|---|---:|---:|---:|---:|---:|---:|
+| Qwen3.5 27B BF16 | 75.51% (185/245) | 3.27% (8/245) | 1.22% (3/245) | 0.82% (2/245) | 17.55% (43/245) | 8.57% (21/245) |
+| Qwen3.6 27B BF16 | 77.55% (190/245) | 4.08% (10/245) | 0.41% (1/245) | 0.00% (0/245) | 17.55% (43/245) | 5.71% (14/245) |
+| Qwen3-VL 32B BF16 | 72.79% (214/294) | 2.38% (7/294) | 3.40% (10/294) | 0.34% (1/294) | 20.41% (60/294) | 8.16% (24/294) |
+| Mistral 24B BF16 | 61.64% (143/232) | 5.60% (13/232) | 1.29% (3/232) | 1.29% (3/232) | 30.17% (70/232) | 7.33% (17/232) |
+| Gemini 2.5 Flash | 69.23% (189/273) | 8.79% (24/273) | 0.73% (2/273) | 1.47% (4/273) | 16.85% (46/273) | 11.36% (31/273) |
+
+The interaction patterns sharpen the model-level interpretation. Qwen3-VL and Mistral direct vulnerability is predominantly persistent across image and joint delivery. Qwen3.6 has a larger image-only group, while Gemini has a uniquely large joint-only group. This supports heterogeneous modality behavior without treating the observational pattern labels as mechanisms.
 
 ## Secondary Natural and Official Clean Characterization
 
@@ -407,16 +508,18 @@ The expensive paper-facing main, natural-clean, official-test, presentation-styl
 13. McNemar, Q. (1947). “Note on the Sampling Error of the Difference Between Correlated Proportions or Percentages.” *Psychometrika*, 12(2), 153-157. [DOI](https://doi.org/10.1007/BF02295996).
 14. Holm, S. (1979). “A Simple Sequentially Rejective Multiple Test Procedure.” *Scandinavian Journal of Statistics*, 6(2), 65-70. [DOI](https://doi.org/10.2307/4615733).
 15. Efron, B., and Tibshirani, R. (1986). “Bootstrap Methods for Standard Errors, Confidence Intervals, and Other Measures of Statistical Accuracy.” *Statistical Science*, 1(1), 54-75. [DOI](https://doi.org/10.1214/ss/1177013815).
+16. Wei, L., and Hutson, A. D. (2013). “A Comment on Sample Size Calculations for Binomial Confidence Intervals.” *Journal of Applied Statistics*, 40(2), 311-319. [DOI](https://doi.org/10.1080/02664763.2012.740629).
+17. Lachin, J. M. (1992). “Power and Sample Size Evaluation for the McNemar Test with Application to Matched Case-Control Studies.” *Statistics in Medicine*, 11(9), 1239-1251. [DOI](https://doi.org/10.1002/sim.4780110909).
 
 ### Model and Runtime Sources
 
-16. Qwen Team. “Qwen3.5-27B.” Official model card and citation entry. [Model card](https://huggingface.co/Qwen/Qwen3.5-27B).
-17. Qwen Team. “Qwen3.6-27B.” Official model card. [Model card](https://huggingface.co/Qwen/Qwen3.6-27B).
-18. Qwen Team. “Qwen3-VL-32B-Instruct.” Official model card. [Model card](https://huggingface.co/Qwen/Qwen3-VL-32B-Instruct).
-19. Mistral AI. “Mistral-Small-3.1-24B-Instruct-2503.” Official model card. [Model card](https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503).
-20. Google. “Gemini 2.5 Flash.” Official Gemini API model documentation and model card. [Documentation](https://ai.google.dev/gemini-api/docs/models/gemini-2.5-flash); [model card](https://modelcards.withgoogle.com/assets/documents/gemini-2.5-flash.pdf).
-21. MLX-VLM. Official inference package for VLMs on Apple Silicon. [Repository](https://github.com/Blaizzy/mlx-vlm).
-22. vLLM. Official multimodal model-serving documentation. [Documentation](https://docs.vllm.ai/en/latest/models/supported_models/).
+18. Qwen Team. “Qwen3.5-27B.” Official model card and citation entry. [Model card](https://huggingface.co/Qwen/Qwen3.5-27B).
+19. Qwen Team. “Qwen3.6-27B.” Official model card. [Model card](https://huggingface.co/Qwen/Qwen3.6-27B).
+20. Qwen Team. “Qwen3-VL-32B-Instruct.” Official model card. [Model card](https://huggingface.co/Qwen/Qwen3-VL-32B-Instruct).
+21. Mistral AI. “Mistral-Small-3.1-24B-Instruct-2503.” Official model card. [Model card](https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503).
+22. Google. “Gemini 2.5 Flash.” Official Gemini API model documentation and model card. [Documentation](https://ai.google.dev/gemini-api/docs/models/gemini-2.5-flash); [model card](https://modelcards.withgoogle.com/assets/documents/gemini-2.5-flash.pdf).
+23. MLX-VLM. Official inference package for VLMs on Apple Silicon. [Repository](https://github.com/Blaizzy/mlx-vlm).
+24. vLLM. Official multimodal model-serving documentation. [Documentation](https://docs.vllm.ai/en/latest/models/supported_models/).
 
 Before submission, convert these entries to the target venue's BibTeX style and verify every author list/model-specific citation from the primary source. These references justify the dataset provenance, duplicate-control rationale, typographic threat, and statistical tools; they do not by themselves support a first-of-kind claim.
 
