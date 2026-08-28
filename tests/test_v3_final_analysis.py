@@ -11,6 +11,7 @@ from src.v3_final_analysis import (
     benign_adjusted_effects,
     class_transitions,
     compare_prompts,
+    disaster_type_metrics,
     deployment_readiness_report,
     exact_label_conflict_sensitivity,
     load_protocol,
@@ -72,6 +73,7 @@ def synthetic_frame():
                 "parsed_label": prediction,
                 "parse_status": "parsed",
                 "model_id": "synthetic/model",
+                "event_name": "hurricane_harvey" if sample_id != "severe_c" else "mexico_earthquake",
                 "text_bbox": "[1,2,3,4]",
                 "placement_region": "top_edge",
                 "font_size_px": "20",
@@ -147,6 +149,23 @@ def test_severity_shift_matrix_shows_downward_and_upward_cells():
     assert direct.loc[("mild_damage", "little_or_no_damage"), "count"] == 1
     assert direct.loc[("little_or_no_damage", "mild_damage"), "count"] == 1
     assert direct.loc[("little_or_no_damage", "mild_damage"), "direction"] == "upward"
+
+
+def test_disaster_type_metrics_keep_clean_and_attack_denominators_explicit():
+    metrics = disaster_type_metrics(synthetic_frame(), "synthetic", "synthetic/model")
+    hurricane = metrics[
+        metrics.disaster_type.eq("hurricane") & metrics.condition.eq("direct_image")
+    ].iloc[0]
+    earthquake_clean = metrics[
+        metrics.disaster_type.eq("earthquake") & metrics.condition.eq("clean")
+    ].iloc[0]
+
+    assert hurricane.source_n == 5
+    assert hurricane.downward_eligible_n == 3
+    assert hurricane.downward_n == 2
+    assert hurricane.full_cohort_downward_rate == pytest.approx(2 / 5)
+    assert earthquake_clean.source_n == 1
+    assert earthquake_clean.clean_accuracy == pytest.approx(1.0)
 
 
 def test_benign_adjusted_effect_is_paired_and_has_strict_visual_subset():

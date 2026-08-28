@@ -46,6 +46,16 @@ VISUAL_MATCH_FIELDS = [
     "text_bbox", "placement_region", "font_size_px", "line_count", "opacity",
     "occupied_area_ratio",
 ]
+DISASTER_TYPE_BY_EVENT = {
+    "california_wildfires": "wildfire",
+    "hurricane_harvey": "hurricane",
+    "hurricane_irma": "hurricane",
+    "hurricane_maria": "hurricane",
+    "iraq_iran_earthquake": "earthquake",
+    "mexico_earthquake": "earthquake",
+    "srilanka_floods": "flood",
+    "sri_lanka_floods": "flood",
+}
 
 
 def load_protocol(path: str | Path = DEFAULT_PROTOCOL) -> dict:
@@ -672,6 +682,83 @@ def severity_shift_matrix(frame: pd.DataFrame, model_slug: str, model_id: str) -
     return pd.DataFrame(rows)
 
 
+def disaster_type_metrics(frame: pd.DataFrame, model_slug: str, model_id: str) -> pd.DataFrame:
+    """Descriptive main-split results by disaster type, with explicit denominators."""
+    typed = frame.copy()
+    typed["disaster_type"] = typed.event_name.map(DISASTER_TYPE_BY_EVENT).fillna("other")
+    rows = []
+    for disaster_type, subset in typed.groupby("disaster_type", sort=True):
+        clean_all = subset[subset.condition.eq("clean")]
+        clean = clean_all[clean_all.parse_status.eq("parsed")]
+        clean_accuracy = (
+            float(clean.parsed_label.eq(clean.ground_truth).mean()) if len(clean) else math.nan
+        )
+        event_names = "|".join(sorted(clean_all.event_name.unique()))
+        rows.append({
+            "model": model_slug,
+            "model_id": model_id,
+            "disaster_type": disaster_type,
+            "event_names": event_names,
+            "condition": "clean",
+            "source_n": len(clean_all),
+            "paired_parsed_n": len(clean),
+            "clean_accuracy": clean_accuracy,
+            "clean_correct_target_eligible_n": int(
+                (clean.parsed_label.eq(clean.ground_truth)
+                 & clean.ground_truth.isin(["mild_damage", "severe_damage"])).sum()
+            ),
+            "downward_n": math.nan,
+            "downward_eligible_n": math.nan,
+            "downward_rate": math.nan,
+            "full_cohort_downward_rate": math.nan,
+            "upward_n": math.nan,
+            "upward_eligible_n": math.nan,
+            "upward_rate": math.nan,
+            "full_cohort_upward_rate": math.nan,
+            "mean_signed_severity_shift_attack_minus_clean": math.nan,
+            "interpretation": "descriptive_event_class_confounded",
+        })
+        for condition in [value for value in MAIN_CONDITIONS[1:] if value in set(subset.condition)]:
+            paired = _paired(subset, condition)
+            clean_correct = paired.clean_prediction.eq(paired.ground_truth)
+            target = clean_correct & paired.ground_truth.isin(["mild_damage", "severe_damage"])
+            upward_eligible = clean_correct & paired.ground_truth.isin(
+                ["little_or_no_damage", "mild_damage"]
+            )
+            clean_level = paired.clean_prediction.map(LEVEL)
+            attack_level = paired.attack_prediction.map(LEVEL)
+            downward = attack_level.lt(clean_level)
+            upward = attack_level.gt(clean_level)
+            down = _rate(downward, target)
+            full_down = _rate(downward & target, np.ones(len(paired), dtype=bool))
+            up = _rate(upward, upward_eligible)
+            full_up = _rate(upward & upward_eligible, np.ones(len(paired), dtype=bool))
+            rows.append({
+                "model": model_slug,
+                "model_id": model_id,
+                "disaster_type": disaster_type,
+                "event_names": event_names,
+                "condition": condition,
+                "source_n": len(clean_all),
+                "paired_parsed_n": len(paired),
+                "clean_accuracy": clean_accuracy,
+                "clean_correct_target_eligible_n": int(target.sum()),
+                "downward_n": down[0],
+                "downward_eligible_n": down[1],
+                "downward_rate": down[2],
+                "full_cohort_downward_rate": full_down[2],
+                "upward_n": up[0],
+                "upward_eligible_n": up[1],
+                "upward_rate": up[2],
+                "full_cohort_upward_rate": full_up[2],
+                "mean_signed_severity_shift_attack_minus_clean": float(
+                    (attack_level - clean_level).mean()
+                ),
+                "interpretation": "descriptive_event_class_confounded",
+            })
+    return pd.DataFrame(rows)
+
+
 def _strict_visual_ids(frame: pd.DataFrame, malicious: str, benign: str) -> set[str]:
     if malicious.endswith("_text"):
         return set(frame.loc[frame.condition.eq(malicious), "sample_id"])
@@ -1076,6 +1163,7 @@ def analyze_run(
     attack = attack_metrics(frame, model_slug, model_id)
     transitions = class_transitions(frame, model_slug, model_id)
     shift_matrix = severity_shift_matrix(frame, model_slug, model_id)
+    disaster_types = disaster_type_metrics(frame, model_slug, model_id)
     analysis_cfg = protocol["analysis"]
     benign = benign_adjusted_effects(frame, model_slug, model_id, analysis_cfg["bootstrap_draws"], analysis_cfg["bootstrap_seed"])
     interactions = modality_interactions(frame, model_slug, model_id)
@@ -1090,6 +1178,7 @@ def analyze_run(
         "attack_metrics.csv": attack,
         "class_transitions.csv": transitions, "benign_adjusted_effects.csv": benign,
         "severity_shift_matrix.csv": shift_matrix,
+        "disaster_type_metrics.csv": disaster_types,
         "modality_interactions.csv": interactions, "statistical_tests.csv": tests,
         "occlusion_sensitivity.csv": occlusion,
         "source_distribution_sensitivity.csv": source_sensitivity,
@@ -1488,7 +1577,7 @@ def aggregate_reports(protocol_path: str | Path, output_dir: str | Path) -> dict
         "class_transitions.csv", "severity_shift_matrix.csv",
         "benign_adjusted_effects.csv", "modality_interactions.csv", "statistical_tests.csv",
         "occlusion_sensitivity.csv", "source_distribution_sensitivity.csv",
-        "label_conflict_sensitivity.csv",
+        "label_conflict_sensitivity.csv", "disaster_type_metrics.csv",
     ]
     combined = {}
     completed = []
@@ -1509,7 +1598,26 @@ def aggregate_reports(protocol_path: str | Path, output_dir: str | Path) -> dict
     benign = combined["benign_adjusted_effects.csv"]
     interactions = combined["modality_interactions.csv"]
     tests = combined["statistical_tests.csv"]
+    disaster_types = combined["disaster_type_metrics.csv"]
     quantization_sensitivity(protocol, clean, output)
+    if len(disaster_types):
+        numeric = [
+            "clean_accuracy", "downward_rate", "full_cohort_downward_rate",
+            "upward_rate", "full_cohort_upward_rate",
+            "mean_signed_severity_shift_attack_minus_clean",
+        ]
+        model_average = (
+            disaster_types.groupby(["disaster_type", "condition"], as_index=False)
+            .agg(
+                model_count=("model", "nunique"),
+                source_n_per_model=("source_n", "first"),
+                **{f"mean_{column}": (column, "mean") for column in numeric},
+            )
+        )
+        model_average["aggregation"] = "unweighted_mean_of_model_level_rates"
+    else:
+        model_average = pd.DataFrame()
+    _write_csv(model_average, output / "disaster_type_model_average.csv")
     cross_rows = []
     if len(attack):
         for condition, values in attack.groupby("condition"):

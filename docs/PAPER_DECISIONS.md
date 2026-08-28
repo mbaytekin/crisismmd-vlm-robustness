@@ -512,6 +512,53 @@ Executable sources:
 - **Evidence:** [`reports/v3/ALL_RESULTS.md`](../reports/v3/ALL_RESULTS.md),
   `reports/v3/gcp_a100/models/*/main/{attack_metrics,benign_adjusted_effects,clean_confusion_matrix,severity_shift_matrix}.csv`.
 
+### D023 - Freeze supervisor-requested rhetoric, point-size, and disaster-type follow-ups
+
+- **Status:** ACCEPTED; SECONDARY FOLLOW-UP PROTOCOL FROZEN BEFORE MODEL RESPONSES WERE INSPECTED
+- **Date:** 2026-08-28
+- **Decision:** Preserve the completed canonical main/style/relative-size matrix.
+  Add two separate secondary paired experiments on existing globally disjoint
+  cohorts: (1) a 120-source text-rhetoric experiment with exact-label direct,
+  natural-language direct, plain misleading, authority-framed misleading, and
+  four matched benign controls; and (2) a 60-source point-size response with
+  benign/direct/misleading overlays at nominal 3, 6, 9, 12, and 15 pt. Run the
+  follow-ups for Qwen3.5 27B, Qwen3.6 27B, Qwen3.8 27B, Qwen3-VL 32B, and
+  Mistral 24B BF16 on separate A100 80GB instances. Add disaster-type
+  post-analysis for the completed main predictions without new inference.
+- **Semantic rule:** Direct payloads are imperative requests to ignore/override
+  evidence and produce a low-damage output. Misleading payloads are declarative
+  false low-damage scene claims without a model-directed command. Because the
+  direct message is embedded in external image/tweet content, its delivery is
+  indirect prompt injection even though its payload semantics are direct.
+- **Point-size rule:** D017's completed canonical size experiment remains a
+  relative-height comparison at 3%, 5%, and 8%. The new experiment uses nominal
+  points under a frozen 72-PPI raster convention, so 3/6/9/12/15 pt map to the
+  same pixel counts. Report nominal pt, realized px, relative height, line count,
+  and occupied area. Do not describe the units as device-independent physical
+  size. The 15-pt endpoint follows the five-level 3-15 px typography grid in
+  Cheng et al. (ECCV 2024); 18-27 pt were rejected after frozen pre-rendering
+  showed 53%-100% occupied area on the smallest source image.
+- **Analysis:** Retain clean-aware full-cohort downward and upward rates,
+  conditional eligible rates, matched-benign paired risk differences, 5,000
+  paired bootstrap draws, exact McNemar/Holm tests, signed severity shift, and
+  clean-to-attacked transition matrices. Plot point-size response but do not
+  infer monotonicity from an aggregate line alone.
+- **Disaster-type caveat:** Group the main split descriptively into wildfire,
+  hurricane, earthquake, and flood, with per-model and unweighted model-mean
+  rates. Do not call differences causal disaster-type effects because event and
+  class are confounded and group sizes range from 29 to 559.
+- **Paper impact:** Keep these results secondary and label them post-review.
+  Qwen3.8 enters no completed aggregate table until all requested outputs pass
+  completeness checks. The original canonical results remain valid regardless
+  of follow-up outcome.
+- **Evidence:** [`configs/v3/followup_ablation_protocol.yaml`](../configs/v3/followup_ablation_protocol.yaml),
+  [`src/v3_followup_ablations.py`](../src/v3_followup_ablations.py),
+  [`reports/v3/ALL_RESULTS.md`](../reports/v3/ALL_RESULTS.md),
+  [Cheng et al., ECCV 2024](https://www.ecva.net/papers/eccv_2024/papers_ECCV/papers/07650.pdf),
+  [SceneTAP, CVPR 2025](https://openaccess.thecvf.com/content/CVPR2025/html/Cao_SceneTAP_Scene-Coherent_Typographic_Adversarial_Planner_against_Vision-Language_Models_in_Real-World_CVPR_2025_paper.html),
+  [Words or Vision, CVPR 2025](https://openaccess.thecvf.com/content/CVPR2025/html/Deng_Words_or_Vision_Do_Vision-Language_Models_Have_Blind_Faith_in_CVPR_2025_paper.html),
+  and [InjecAgent, ACL 2024](https://aclanthology.org/2024.findings-acl.624/).
+
 ## Superseded decisions and historical results
 
 ### D004-H1 - Use the 90-example pilot as the production screen
