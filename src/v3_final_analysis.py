@@ -1062,7 +1062,114 @@ def _png_bars(path: Path, title: str, labels: list[str], values: list[float]) ->
     image.save(path)
 
 
-def make_plots(attack: pd.DataFrame, transitions: pd.DataFrame, tests: pd.DataFrame, output: Path) -> None:
+def _plot_font(size: int) -> ImageFont.ImageFont:
+    try:
+        return ImageFont.truetype("DejaVuSans.ttf", size)
+    except OSError:
+        return ImageFont.load_default()
+
+
+def _transition_matrices(shift_matrix: pd.DataFrame) -> dict[str, np.ndarray]:
+    labels = list(LEVEL)
+    malicious = [
+        "direct_image", "direct_text", "direct_joint",
+        "misleading_image", "misleading_text", "misleading_joint",
+    ]
+    matrices = {}
+    for condition in malicious:
+        subset = shift_matrix[shift_matrix.condition.eq(condition)]
+        if subset.empty:
+            continue
+        means = subset.groupby(["clean_label", "attacked_label"]).row_rate.mean()
+        matrices[condition] = np.asarray([
+            [float(means.get((clean, attacked), math.nan)) for attacked in labels]
+            for clean in labels
+        ])
+    return matrices
+
+
+def _png_transition_matrices(path: Path, matrices: dict[str, np.ndarray]) -> None:
+    width, height = 1560, 960
+    image = Image.new("RGB", (width, height), "white")
+    draw = ImageDraw.Draw(image)
+    title_font = _plot_font(28)
+    panel_font = _plot_font(22)
+    label_font = _plot_font(17)
+    value_font = _plot_font(19)
+    draw.text((width / 2, 24), "Clean-to-attacked severity transition matrices", anchor="ma", fill="#20242b", font=title_font)
+    label_names = ["Little/no", "Mild", "Severe"]
+    panel_w, panel_h = 500, 410
+    left, top = 20, 90
+    cell = 92
+    for index, (condition, matrix) in enumerate(matrices.items()):
+        panel_x = left + (index % 3) * panel_w
+        panel_y = top + (index // 3) * panel_h
+        draw.text((panel_x + panel_w / 2, panel_y), condition.replace("_", " ").title(), anchor="ma", fill="#20242b", font=panel_font)
+        grid_x, grid_y = panel_x + 180, panel_y + 70
+        draw.text((grid_x + 1.5 * cell, grid_y - 52), "Attacked label", anchor="ma", fill="#4a5560", font=label_font)
+        draw.text((panel_x + 20, grid_y + 1.5 * cell), "Clean label", anchor="mm", fill="#4a5560", font=label_font)
+        for col, name in enumerate(label_names):
+            draw.text((grid_x + (col + 0.5) * cell, grid_y - 24), name, anchor="mm", fill="#4a5560", font=label_font)
+        for row, name in enumerate(label_names):
+            draw.text((grid_x - 10, grid_y + (row + 0.5) * cell), name, anchor="rm", fill="#4a5560", font=label_font)
+            for col in range(3):
+                value = matrix[row, col]
+                intensity = 0.0 if not math.isfinite(value) else min(1.0, max(0.0, value))
+                rgb = tuple(round(255 + (target - 255) * intensity) for target in (31, 122, 109))
+                box = (
+                    grid_x + col * cell, grid_y + row * cell,
+                    grid_x + (col + 1) * cell, grid_y + (row + 1) * cell,
+                )
+                draw.rectangle(box, fill=rgb, outline="#d5dce0", width=2)
+                text_fill = "white" if intensity >= 0.55 else "#20242b"
+                value_text = "NA" if not math.isfinite(value) else f"{100 * value:.1f}%"
+                draw.text((box[0] + cell / 2, box[1] + cell / 2), value_text, anchor="mm", fill=text_fill, font=value_font)
+    image.save(path)
+
+
+def _svg_transition_matrices(path: Path, matrices: dict[str, np.ndarray]) -> None:
+    width, height = 1560, 960
+    label_names = ["Little/no", "Mild", "Severe"]
+    panel_w, panel_h = 500, 410
+    left, top, cell = 20, 90, 92
+    parts = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}">',
+        '<style>text{font-family:Arial,sans-serif;fill:#20242b}.muted{fill:#4a5560}</style>',
+        f'<rect width="{width}" height="{height}" fill="white"/>',
+        f'<text x="{width/2}" y="45" text-anchor="middle" font-size="28">Clean-to-attacked severity transition matrices</text>',
+    ]
+    for index, (condition, matrix) in enumerate(matrices.items()):
+        panel_x = left + (index % 3) * panel_w
+        panel_y = top + (index // 3) * panel_h
+        grid_x, grid_y = panel_x + 180, panel_y + 70
+        parts.append(f'<text x="{panel_x + panel_w/2}" y="{panel_y + 22}" text-anchor="middle" font-size="22">{condition.replace("_", " ").title()}</text>')
+        parts.append(f'<text class="muted" x="{grid_x + 1.5*cell}" y="{grid_y - 43}" text-anchor="middle" font-size="17">Attacked label</text>')
+        parts.append(f'<text class="muted" x="{panel_x + 25}" y="{grid_y + 1.5*cell}" text-anchor="middle" font-size="17" transform="rotate(-90 {panel_x + 25} {grid_y + 1.5*cell})">Clean label</text>')
+        for col, name in enumerate(label_names):
+            parts.append(f'<text class="muted" x="{grid_x + (col+.5)*cell}" y="{grid_y - 12}" text-anchor="middle" font-size="16">{name}</text>')
+        for row, name in enumerate(label_names):
+            parts.append(f'<text class="muted" x="{grid_x - 10}" y="{grid_y + (row+.5)*cell + 6}" text-anchor="end" font-size="16">{name}</text>')
+            for col in range(3):
+                value = matrix[row, col]
+                intensity = 0.0 if not math.isfinite(value) else min(1.0, max(0.0, value))
+                rgb = tuple(round(255 + (target - 255) * intensity) for target in (31, 122, 109))
+                fill = f'rgb({rgb[0]},{rgb[1]},{rgb[2]})'
+                x, y = grid_x + col * cell, grid_y + row * cell
+                text_fill = "white" if intensity >= 0.55 else "#20242b"
+                value_text = "NA" if not math.isfinite(value) else f"{100 * value:.1f}%"
+                parts.append(f'<rect x="{x}" y="{y}" width="{cell}" height="{cell}" fill="{fill}" stroke="#d5dce0" stroke-width="2"/>')
+                parts.append(f'<text x="{x + cell/2}" y="{y + cell/2 + 7}" text-anchor="middle" font-size="19" fill="{text_fill}" style="fill:{text_fill}">{value_text}</text>')
+    parts.append("</svg>")
+    path.write_text("".join(parts), encoding="utf-8")
+
+
+def make_plots(
+    attack: pd.DataFrame,
+    transitions: pd.DataFrame,
+    tests: pd.DataFrame,
+    output: Path,
+    shift_matrix: pd.DataFrame | None = None,
+) -> None:
     if attack.empty:
         return
     output.mkdir(parents=True, exist_ok=True)
@@ -1081,12 +1188,11 @@ def make_plots(attack: pd.DataFrame, transitions: pd.DataFrame, tests: pd.DataFr
         values = joint.b_minus_a.astype(float).tolist()
         _svg_bars(output / "joint_vs_image_effect.svg", "Joint paired risk difference", labels, values, "joint minus comparator")
         _png_bars(output / "joint_vs_image_effect.png", "Joint paired risk difference", labels, values)
-    selected = transitions[transitions.transition.isin(["mild_to_little_or_no", "severe_to_mild", "severe_to_little_or_no"])]
-    if len(selected):
-        labels = (selected.condition + ":" + selected.transition).tolist()
-        values = selected.rate.astype(float).tolist()
-        _svg_bars(output / "class_transition_heatmap.svg", "Class transition rates", labels, values, "transition rate")
-        _png_bars(output / "class_transition_heatmap.png", "Class transition rates", labels, values)
+    if shift_matrix is not None and len(shift_matrix):
+        matrices = _transition_matrices(shift_matrix)
+        if matrices:
+            _svg_transition_matrices(output / "class_transition_heatmap.svg", matrices)
+            _png_transition_matrices(output / "class_transition_heatmap.png", matrices)
 
 
 def write_summary(
@@ -1186,7 +1292,7 @@ def analyze_run(
     }
     for name, values in outputs.items():
         _write_csv(values, output / name)
-    make_plots(attack, transitions, tests, output)
+    make_plots(attack, transitions, tests, output, shift_matrix)
     write_summary(output, clean, attack, transitions, benign, interactions, tests)
     return {"model": model_slug, "model_id": model_id, "output_dir": str(output),
             "clean_rows": len(clean), "attack_conditions": len(attack)}
@@ -1652,7 +1758,7 @@ def aggregate_reports(protocol_path: str | Path, output_dir: str | Path) -> dict
                 })
     cross_model = pd.DataFrame(cross_rows)
     _write_csv(cross_model, output / "cross_model_summary.csv")
-    make_plots(attack, transitions, tests, output)
+    make_plots(attack, transitions, tests, output, combined["severity_shift_matrix.csv"])
     if len(clean) == 1:
         write_summary(output, clean, attack, transitions, benign, interactions, tests)
     else:
