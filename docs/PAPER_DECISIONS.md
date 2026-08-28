@@ -1,6 +1,6 @@
 # Paper decision log
 
-Last updated: 2026-08-26
+Last updated: 2026-08-28
 
 This is the single living record of decisions that can affect the manuscript.
 It records what was decided, why, where the evidence lives, what changed, and
@@ -599,20 +599,20 @@ paper-writing guidance are in
 [`reports/v3/ALL_RESULTS.md`](../reports/v3/ALL_RESULTS.md). Historical 8-bit,
 4-bit, V2, and 9B outputs remain available but are outside the paper panel.
 
-## Paper synchronization debt
+## Paper synchronization status
 
-The methodology predates the completed matrix. Synchronize `paper.md` from the
-canonical paper-writing reference before submission:
+`paper.md` was synchronized on 2026-08-28 from the canonical A100/Gemini
+artifacts and `reports/v3/ALL_RESULTS.md`. It now contains the five-model panel,
+full-cohort and conditional downward outcomes, matched-benign effects, upward
+transitions, completed style/relative-size tables, disaster-type caveats, and
+model-specific appendix matrices. Deployment/pass/fail language was removed in
+accordance with D018, and the unrun P7 sensitivity is disclosed under D021.
 
-- replace final model and result placeholders only from saved canonical run artifacts;
-- insert completed presentation-style and size results with exact denominators;
-- remove deployment/pass/fail threshold language under D018;
-- disclose the unrun P7 sensitivity under D021 rather than presenting prompt invariance;
-- complete the blinded visual review before final perceptual claims;
-- leave V2 and Qwen 9B findings explicitly historical/exploratory.
-
-This decision log and executable YAML remain authoritative if a future result
-edit introduces a conflict with the paper blueprint.
+The remaining manuscript constraints are unchanged: complete the blinded
+visual review before perceptual/readability/non-occlusion claims, keep V2 and
+Qwen 9B historical, and add Qwen3.8 or rhetoric/point-size follow-ups only after
+their complete outputs are validated. This decision log and executable YAML
+remain authoritative if a future result edit introduces a conflict.
 
 ## Resolved and open decisions
 
@@ -628,11 +628,13 @@ Freeze reviewer sampling/full-review scope, collect at least two blinded
 ratings per unique modified image, and select the agreement statistic before
 final robustness claims.
 
-### OPEN-003 - Related-work verification
+### RESOLVED-003 - Related-work verification
 
-Complete a primary-source literature table separating zero-shot generative
-VLMs, supervised VLM/CLIP classifiers, caption-augmentation pipelines, data
-splits, class distributions, and reported metrics.
+**Resolved 2026-08-28.** The core disaster, typographic-attack, prompt-
+injection, statistical, and model records were checked against publisher,
+proceedings, or official model-card pages and consolidated in `paper.md` and
+`reports/v3/ALL_RESULTS.md`. Venue-specific BibTeX export remains a typesetting
+task. A first-of-kind claim remains prohibited without a systematic review.
 
 ### RESOLVED-004 - Secondary natural and official clean outcomes
 
@@ -640,10 +642,14 @@ splits, class distributions, and reported metrics.
 for all five paper models. The two formerly empty GCP label-conflict sensitivity
 tables were regenerated locally from saved predictions without new inference.
 
-### OPEN-005 - Paper protocol synchronization
+### RESOLVED-005 - Paper protocol synchronization
 
-Resolve every item in `Paper synchronization debt` and date the resulting
-`paper.md` snapshot before pushing a manuscript-facing release.
+**Resolved 2026-08-28.** `paper.md` was synchronized from the canonical A100
+and Gemini results, `reports/v3/ALL_RESULTS.md`, and the accepted decisions.
+It now includes clean-aware and benign-adjusted outcomes, full upward/downward
+transition matrices, style/size tables, disaster-type caveats, and model-level
+appendix counts. Future result imports must repeat the consistency check before
+a manuscript-facing release.
 
 ### RESOLVED-006 - Ablation outcomes; visual validation remains OPEN-002
 

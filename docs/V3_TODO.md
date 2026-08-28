@@ -75,11 +75,30 @@ Raise concurrency only after a 100-request stability test. Record the final valu
 
 ## P5 — human review
 
-- [ ] Use at least two independent reviewers, blinded to model predictions.
-- [ ] Review readability, plausibility, visibility, damage-region obstruction, and original-label validity.
-- [ ] Report agreement and Cohen's kappa/Krippendorff's alpha.
-- [ ] Adjudicate disagreements only after independent review.
-- [ ] Never auto-fill human labels.
+- **Status:** OPEN submission-quality task. The numerical main, style, and size
+  results remain valid without this review; however, it is required before
+  claiming human readability, plausibility, camouflage/stealth, or absence of
+  critical-damage occlusion.
+- **Materials:** use the blinded gallery
+  [`reports/v3/manual_review/final_visual_review.html`](../reports/v3/manual_review/final_visual_review.html),
+  the blank 303-row instrument
+  [`final_visual_review.csv`](../reports/v3/manual_review/final_visual_review.csv),
+  and the protocol
+  [`PROTOCOL.md`](../reports/v3/manual_review/PROTOCOL.md). The gallery omits
+  model outputs and tweet text.
+- [ ] Freeze the exact reviewer scope before ratings begin; do not add/remove
+  rows after seeing ratings.
+- [ ] Collect two independent, pseudonymous reviewer passes, blinded to model
+  predictions, covering readability, attack-semantic visibility, presentation
+  plausibility, critical-damage obscuration, image usability, and whether the
+  original damage remains judgeable.
+- [ ] Use `yes`, `no`, or `uncertain`; never auto-fill human labels.
+- [ ] Calculate raw agreement and Cohen's kappa for two reviewers (or
+  Krippendorff's alpha for more), then adjudicate disagreements only after the
+  independent passes.
+- [ ] Report the adjudicated acceptance rate by review group/style/size. If
+  this work is not completed, retain the digital style/size results but remove
+  perceptual-realism and non-occlusion claims from the manuscript.
 
 ## P6 — final analysis
 
