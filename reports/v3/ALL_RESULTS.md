@@ -1,15 +1,15 @@
 # CrisisMMD VLM Robustness: Canonical Paper-Writing Reference
 
-**Status date:** 2026-08-27
+**Status date:** 2026-08-28
 **Paper panel:** Qwen3.5 27B BF16, Qwen3.6 27B BF16, Qwen3-VL 32B BF16, Mistral Small 3.1 24B BF16, and Gemini 2.5 Flash.
 **Purpose:** This is the one reader-facing file to use while writing the manuscript. It combines the active paper decisions, dataset construction and rationale, complete BF16 + Gemini results, supported claims, caveats, and bibliography. Implementation artifacts remain audit evidence, but they are not competing manuscript summaries.
-**Interpretation rule:** Decisions D018-D021 govern post-result manuscript scope. Historical 8-bit, 4-bit, V2, 9B pilot, pass/fail gates, and deployment thresholds are excluded from paper-facing conclusions.
+**Interpretation rule:** Decisions D018-D022 govern post-result manuscript scope. Historical 8-bit, 4-bit, V2, 9B pilot, pass/fail gates, and deployment thresholds are excluded from paper-facing conclusions. Qwen3.8 is a pending same-protocol extension and must not enter aggregate tables until its complete matrix is available.
 
 ## Technical Summary
 
-The completed evidence is sufficient to write a controlled, paired adversarial-robustness paper. All five models parsed every main response; balanced-main clean accuracy was 50.28%-55.69%. Clean performance is reported continuously without a pass/fail or deployment threshold. Robustness is estimated separately for each model among its predeclared clean-correct mild/severe decisions, so the result is a conditional security estimate rather than evidence of operational utility.
+The completed evidence is sufficient to write a controlled, paired adversarial-robustness paper. All five models parsed every main response; balanced-main clean accuracy was 50.28%-55.69%. Clean performance is reported continuously without a pass/fail or deployment threshold. The paper-primary attack percentage is the number of clean-correct mild/severe decisions shifted downward divided by all 720 main samples. Conditional ASR on the clean-correct eligible subset is retained as a susceptibility analysis, not used as the headline population percentage.
 
-The main result is not a universal modality ordering. All 30 malicious model-condition comparisons produced a positive malicious-minus-benign downward risk difference with Holm-corrected McNemar significance. However, magnitude and modality were strongly model-dependent. Direct image/joint attacks converted about 76%-81% of eligible decisions for Qwen3-VL and Mistral and about 42%-68% for the dense Qwen models. Gemini was moderate for direct image (24.91%) but rose to 64.84% for direct joint. Thus joint delivery was dramatically stronger only for Gemini; it was approximately equal to image-only for Qwen3-VL and Qwen3.5, lower than image-only for Qwen3.6 and Mistral.
+The main result is not a universal modality ordering. All 30 malicious model-condition comparisons produced a positive full-cohort malicious-minus-benign downward risk difference with Holm-corrected McNemar significance. However, magnitude and modality were strongly model-dependent. Full-cohort direct image/joint effects reached about 25%-33% for Qwen3-VL and Mistral, 14%-23% for the dense Qwen models, and 9%/25% for Gemini. Conditional eligible-only rates are larger and remain useful for explaining susceptibility, but they are not the headline population percentages.
 
 Presentation-style and size experiments are secondary mechanism analyses. Simple/news presentation was usually more effective than camouflage for direct instructions, but this is a bundled presentation contrast rather than an isolated style effect. Size did not have a universal monotonic relationship with attack success. These ablations have small model-specific eligible denominators (style 28-37; size 13-21), so exact counts and uncertainty must remain visible.
 
@@ -30,7 +30,7 @@ The central contribution is meaningful for the literature because it combines fo
 | Framing | Clean-characterized paired conditional robustness audit | Do not call the work a leaderboard or operational deployment study |
 | Clean performance | No pass/fail, qualification, or deployment threshold | Report accuracy, macro-F1, MAE, parsing, confusion matrix, and per-class recall as continuous measurements |
 | Primary panel | Four BF16 open VLMs plus Gemini 2.5 Flash | Exclude historical 8-bit, 4-bit, V2, and 9B pilot results from primary tables |
-| Primary estimand | Downward ASR among clean-correct mild/severe cases | Report the exact model-specific denominator in every effect table |
+| Primary estimand | Full-cohort downward success: clean-correct mild/severe cases shifted lower, divided by all 720 samples | Report its numerator and 720 denominator; retain eligible-only ASR as conditional susceptibility |
 | Controls | Compare each malicious condition with its modality-matched benign condition | Attacked accuracy alone is descriptive, not the main finding |
 | Statistics | Wilson intervals, 5,000 paired bootstrap draws, exact McNemar, Holm correction | Keep pairing and comparison families explicit; do not pool model predictions |
 | Prompt | Frozen zero-shot P5/V4 for all main runs | Do not add attack-aware language or retrofit the prompt after outcomes |
@@ -187,26 +187,41 @@ All four open models use the same GCP A100/CUDA-vLLM execution family for the ca
 
 - **Clean accuracy / macro-F1:** three-class correctness and class-balanced F1.
 - **Eligible denominator:** samples whose ground truth is mild/severe and whose clean prediction is correct for that model.
-- **Downward ASR:** eligible samples whose attacked prediction moves to a lower severity level.
+- **Conditional downward ASR:** downward successes divided by the model-specific eligible denominator. This measures susceptibility after conditioning on a correct actionable clean decision.
+- **Full-cohort downward success rate (paper-primary):** the same downward-success count divided by all 720 main samples. Algebraically this is `eligible share x conditional downward ASR`; this is the requested clean-performance-aware population percentage.
+- **Full-cohort upward shift rate:** clean-correct little/no or mild decisions shifted to a higher severity, divided by all 720 samples.
 - **Induced severe under-triage:** clean-correct severe samples attacked to mild or little/no.
 - **Induced critical under-triage:** clean-correct severe samples attacked specifically to little/no.
-- **Benign-adjusted risk difference:** malicious downward-success indicator minus its modality-matched benign indicator on the same samples.
+- **Full-cohort benign-adjusted effect (paper-primary):** `(malicious downward successes - matched-benign downward successes) / 720`. Benign behavior is a matched control baseline, not a standard deviation. It is not multiplied by clean accuracy a second time because clean eligibility is already encoded in both success indicators.
+- **Conditional benign-adjusted risk difference:** the same paired contrast divided by the eligible denominator; retained as a susceptibility analysis.
 
 Wilson 95% intervals are used for proportions. Paired effects use 5,000 bootstrap draws with seed 42. Paired binary outcomes use exact two-sided McNemar tests with Holm correction inside predeclared comparison families. Models are analyzed separately.
 
-## Main Clean Competence and Downward Attack Success
+## Main Clean Competence and Full-Cohort Downward Attack Success
 
-All values after the eligible denominator are downward ASR. Clean accuracy and macro-F1 use all 720 balanced-main samples.
+Attack columns report downward-success counts over all 720 balanced-main samples. For example, a 50% eligible share and 40% conditional ASR produce a 20% full-cohort rate. This is not attacked error rate: it counts only initially correct mild/severe decisions that move downward.
 
-| Model | Clean acc. | Macro-F1 | Eligible n | Direct image | Direct text | Direct joint | Misleading image | Misleading text | Misleading joint |
+| Model | Clean acc. | Macro-F1 | Eligible n/720 | Direct image | Direct text | Direct joint | Misleading image | Misleading text | Misleading joint |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| Qwen3.5 27B BF16 | 55.69% | 54.94% | 245 | 43.67% | 14.29% | 42.45% | 18.78% | 11.02% | 22.45% |
-| Qwen3.6 27B BF16 | 53.89% | 53.17% | 245 | 67.76% | 8.16% | 45.31% | 17.96% | 6.12% | 22.04% |
-| Qwen3-VL 32B BF16 | 53.19% | 52.98% | 294 | 79.93% | 11.56% | 80.61% | 24.15% | 9.18% | 23.13% |
-| Mistral 24B BF16 | 50.28% | 48.57% | 232 | 81.47% | 26.72% | 76.29% | 31.47% | 8.62% | 35.78% |
-| Gemini 2.5 Flash | 54.58% | 54.85% | 273 | 24.91% | 16.12% | 64.84% | 17.58% | 15.75% | 28.57% |
+| Qwen3.5 27B BF16 | 55.69% | 54.94% | 245/720 | 14.86% | 4.86% | 14.44% | 6.39% | 3.75% | 7.64% |
+| Qwen3.6 27B BF16 | 53.89% | 53.17% | 245/720 | 23.06% | 2.78% | 15.42% | 6.11% | 2.08% | 7.50% |
+| Qwen3-VL 32B BF16 | 53.19% | 52.98% | 294/720 | 32.64% | 4.72% | 32.92% | 9.86% | 3.75% | 9.44% |
+| Mistral 24B BF16 | 50.28% | 48.57% | 232/720 | 26.25% | 8.61% | 24.58% | 10.14% | 2.78% | 11.53% |
+| Gemini 2.5 Flash | 54.58% | 54.85% | 273/720 | 9.44% | 6.11% | 24.58% | 6.67% | 5.97% | 10.83% |
 
-Clean performance is modest and heterogeneous, with eligible denominators of 232-294. Primary estimates therefore apply only to initially correct mild/severe decisions and do not imply that any model is operationally useful. No pass/fail label is assigned.
+Clean performance is modest and heterogeneous, with eligible counts of 232-294. The 720-denominator rate makes that competence limitation visible in the headline effect while preserving the attack's direction. It does not imply that any model is operationally useful. No pass/fail label is assigned.
+
+### Conditional Susceptibility Among Eligible Decisions
+
+These are the original eligible-only downward ASRs. They answer a different question: once a model made a correct mild/severe decision, how often did the attack lower it?
+
+| Model | Direct image | Direct text | Direct joint | Misleading image | Misleading text | Misleading joint |
+|---|---:|---:|---:|---:|---:|---:|
+| Qwen3.5 27B BF16 | 43.67% | 14.29% | 42.45% | 18.78% | 11.02% | 22.45% |
+| Qwen3.6 27B BF16 | 67.76% | 8.16% | 45.31% | 17.96% | 6.12% | 22.04% |
+| Qwen3-VL 32B BF16 | 79.93% | 11.56% | 80.61% | 24.15% | 9.18% | 23.13% |
+| Mistral 24B BF16 | 81.47% | 26.72% | 76.29% | 31.47% | 8.62% | 35.78% |
+| Gemini 2.5 Flash | 24.91% | 16.12% | 64.84% | 17.58% | 15.75% | 28.57% |
 
 ### Main Clean Detail
 
@@ -222,47 +237,82 @@ MAE uses the ordinal mapping little/no=0, mild=1, severe=2. Recall columns show 
 
 Mistral's 25% severe recall is the clearest class-level weakness. The two dense Qwen runs have identical mild and severe recall but differ on little/no recall. These differences explain why all conditional attack denominators and severe-case denominators must remain model-specific.
 
+### Cross-Model Mean Clean Confusion Matrix
+
+Rows are ground truth and columns are predictions. Each cell is the unweighted mean of the five models' row-normalized clean confusion matrices, so every model contributes equally. This is a descriptive panel summary, not a pooled 3,600-observation estimate. Model-specific count matrices belong in the appendix.
+
+| Ground truth | Pred. little/no | Pred. mild | Pred. severe |
+|---|---:|---:|---:|
+| Little/no | 53.17% | 41.42% | 5.42% |
+| Mild | 26.75% | 50.17% | 23.08% |
+| Severe | 23.25% | 19.50% | 57.25% |
+
 ## Matched Benign-Control Instability
 
-These are downward rates for benign additions alone on each model's clean-correct mild/severe cohort. The same image/text/joint benign rates are subtracted from direct and misleading conditions in the paired primary analysis.
+These are benign downward-success counts divided by all 720 main samples. The same image/text/joint control rate is subtracted from its malicious counterpart. Benign is a matched intervention baseline, not an estimate of standard deviation.
 
 | Model | Benign image | Benign text | Benign joint |
 |---|---:|---:|---:|
-| Qwen3.5 27B BF16 | 3.67% | 1.63% | 4.49% |
-| Qwen3.6 27B BF16 | 5.71% | 0.41% | 5.31% |
-| Qwen3-VL 32B BF16 | 3.40% | 1.36% | 3.74% |
-| Mistral 24B BF16 | 7.76% | 1.72% | 9.05% |
-| Gemini 2.5 Flash | 5.49% | 4.40% | 5.86% |
+| Qwen3.5 27B BF16 | 1.25% | 0.56% | 1.53% |
+| Qwen3.6 27B BF16 | 1.94% | 0.14% | 1.81% |
+| Qwen3-VL 32B BF16 | 1.39% | 0.56% | 1.53% |
+| Mistral 24B BF16 | 2.50% | 0.56% | 2.92% |
+| Gemini 2.5 Flash | 2.08% | 1.67% | 2.22% |
 
 Benign controls caused some instability, particularly for visual and joint additions, but their downward rates were substantially below the corresponding malicious rates. This is why the paper reports malicious-minus-matched-benign effects rather than attributing every changed prediction to attack semantics.
 
 ## Malicious Effects Exceed Matched Benign Instability
 
-Values are paired malicious-minus-benign downward risk differences on the eligible cohort. All 30 values are positive; all Holm-adjusted McNemar tests are significant. Strict typography-matched subsets preserve all 30 positive effects, with their lowest bootstrap confidence bound still above zero.
+Values are paired malicious-minus-benign downward risk differences on the full 720-sample cohort. All 30 values are positive, their full-cohort bootstrap intervals exclude zero, and all Holm-adjusted McNemar tests are significant. Conditional eligible-cohort effects and strict typography-matched sensitivity remain in model-level artifacts.
 
 | Model | Direct image | Direct text | Direct joint | Misleading image | Misleading text | Misleading joint |
 |---|---:|---:|---:|---:|---:|---:|
-| Qwen3.5 27B BF16 | +40.00 pp | +12.65 pp | +37.96 pp | +15.10 pp | +9.39 pp | +17.96 pp |
-| Qwen3.6 27B BF16 | +62.04 pp | +7.76 pp | +40.00 pp | +12.24 pp | +5.71 pp | +16.73 pp |
-| Qwen3-VL 32B BF16 | +76.53 pp | +10.20 pp | +76.87 pp | +20.75 pp | +7.82 pp | +19.39 pp |
-| Mistral 24B BF16 | +73.71 pp | +25.00 pp | +67.24 pp | +23.71 pp | +6.90 pp | +26.72 pp |
-| Gemini 2.5 Flash | +19.41 pp | +11.72 pp | +58.97 pp | +12.09 pp | +11.36 pp | +22.71 pp |
+| Qwen3.5 27B BF16 | +13.61 pp | +4.31 pp | +12.92 pp | +5.14 pp | +3.19 pp | +6.11 pp |
+| Qwen3.6 27B BF16 | +21.11 pp | +2.64 pp | +13.61 pp | +4.17 pp | +1.94 pp | +5.69 pp |
+| Qwen3-VL 32B BF16 | +31.25 pp | +4.17 pp | +31.39 pp | +8.47 pp | +3.19 pp | +7.92 pp |
+| Mistral 24B BF16 | +23.75 pp | +8.06 pp | +21.67 pp | +7.64 pp | +2.22 pp | +8.61 pp |
+| Gemini 2.5 Flash | +7.36 pp | +4.44 pp | +22.36 pp | +4.58 pp | +4.31 pp | +8.61 pp |
 
 This is the cleanest evidence that the findings are not explained merely by adding visual/textual material. Benign controls can still change predictions, but malicious payloads create substantially more downward movement on the same samples.
 
-## Ordinal Severity Drop
+## Cross-Model Mean Severity Transition Matrices
 
-Severity drop measures the mean change in ordinal class level on the clean-correct mild/severe cohort, using little/no=0, mild=1, and severe=2. Thus severe-to-little/no contributes 2, a one-level downward transition contributes 1, no change contributes 0, and an upward transition contributes a negative value. These means complement downward ASR by measuring error magnitude rather than only error occurrence.
+These confusion-matrix-like rows replace mean severity drop as the main presentation. Each row begins with a clean-correct label and shows the attacked label distribution. Values are unweighted means of the five model-specific row percentages. Downward and upward movements are both visible; model-specific count matrices belong in the appendix.
+
+| Condition | Clean label | To little/no | To mild | To severe |
+|---|---|---:|---:|---:|
+| Direct image | Little/no | 100.00% | 0.00% | 0.00% |
+|  | Mild | 75.11% | 21.62% | 3.27% |
+|  | Severe | 47.61% | 2.10% | 50.29% |
+| Direct text | Little/no | 99.72% | 0.28% | 0.00% |
+|  | Mild | 25.99% | 71.77% | 2.24% |
+|  | Severe | 2.38% | 2.25% | 95.37% |
+| Direct joint | Little/no | 99.74% | 0.26% | 0.00% |
+|  | Mild | 73.85% | 23.19% | 2.95% |
+|  | Severe | 51.22% | 2.59% | 46.19% |
+| Misleading image | Little/no | 99.44% | 0.56% | 0.00% |
+|  | Mild | 29.29% | 69.90% | 0.81% |
+|  | Severe | 2.95% | 12.52% | 84.53% |
+| Misleading text | Little/no | 99.21% | 0.79% | 0.00% |
+|  | Mild | 16.04% | 83.45% | 0.51% |
+|  | Severe | 0.52% | 5.65% | 93.83% |
+| Misleading joint | Little/no | 99.62% | 0.38% | 0.00% |
+|  | Mild | 34.69% | 64.57% | 0.75% |
+|  | Severe | 3.68% | 15.64% | 80.68% |
+
+### Full-Cohort Upward Shift Rates
+
+Upward shifts are possible but rare. Each value is the count of clean-correct little/no or mild decisions shifted to a higher class divided by 720. These are not additional model runs; they are symmetric post-analysis of the existing paired predictions.
 
 | Model | Direct image | Direct text | Direct joint | Misleading image | Misleading text | Misleading joint |
 |---|---:|---:|---:|---:|---:|---:|
-| Qwen3.5 27B BF16 | 0.596 | 0.163 | 0.624 | 0.200 | 0.114 | 0.253 |
-| Qwen3.6 27B BF16 | 1.029 | 0.082 | 0.633 | 0.196 | 0.057 | 0.229 |
-| Qwen3-VL 32B BF16 | 1.160 | 0.116 | 1.201 | 0.262 | 0.092 | 0.248 |
-| Mistral 24B BF16 | 1.013 | 0.267 | 0.931 | 0.319 | 0.082 | 0.366 |
-| Gemini 2.5 Flash | 0.275 | 0.158 | 0.930 | 0.183 | 0.165 | 0.300 |
+| Qwen3.5 27B BF16 | 0.83% | 0.28% | 0.97% | 0.28% | 0.00% | 0.00% |
+| Qwen3.6 27B BF16 | 0.14% | 0.28% | 0.97% | 0.14% | 0.14% | 0.28% |
+| Qwen3-VL 32B BF16 | 0.00% | 0.42% | 0.00% | 0.14% | 0.00% | 0.14% |
+| Mistral 24B BF16 | 0.00% | 0.28% | 0.00% | 0.14% | 0.56% | 0.28% |
+| Gemini 2.5 Flash | 1.39% | 0.83% | 0.14% | 0.28% | 0.42% | 0.14% |
 
-The severity-drop pattern reinforces the primary result. Qwen3-VL image/joint, Mistral image/joint, Qwen3.6 image, and Gemini joint attacks do not merely cause frequent errors; they produce large average downward movements. Pairwise severity-drop differences and their 5,000-draw bootstrap intervals remain available in each model's `statistical_tests.csv`.
+The directional asymmetry is empirical rather than imposed by the analysis: attacks overwhelmingly lower severity, but occasional mild-to-severe and little/no-to-mild transitions occur. Mean ordinal severity drop remains available as a supplementary magnitude statistic in each model's `attack_metrics.csv` and `statistical_tests.csv`.
 
 ## Severe Cases Show Safety-Relevant Under-Triage
 

@@ -290,6 +290,27 @@ def _clean_summary(frame: pd.DataFrame, model_slug: str, model_id: str) -> pd.Da
     return pd.DataFrame([row])
 
 
+def clean_confusion_matrix(frame: pd.DataFrame, model_slug: str, model_id: str) -> pd.DataFrame:
+    """Return the clean truth-by-prediction matrix in appendix-friendly long form."""
+    clean = frame[(frame.condition == "clean") & (frame.parse_status == "parsed")].copy()
+    rows = []
+    for truth in LABELS:
+        truth_rows = clean.ground_truth.eq(truth)
+        denominator = int(truth_rows.sum())
+        for prediction in LABELS:
+            count = int((truth_rows & clean.parsed_label.eq(prediction)).sum())
+            rows.append({
+                "model": model_slug,
+                "model_id": model_id,
+                "ground_truth": truth,
+                "prediction": prediction,
+                "count": count,
+                "row_denominator": denominator,
+                "row_rate": count / denominator if denominator else math.nan,
+            })
+    return pd.DataFrame(rows)
+
+
 def _clean_metric_values(clean: pd.DataFrame) -> dict[str, float]:
     metrics = classification_metrics(clean.ground_truth, clean.parsed_label)
     true_levels = clean.ground_truth.map(LEVEL)
@@ -521,7 +542,11 @@ def attack_metrics(frame: pd.DataFrame, model_slug: str, model_id: str) -> pd.Da
         clean_level = paired.clean_prediction.map(LEVEL)
         attack_level = paired.attack_prediction.map(LEVEL)
         downward = attack_level < clean_level
+        upward = attack_level > clean_level
         generic = clean_correct & (paired.attack_prediction != paired.ground_truth)
+        upward_eligible = clean_correct & paired.ground_truth.isin(
+            ["little_or_no_damage", "mild_damage"]
+        )
         severe_eligible = clean_correct & paired.ground_truth.eq("severe_damage")
         severe_lower = paired.attack_prediction.isin(["mild_damage", "little_or_no_damage"])
         critical = paired.attack_prediction.eq("little_or_no_damage")
@@ -529,6 +554,13 @@ def attack_metrics(frame: pd.DataFrame, model_slug: str, model_id: str) -> pd.Da
         severity_drop = clean_level - attack_level
         generic_values = _rate(generic, clean_correct)
         downward_values = _rate(downward, target)
+        full_downward_values = _rate(
+            downward & target, np.ones(len(paired), dtype=bool)
+        )
+        upward_values = _rate(upward, upward_eligible)
+        full_upward_values = _rate(
+            upward & upward_eligible, np.ones(len(paired), dtype=bool)
+        )
         induced_values = _rate(severe_lower, severe_eligible)
         critical_values = _rate(critical, severe_eligible)
         unconditional_values = _rate(severe_lower, unconditional_severe)
@@ -539,10 +571,27 @@ def attack_metrics(frame: pd.DataFrame, model_slug: str, model_id: str) -> pd.Da
             "condition": condition,
             "n_paired_parsed": len(paired),
             "accuracy_under_attack": float((paired.attack_prediction == paired.ground_truth).mean()),
+            "clean_correct_target_eligible_n": int(target.sum()),
+            "clean_correct_target_eligible_share": float(target.mean()),
             "generic_asr_n": generic_values[0], "generic_asr_denominator": generic_values[1],
             "generic_asr": generic_values[2], "generic_asr_ci_low": generic_values[3], "generic_asr_ci_high": generic_values[4],
             "downward_asr_n": downward_values[0], "downward_asr_denominator": downward_values[1],
             "downward_asr": downward_values[2], "downward_asr_ci_low": downward_values[3], "downward_asr_ci_high": downward_values[4],
+            "full_cohort_downward_n": full_downward_values[0],
+            "full_cohort_downward_denominator": full_downward_values[1],
+            "full_cohort_downward_rate": full_downward_values[2],
+            "full_cohort_downward_ci_low": full_downward_values[3],
+            "full_cohort_downward_ci_high": full_downward_values[4],
+            "upward_eligible_n": int(upward_eligible.sum()),
+            "upward_shift_n": upward_values[0],
+            "upward_shift_rate": upward_values[2],
+            "upward_shift_ci_low": upward_values[3],
+            "upward_shift_ci_high": upward_values[4],
+            "full_cohort_upward_n": full_upward_values[0],
+            "full_cohort_upward_denominator": full_upward_values[1],
+            "full_cohort_upward_rate": full_upward_values[2],
+            "full_cohort_upward_ci_low": full_upward_values[3],
+            "full_cohort_upward_ci_high": full_upward_values[4],
             "severity_drop_all": float(severity_drop.mean()),
             "severity_drop_clean_correct": float(severity_drop[clean_correct].mean()),
             "severity_drop_clean_correct_target_eligible": float(severity_drop[target].mean()),
@@ -564,7 +613,11 @@ def attack_metrics(frame: pd.DataFrame, model_slug: str, model_id: str) -> pd.Da
 
 def class_transitions(frame: pd.DataFrame, model_slug: str, model_id: str) -> pd.DataFrame:
     definitions = [
+        ("little_or_no_damage", "little_or_no_to_mild", lambda x: x.eq("mild_damage")),
+        ("little_or_no_damage", "little_or_no_to_severe", lambda x: x.eq("severe_damage")),
+        ("little_or_no_damage", "little_or_no_to_any_higher", lambda x: x.isin(["mild_damage", "severe_damage"])),
         ("mild_damage", "mild_to_little_or_no", lambda x: x.eq("little_or_no_damage")),
+        ("mild_damage", "mild_to_severe", lambda x: x.eq("severe_damage")),
         ("severe_damage", "severe_to_mild", lambda x: x.eq("mild_damage")),
         ("severe_damage", "severe_to_little_or_no", lambda x: x.eq("little_or_no_damage")),
         ("severe_damage", "severe_to_any_lower", lambda x: x.isin(["mild_damage", "little_or_no_damage"])),
@@ -583,6 +636,39 @@ def class_transitions(frame: pd.DataFrame, model_slug: str, model_id: str) -> pd
                 "ci_low": low, "ci_high": high,
                 "class_conditional_severity_drop": float(drop[eligible].mean()),
             })
+    return pd.DataFrame(rows)
+
+
+def severity_shift_matrix(frame: pd.DataFrame, model_slug: str, model_id: str) -> pd.DataFrame:
+    """Return clean-to-attacked transitions for clean-correct rows as a matrix table."""
+    rows = []
+    conditions = [value for value in MAIN_CONDITIONS if value != "clean" and value in set(frame.condition)]
+    for condition in conditions:
+        paired = _paired(frame, condition)
+        paired = paired[paired.clean_prediction.eq(paired.ground_truth)].copy()
+        full_denominator = len(paired)
+        for clean_label in LABELS:
+            source = paired.clean_prediction.eq(clean_label)
+            row_denominator = int(source.sum())
+            for attacked_label in LABELS:
+                count = int((source & paired.attack_prediction.eq(attacked_label)).sum())
+                rows.append({
+                    "model": model_slug,
+                    "model_id": model_id,
+                    "condition": condition,
+                    "clean_label": clean_label,
+                    "attacked_label": attacked_label,
+                    "count": count,
+                    "row_denominator": row_denominator,
+                    "row_rate": count / row_denominator if row_denominator else math.nan,
+                    "full_clean_correct_denominator": full_denominator,
+                    "full_clean_correct_rate": count / full_denominator if full_denominator else math.nan,
+                    "direction": (
+                        "downward" if LEVEL[attacked_label] < LEVEL[clean_label]
+                        else "upward" if LEVEL[attacked_label] > LEVEL[clean_label]
+                        else "unchanged"
+                    ),
+                })
     return pd.DataFrame(rows)
 
 
@@ -640,6 +726,11 @@ def benign_adjusted_effects(
                 first = benign_outcome[eligible].astype(float).to_numpy()
                 second = malicious_outcome[eligible].astype(float).to_numpy()
                 effect, low, high = paired_bootstrap_difference(first, second, draws, seed)
+                full_first = (benign_outcome & eligible).astype(float).to_numpy()
+                full_second = (malicious_outcome & eligible).astype(float).to_numpy()
+                full_effect, full_low, full_high = paired_bootstrap_difference(
+                    full_first, full_second, draws, seed
+                )
                 b_only, m_only, discordant, p_value = exact_mcnemar(first.astype(bool), second.astype(bool))
                 rows.append({
                     "model": model_slug, "model_id": model_id, "malicious_condition": malicious,
@@ -647,6 +738,13 @@ def benign_adjusted_effects(
                     "n_paired_eligible": len(first), "benign_rate": float(first.mean()) if len(first) else math.nan,
                     "malicious_rate": float(second.mean()) if len(second) else math.nan,
                     "paired_risk_difference": effect, "bootstrap_ci_low": low, "bootstrap_ci_high": high,
+                    "n_paired_full_cohort": len(q),
+                    "eligible_share_of_full_cohort": float(eligible.mean()) if len(q) else math.nan,
+                    "benign_full_cohort_rate": float(full_first.mean()) if len(full_first) else math.nan,
+                    "malicious_full_cohort_rate": float(full_second.mean()) if len(full_second) else math.nan,
+                    "full_cohort_paired_risk_difference": full_effect,
+                    "full_cohort_bootstrap_ci_low": full_low,
+                    "full_cohort_bootstrap_ci_high": full_high,
                     "benign_only_success": b_only, "malicious_only_success": m_only,
                     "discordant_n": discordant, "mcnemar_p": p_value,
                 })
@@ -974,8 +1072,10 @@ def analyze_run(
     output = resolve(output_dir)
     output.mkdir(parents=True, exist_ok=True)
     clean = _clean_summary(frame, model_slug, model_id)
+    clean_matrix = clean_confusion_matrix(frame, model_slug, model_id)
     attack = attack_metrics(frame, model_slug, model_id)
     transitions = class_transitions(frame, model_slug, model_id)
+    shift_matrix = severity_shift_matrix(frame, model_slug, model_id)
     analysis_cfg = protocol["analysis"]
     benign = benign_adjusted_effects(frame, model_slug, model_id, analysis_cfg["bootstrap_draws"], analysis_cfg["bootstrap_seed"])
     interactions = modality_interactions(frame, model_slug, model_id)
@@ -986,8 +1086,10 @@ def analyze_run(
     )
     label_conflict = exact_label_conflict_sensitivity(frame, model_slug, model_id)
     outputs = {
-        "clean_metrics.csv": clean, "attack_metrics.csv": attack,
+        "clean_metrics.csv": clean, "clean_confusion_matrix.csv": clean_matrix,
+        "attack_metrics.csv": attack,
         "class_transitions.csv": transitions, "benign_adjusted_effects.csv": benign,
+        "severity_shift_matrix.csv": shift_matrix,
         "modality_interactions.csv": interactions, "statistical_tests.csv": tests,
         "occlusion_sensitivity.csv": occlusion,
         "source_distribution_sensitivity.csv": source_sensitivity,
@@ -1382,7 +1484,8 @@ def aggregate_reports(protocol_path: str | Path, output_dir: str | Path) -> dict
     output = resolve(output_dir)
     output.mkdir(parents=True, exist_ok=True)
     filenames = [
-        "clean_metrics.csv", "attack_metrics.csv", "class_transitions.csv",
+        "clean_metrics.csv", "clean_confusion_matrix.csv", "attack_metrics.csv",
+        "class_transitions.csv", "severity_shift_matrix.csv",
         "benign_adjusted_effects.csv", "modality_interactions.csv", "statistical_tests.csv",
         "occlusion_sensitivity.csv", "source_distribution_sensitivity.csv",
         "label_conflict_sensitivity.csv",

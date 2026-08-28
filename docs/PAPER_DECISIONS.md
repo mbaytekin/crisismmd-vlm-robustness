@@ -482,6 +482,36 @@ Executable sources:
 - **Evidence:** [`configs/prompts/p7_modality_neutral_sensitivity.yaml`](../configs/prompts/p7_modality_neutral_sensitivity.yaml),
   [`reports/v3/ALL_RESULTS.md`](../reports/v3/ALL_RESULTS.md).
 
+### D022 - Report clean-aware full-cohort directional effects and transition matrices
+
+- **Status:** ACCEPTED AFTER SUPERVISOR FEEDBACK; REPORTING AMENDMENT
+- **Date:** 2026-08-28
+- **Decision:** Use downward successes divided by all 720 main samples as the
+  headline attack percentage. Report the modality-matched benign-adjusted
+  full-cohort contrast as `(malicious successes - benign successes) / 720`.
+  Retain eligible-only downward ASR as a conditional susceptibility measure.
+  Add symmetric upward-shift outcomes and replace mean severity drop in the
+  main presentation with row-normalized clean-to-attacked transition matrices.
+  Show the unweighted mean of model-level row percentages in the main text and
+  retain model-specific count matrices for the appendix.
+- **Reason:** The full-cohort rate incorporates clean competence into the
+  displayed population effect, while the conditional rate still identifies
+  attack susceptibility after a correct actionable decision. Transition
+  matrices communicate both direction and magnitude more directly than one
+  signed mean.
+- **Clarification:** Benign behavior is a matched control baseline, not a
+  standard deviation. It is not multiplied by clean accuracy after subtraction;
+  clean correctness is already encoded in both full-cohort success indicators.
+- **Caveat:** The five-model mean matrix is descriptive and does not pool model
+  predictions as independent observations. Qwen3.8 is an additional
+  same-protocol model and remains pending until main, style, size, natural, and
+  official outputs are complete.
+- **Paper impact:** Lead with full-cohort downward and benign-adjusted effects;
+  label eligible-only ASR as conditional; report upward shifts; place
+  model-specific clean and attack transition matrices in the appendix.
+- **Evidence:** [`reports/v3/ALL_RESULTS.md`](../reports/v3/ALL_RESULTS.md),
+  `reports/v3/gcp_a100/models/*/main/{attack_metrics,benign_adjusted_effects,clean_confusion_matrix,severity_shift_matrix}.csv`.
+
 ## Superseded decisions and historical results
 
 ### D004-H1 - Use the 90-example pilot as the production screen

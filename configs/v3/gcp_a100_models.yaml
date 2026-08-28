@@ -26,6 +26,12 @@ models:
     precision: bf16
     role: qwen_release_sensitivity
 
+  - slug: qwen38_27b_bf16
+    aliases: [qwen38]
+    model_id: Qwen/Qwen3.8-27B
+    precision: bf16
+    role: qwen_release_sensitivity
+
   - slug: mistral31_24b_bf16
     aliases: [mistral, mistral_bf16]
     model_id: mistralai/Mistral-Small-3.1-24B-Instruct-2503

@@ -25,7 +25,7 @@ class VLLMClient(VisionClient):
         payload = {"model": self.model_id, "messages": [{"role": "system", "content": system_prompt}, {"role": "user", "content": [{"type": "text", "text": user_prompt}, {"type": "image_url", "image_url": {"url": f"data:{mime};base64,{encoded}"}}]}], "temperature": kwargs.get("temperature", 0), "top_p": kwargs.get("top_p", 1), "max_tokens": kwargs.get("max_tokens", 150)}
         if kwargs.get("seed") is not None: payload["seed"] = kwargs["seed"]
         normalized_model_id = self.model_id.lower()
-        if any(name in normalized_model_id for name in ("qwen3.5", "qwen3.6", "glm-4.6v")):
+        if any(name in normalized_model_id for name in ("qwen3.5", "qwen3.6", "qwen3.8", "glm-4.6v")):
             payload["chat_template_kwargs"] = {"enable_thinking": False}
         response = requests.post(f"{self.base_url}/chat/completions", json=payload, timeout=self.timeout)
         body = response.text
