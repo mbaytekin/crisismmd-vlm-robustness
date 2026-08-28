@@ -11,11 +11,13 @@ from src.v3_final_analysis import (
     benign_adjusted_effects,
     class_transitions,
     compare_prompts,
+    disaster_type_metrics,
     deployment_readiness_report,
     exact_label_conflict_sensitivity,
     load_protocol,
     modality_interactions,
     paired_bootstrap_difference,
+    severity_shift_matrix,
     statistical_tests,
 )
 
@@ -71,6 +73,7 @@ def synthetic_frame():
                 "parsed_label": prediction,
                 "parse_status": "parsed",
                 "model_id": "synthetic/model",
+                "event_name": "hurricane_harvey" if sample_id != "severe_c" else "mexico_earthquake",
                 "text_bbox": "[1,2,3,4]",
                 "placement_region": "top_edge",
                 "font_size_px": "20",
@@ -91,6 +94,24 @@ def test_downward_and_direct_target_eligible_denominators():
     assert direct_image.direct_target_eligible_asr_denominator == 4
     assert direct_image.direct_target_eligible_asr_n == 1
     assert direct_image.direct_target_eligible_asr == pytest.approx(0.25)
+    assert direct_image.full_cohort_downward_n == 2
+    assert direct_image.full_cohort_downward_denominator == 6
+    assert direct_image.full_cohort_downward_rate == pytest.approx(2 / 6)
+
+
+def test_upward_metrics_use_clean_correct_little_and_mild_denominator():
+    frame = synthetic_frame()
+    frame.loc[
+        frame.sample_id.eq("little_e") & frame.condition.eq("direct_image"),
+        "parsed_label",
+    ] = "mild_damage"
+    metrics = attack_metrics(frame, "synthetic", "synthetic/model").set_index("condition")
+    direct_image = metrics.loc["direct_image"]
+
+    assert direct_image.upward_eligible_n == 3
+    assert direct_image.upward_shift_n == 1
+    assert direct_image.upward_shift_rate == pytest.approx(1 / 3)
+    assert direct_image.full_cohort_upward_rate == pytest.approx(1 / 6)
 
 
 def test_induced_undertriage_denominators_are_clean_correct_severe_only():
@@ -114,6 +135,39 @@ def test_class_conditional_transitions_use_clean_correct_class_denominators():
     assert direct.loc["severe_to_little_or_no", "numerator"] == 0
 
 
+def test_severity_shift_matrix_shows_downward_and_upward_cells():
+    frame = synthetic_frame()
+    frame.loc[
+        frame.sample_id.eq("little_e") & frame.condition.eq("direct_image"),
+        "parsed_label",
+    ] = "mild_damage"
+    matrix = severity_shift_matrix(frame, "synthetic", "synthetic/model")
+    direct = matrix[matrix.condition.eq("direct_image")].set_index(
+        ["clean_label", "attacked_label"]
+    )
+
+    assert direct.loc[("mild_damage", "little_or_no_damage"), "count"] == 1
+    assert direct.loc[("little_or_no_damage", "mild_damage"), "count"] == 1
+    assert direct.loc[("little_or_no_damage", "mild_damage"), "direction"] == "upward"
+
+
+def test_disaster_type_metrics_keep_clean_and_attack_denominators_explicit():
+    metrics = disaster_type_metrics(synthetic_frame(), "synthetic", "synthetic/model")
+    hurricane = metrics[
+        metrics.disaster_type.eq("hurricane") & metrics.condition.eq("direct_image")
+    ].iloc[0]
+    earthquake_clean = metrics[
+        metrics.disaster_type.eq("earthquake") & metrics.condition.eq("clean")
+    ].iloc[0]
+
+    assert hurricane.source_n == 5
+    assert hurricane.downward_eligible_n == 3
+    assert hurricane.downward_n == 2
+    assert hurricane.full_cohort_downward_rate == pytest.approx(2 / 5)
+    assert earthquake_clean.source_n == 1
+    assert earthquake_clean.clean_accuracy == pytest.approx(1.0)
+
+
 def test_benign_adjusted_effect_is_paired_and_has_strict_visual_subset():
     effects = benign_adjusted_effects(synthetic_frame(), "synthetic", "synthetic/model", draws=200, seed=42)
     full = effects[
@@ -129,6 +183,8 @@ def test_benign_adjusted_effect_is_paired_and_has_strict_visual_subset():
 
     assert full.n_paired_eligible == 4
     assert full.paired_risk_difference == pytest.approx(0.5)
+    assert full.n_paired_full_cohort == 6
+    assert full.full_cohort_paired_risk_difference == pytest.approx(2 / 6)
     assert strict.n_paired_eligible == 3
     assert strict.paired_risk_difference == pytest.approx(1 / 3)
 

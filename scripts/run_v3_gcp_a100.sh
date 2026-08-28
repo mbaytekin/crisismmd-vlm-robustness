@@ -115,12 +115,20 @@ if (( LIST_ONLY )); then
   exit 0
 fi
 
-for path in "$PROMPT" "$ANALYSIS_PROTOCOL" \
-  data/v3/manifests/all_conditions.csv \
-  data/v3/manifests/style_ablation_conditions.csv \
-  data/v3/manifests/size_ablation_conditions.csv \
-  data/v3/manifests/natural_clean_all.csv \
-  data/v3/manifests/official_test_clean.csv; do
+REQUIRED_PATHS=("$PROMPT" "$ANALYSIS_PROTOCOL")
+if [[ "$STAGE" == main || "$STAGE" == all ]]; then
+  REQUIRED_PATHS+=(data/v3/manifests/all_conditions.csv)
+fi
+if [[ "$STAGE" == ablation || "$STAGE" == all ]]; then
+  [[ "$KIND" != size ]] && REQUIRED_PATHS+=(data/v3/manifests/style_ablation_conditions.csv)
+  [[ "$KIND" != style ]] && REQUIRED_PATHS+=(data/v3/manifests/size_ablation_conditions.csv)
+fi
+if [[ "$STAGE" == clean || "$STAGE" == all ]]; then
+  REQUIRED_PATHS+=("$DATASET_PROTOCOL")
+  [[ "$COHORT" != official ]] && REQUIRED_PATHS+=(data/v3/manifests/natural_clean_all.csv)
+  [[ "$COHORT" != natural ]] && REQUIRED_PATHS+=(data/v3/manifests/official_test_clean.csv)
+fi
+for path in "${REQUIRED_PATHS[@]}"; do
   [[ -f "$path" ]] || { echo "Required artifact missing: $path" >&2; exit 4; }
 done
 
