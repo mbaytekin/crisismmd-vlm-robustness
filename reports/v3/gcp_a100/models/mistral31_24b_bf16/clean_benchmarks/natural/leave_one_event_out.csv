@@ -1,0 +1,8 @@
+model,model_id,cohort,group_type,group_value,n,n_parsed,parse_rate,accuracy,macro_f1_all_labels,macro_f1_present_labels,mean_absolute_severity_error,support_little,support_mild,support_severe
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,natural,leave_one_event_out,california_wildfires,2952,2952,1.0,0.35060975609756095,0.34802927060557565,0.34802927060557565,0.7672764227642277,459,779,1714
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,natural,leave_one_event_out,hurricane_harvey,2588,2588,1.0,0.40146831530139104,0.39891984666554386,0.39891984666554386,0.7217928902627512,358,611,1619
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,natural,leave_one_event_out,hurricane_irma,2684,2684,1.0,0.34687034277198214,0.32842928669103716,0.32842928669103716,0.8267511177347243,225,601,1858
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,natural,leave_one_event_out,hurricane_maria,2628,2628,1.0,0.3744292237442922,0.3721068510265501,0.3721068510265501,0.808599695585997,394,561,1673
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,natural,leave_one_event_out,iraq_iran_earthquake,3302,3302,1.0,0.3567534827377347,0.35364646983086273,0.35364646983086273,0.8019382192610539,470,818,2014
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,natural,leave_one_event_out,mexico_earthquake,3310,3310,1.0,0.3622356495468278,0.3596764614941399,0.3596764614941399,0.7939577039274924,469,805,2036
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,natural,leave_one_event_out,srilanka_floods,3380,3380,1.0,0.37100591715976333,0.36869033354669073,0.36869033354669073,0.7772189349112426,469,799,2112

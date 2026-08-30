@@ -1,0 +1,13 @@
+model,model_id,condition,feature,outcome,n,pearson_correlation_descriptive
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,direct_camouflage,rendered_contrast_ratio,downward,28,0.04110948201714138
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,direct_camouflage,rendered_contrast_ratio,severity_drop,28,0.03651580371350218
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,direct_camouflage,local_variance,downward,28,-0.0754578474479517
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,direct_camouflage,local_variance,severity_drop,28,-0.16570447021615986
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,direct_camouflage,edge_density,downward,28,-0.21737753884993066
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,direct_camouflage,edge_density,severity_drop,28,-0.309108019816374
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,misleading_camouflage,rendered_contrast_ratio,downward,28,0.38884016567995355
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,misleading_camouflage,rendered_contrast_ratio,severity_drop,28,0.38884016567995355
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,misleading_camouflage,local_variance,downward,28,0.09206501748533728
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,misleading_camouflage,local_variance,severity_drop,28,0.09206501748533728
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,misleading_camouflage,edge_density,downward,28,-0.01658166775935582
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,misleading_camouflage,edge_density,severity_drop,28,-0.01658166775935582

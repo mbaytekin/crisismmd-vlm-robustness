@@ -1,0 +1,2 @@
+model,model_id,cohort,group_type,group_value,n,n_parsed,parse_rate,accuracy,macro_f1_all_labels,macro_f1_present_labels,mean_absolute_severity_error,support_little,support_mild,support_severe
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,official,cohort,official,529,529,1.0,0.3705103969754253,0.3682809251920882,0.3682809251920882,0.782608695652174,71,126,332

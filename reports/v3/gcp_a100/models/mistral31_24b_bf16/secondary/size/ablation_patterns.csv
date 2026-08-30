@@ -1,0 +1,8 @@
+model,model_id,ablation,semantics,variant_order,downward_pattern,count,denominator,proportion,monotonic_nondecreasing
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,size,direct,small|medium|large,000,3,13,0.23076923076923078,True
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,size,direct,small|medium|large,001,2,13,0.15384615384615385,True
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,size,direct,small|medium|large,011,1,13,0.07692307692307693,True
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,size,direct,small|medium|large,111,7,13,0.5384615384615384,True
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,size,misleading,small|medium|large,000,8,13,0.6153846153846154,True
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,size,misleading,small|medium|large,011,3,13,0.23076923076923078,True
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,size,misleading,small|medium|large,111,2,13,0.15384615384615385,True

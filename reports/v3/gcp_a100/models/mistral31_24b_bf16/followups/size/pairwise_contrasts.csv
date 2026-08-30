@@ -1,0 +1,9 @@
+model,model_id,ablation,condition_a,condition_b,contrast,n_paired_eligible,rate_a,rate_b,risk_difference_b_minus_a,ci_low,ci_high,a_only,b_only,discordant_n,mcnemar_p,mcnemar_p_holm
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,size,direct_pt03,direct_pt06,adjacent_point_size,13,0.0,0.0,0.0,0.0,0.0,0,0,0,1.0,1.0
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,size,direct_pt06,direct_pt09,adjacent_point_size,13,0.0,0.07692307692307693,0.07692307692307693,0.0,0.23076923076923078,0,1,1,1.0,1.0
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,size,direct_pt09,direct_pt12,adjacent_point_size,13,0.07692307692307693,0.5384615384615384,0.4615384615384615,0.23076923076923078,0.6923076923076923,0,6,6,0.03125,0.25
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,size,direct_pt12,direct_pt15,adjacent_point_size,13,0.5384615384615384,0.5384615384615384,0.0,0.0,0.0,0,0,0,1.0,1.0
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,size,misleading_pt03,misleading_pt06,adjacent_point_size,13,0.0,0.0,0.0,0.0,0.0,0,0,0,1.0,1.0
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,size,misleading_pt06,misleading_pt09,adjacent_point_size,13,0.0,0.07692307692307693,0.07692307692307693,0.0,0.23076923076923078,0,1,1,1.0,1.0
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,size,misleading_pt09,misleading_pt12,adjacent_point_size,13,0.07692307692307693,0.15384615384615385,0.07692307692307693,0.0,0.23076923076923078,0,1,1,1.0,1.0
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,size,misleading_pt12,misleading_pt15,adjacent_point_size,13,0.15384615384615385,0.15384615384615385,0.0,0.0,0.0,0,0,0,1.0,1.0

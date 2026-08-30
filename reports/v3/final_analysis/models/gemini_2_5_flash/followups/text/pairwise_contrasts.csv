@@ -1,0 +1,4 @@
+model,model_id,ablation,condition_a,condition_b,contrast,n_paired_eligible,rate_a,rate_b,risk_difference_b_minus_a,ci_low,ci_high,a_only,b_only,discordant_n,mcnemar_p,mcnemar_p_holm
+gemini_2_5_flash,gemini-2.5-flash,text,direct_label,direct_natural,exact_label_token_vs_natural_language_target,33,0.06060606060606061,0.12121212121212122,0.06060606060606061,-0.06060606060606061,0.18181818181818182,1,3,4,0.625,1.0
+gemini_2_5_flash,gemini-2.5-flash,text,misleading_plain,misleading_authority,plain_vs_authority_framed_claim,33,0.12121212121212122,0.15151515151515152,0.030303030303030304,-0.09090909090909091,0.15151515151515152,2,3,5,1.0,1.0
+gemini_2_5_flash,gemini-2.5-flash,text,direct_natural,misleading_plain,imperative_vs_declarative_natural_language,33,0.12121212121212122,0.12121212121212122,0.0,-0.12121212121212122,0.12121212121212122,2,2,4,1.0,1.0

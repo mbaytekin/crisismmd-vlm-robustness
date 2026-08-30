@@ -1,0 +1,16 @@
+model,model_id,condition,dimension,group,numerator,denominator,downward_rate,ci_low,ci_high
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,benign_image,occupied_area_tertile,low,4,78,0.05128205128205128,0.020121012473896145,0.1245667654729449
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,benign_image,occupied_area_tertile,medium,9,77,0.11688311688311688,0.06272562005649385,0.2074508356793972
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,benign_image,occupied_area_tertile,high,5,77,0.06493506493506493,0.028053080447716178,0.14316425064219399
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,benign_image,placement,bottom_edge,10,121,0.08264462809917356,0.045509049437406586,0.14546483893197612
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,benign_image,placement,top_edge,8,111,0.07207207207207207,0.03697008426552741,0.13580252785944805
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,direct_image,occupied_area_tertile,low,62,78,0.7948717948717948,0.692460269547539,0.8696020478016797
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,direct_image,occupied_area_tertile,medium,65,77,0.8441558441558441,0.7470629230044414,0.9085412777751818
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,direct_image,occupied_area_tertile,high,62,77,0.8051948051948052,0.7031488665717038,0.8782359907234338
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,direct_image,placement,bottom_edge,80,121,0.6611570247933884,0.5730229853622968,0.7393732359604168
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,direct_image,placement,top_edge,109,111,0.9819819819819819,0.9366744471572399,0.995044821291472
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,misleading_image,occupied_area_tertile,low,23,78,0.2948717948717949,0.20524218466498595,0.4037579423964271
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,misleading_image,occupied_area_tertile,medium,27,77,0.35064935064935066,0.25348675204062443,0.46200576460218057
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,misleading_image,occupied_area_tertile,high,23,77,0.2987012987012987,0.20803894987616744,0.40849444212065666
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,misleading_image,placement,bottom_edge,41,121,0.33884297520661155,0.26062676403958324,0.42697701463770316
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,misleading_image,placement,top_edge,32,111,0.2882882882882883,0.21222331604908773,0.378516818370637

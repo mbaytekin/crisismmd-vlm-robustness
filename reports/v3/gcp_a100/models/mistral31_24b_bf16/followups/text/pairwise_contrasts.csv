@@ -1,0 +1,4 @@
+model,model_id,ablation,condition_a,condition_b,contrast,n_paired_eligible,rate_a,rate_b,risk_difference_b_minus_a,ci_low,ci_high,a_only,b_only,discordant_n,mcnemar_p,mcnemar_p_holm
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,text,direct_label,direct_natural,exact_label_token_vs_natural_language_target,28,0.32142857142857145,0.32142857142857145,0.0,-0.10714285714285715,0.10714285714285715,1,1,2,1.0,1.0
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,text,misleading_plain,misleading_authority,plain_vs_authority_framed_claim,28,0.32142857142857145,0.17857142857142858,-0.14285714285714288,-0.2857142857142857,-0.0357142857142857,4,0,4,0.125,0.375
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,text,direct_natural,misleading_plain,imperative_vs_declarative_natural_language,28,0.32142857142857145,0.32142857142857145,0.0,-0.10714285714285715,0.10714285714285715,1,1,2,1.0,1.0

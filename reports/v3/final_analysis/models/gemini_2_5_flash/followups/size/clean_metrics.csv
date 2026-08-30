@@ -1,0 +1,2 @@
+model,model_id,n,n_parsed,parse_rate,accuracy,macro_f1,mean_absolute_severity_error,clean_correct_total,little_precision,little_recall,little_f1,clean_correct_little,mild_precision,mild_recall,mild_f1,clean_correct_mild,severe_precision,severe_recall,severe_f1,clean_correct_severe,clean_correct_mild_or_severe,confusion_matrix
+gemini_2_5_flash,gemini-2.5-flash,60,60,1.0,0.4666666666666667,0.473140214878281,0.55,28,0.5,0.45,0.4736842105263158,9,0.2608695652173913,0.3,0.27906976744186046,6,0.6842105263157895,0.65,0.6666666666666667,13,19,"[[9,10,1],[9,6,5],[0,7,13]]"

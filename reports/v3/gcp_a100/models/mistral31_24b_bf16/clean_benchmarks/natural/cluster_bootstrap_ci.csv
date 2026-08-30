@@ -1,0 +1,5 @@
+model,model_id,cohort,metric,estimate,ci_low,ci_high,bootstrap_unit,independent_clusters,bootstrap_draws,bootstrap_seed
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,natural,accuracy,0.36557282671272306,0.3487154738263748,0.38259333493780173,duplicate_cluster_id,2933,5000,42
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,natural,macro_f1_all_labels,0.36277962142987247,0.3454691105646094,0.3799351804117958,duplicate_cluster_id,2933,5000,42
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,natural,macro_f1_present_labels,0.36277962142987247,0.3454691105646094,0.3799351804117958,duplicate_cluster_id,2933,5000,42
+mistral31_24b_bf16__gcp_a100,mistralai/Mistral-Small-3.1-24B-Instruct-2503,natural,mean_absolute_severity_error,0.7858376511226253,0.7621651971579987,0.8104756058774729,duplicate_cluster_id,2933,5000,42
