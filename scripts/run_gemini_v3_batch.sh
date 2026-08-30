@@ -27,7 +27,9 @@ Batch jobs are asynchronous; use --action status and --action download later.
 
 Options:
   --split NAME       pilot, main, style_ablation, size_ablation,
-                     natural_clean_all, or official_test (default: pilot)
+                     natural_clean_all, official_test,
+                     text_rhetoric_ablation, or size_response_pt
+                     (default: pilot)
   --model NAME       Gemini model (default: gemini-2.5-flash)
   --shard-size N     Requests per input JSONL shard (default: 500)
   --max-output-tokens N

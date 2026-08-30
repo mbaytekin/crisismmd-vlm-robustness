@@ -73,6 +73,8 @@ def default_manifest(split: str) -> Path:
         "natural_clean_all": "natural_clean_all.csv",
         "official_test": "official_test_clean.csv",
         "prompt_validation": "prompt_validation_clean.csv",
+        "text_rhetoric_ablation": "text_rhetoric_ablation_conditions.csv",
+        "size_response_pt": "size_response_pt_conditions.csv",
     }
     try:
         return ROOT / "data/v3/manifests" / names[split]
@@ -98,6 +100,23 @@ def default_conditions(split: str) -> list[str]:
             "clean", "benign_small", "benign_medium", "benign_large",
             "direct_small", "direct_medium", "direct_large",
             "misleading_small", "misleading_medium", "misleading_large",
+        ]
+    if split == "text_rhetoric_ablation":
+        return [
+            "clean",
+            "benign_direct_label", "direct_label",
+            "benign_direct_natural", "direct_natural",
+            "benign_misleading_plain", "misleading_plain",
+            "benign_misleading_authority", "misleading_authority",
+        ]
+    if split == "size_response_pt":
+        return [
+            "clean",
+            *[
+                f"{semantics}_pt{point:02d}"
+                for semantics in ("benign", "direct", "misleading")
+                for point in (3, 6, 9, 12, 15)
+            ],
         ]
     return ["clean"]
 

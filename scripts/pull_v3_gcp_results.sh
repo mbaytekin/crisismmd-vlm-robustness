@@ -4,6 +4,7 @@ set -uo pipefail
 PROJECT="${V3_GCP_PROJECT:-my-project-1517472402986}"
 ZONE="${V3_GCP_ZONE:-us-central1-a}"
 REMOTE_ROOT="${V3_GCP_REMOTE_ROOT:-/home/can.baytekin/crisismmd-vlm-robustness}"
+REMOTE_USER="${V3_GCP_REMOTE_USER:-can.baytekin}"
 LOCAL_ROOT="${V3_GCP_LOCAL_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 DRY_RUN=0
 
@@ -43,7 +44,7 @@ pull_vm() {
   mkdir -p "$target"
   echo "[$vm] pulling predictions and reports"
   local cmd=(gcloud compute scp --project="$PROJECT" --zone="$ZONE" --recurse
-    "$vm:$remote" "$target")
+    "$REMOTE_USER@$vm:$remote" "$target")
   if (( DRY_RUN )); then
     printf '  '; printf '%q ' "${cmd[@]}"; printf '\n'
   elif ! "${cmd[@]}"; then
@@ -54,7 +55,7 @@ pull_vm() {
   local report_target="$LOCAL_ROOT/reports/v3"
   mkdir -p "$report_target"
   local report_cmd=(gcloud compute scp --project="$PROJECT" --zone="$ZONE" --recurse
-    "$vm:$REMOTE_ROOT/reports/v3/gcp_a100" "$report_target")
+    "$REMOTE_USER@$vm:$REMOTE_ROOT/reports/v3/gcp_a100" "$report_target")
   if (( DRY_RUN )); then
     printf '  '; printf '%q ' "${report_cmd[@]}"; printf '\n'
   elif ! "${report_cmd[@]}"; then
@@ -65,7 +66,7 @@ pull_vm() {
   local log_target="$LOCAL_ROOT/logs/v3"
   mkdir -p "$log_target"
   local log_cmd=(gcloud compute scp --project="$PROJECT" --zone="$ZONE" --recurse
-    "$vm:$REMOTE_ROOT/logs/v3/gcp_a100" "$log_target")
+    "$REMOTE_USER@$vm:$REMOTE_ROOT/logs/v3/gcp_a100" "$log_target")
   if (( DRY_RUN )); then
     printf '  '; printf '%q ' "${log_cmd[@]}"; printf '\n'
   elif ! "${log_cmd[@]}"; then
