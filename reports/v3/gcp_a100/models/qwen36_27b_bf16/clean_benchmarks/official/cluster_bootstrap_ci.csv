@@ -1,0 +1,5 @@
+model,model_id,cohort,metric,estimate,ci_low,ci_high,bootstrap_unit,independent_clusters,bootstrap_draws,bootstrap_seed
+qwen36_27b_bf16__gcp_a100,Qwen/Qwen3.6-27B,official,accuracy,0.5652173913043478,0.5228115278257863,0.6070763500931099,duplicate_cluster_id,517,5000,42
+qwen36_27b_bf16__gcp_a100,Qwen/Qwen3.6-27B,official,macro_f1_all_labels,0.4811664851238426,0.435299080188167,0.5261543250598015,duplicate_cluster_id,517,5000,42
+qwen36_27b_bf16__gcp_a100,Qwen/Qwen3.6-27B,official,macro_f1_present_labels,0.4811664851238426,0.435299080188167,0.5261543250598015,duplicate_cluster_id,517,5000,42
+qwen36_27b_bf16__gcp_a100,Qwen/Qwen3.6-27B,official,mean_absolute_severity_error,0.6124763705103969,0.5473484848484849,0.6787762906309751,duplicate_cluster_id,517,5000,42

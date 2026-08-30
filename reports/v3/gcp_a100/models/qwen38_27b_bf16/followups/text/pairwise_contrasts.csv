@@ -1,0 +1,4 @@
+model,model_id,ablation,condition_a,condition_b,contrast,n_paired_eligible,rate_a,rate_b,risk_difference_b_minus_a,ci_low,ci_high,a_only,b_only,discordant_n,mcnemar_p,mcnemar_p_holm
+qwen38_27b_bf16__gcp_a100,Qwen/Qwen3.8-27B,text,direct_label,direct_natural,exact_label_token_vs_natural_language_target,35,0.2,0.05714285714285714,-0.14285714285714288,-0.2571428571428572,-0.028571428571428574,5,0,5,0.0625,0.1875
+qwen38_27b_bf16__gcp_a100,Qwen/Qwen3.8-27B,text,misleading_plain,misleading_authority,plain_vs_authority_framed_claim,35,0.2,0.2,0.0,0.0,0.0,0,0,0,1.0,1.0
+qwen38_27b_bf16__gcp_a100,Qwen/Qwen3.8-27B,text,direct_natural,misleading_plain,imperative_vs_declarative_natural_language,35,0.05714285714285714,0.2,0.14285714285714288,0.028571428571428574,0.2571428571428571,0,5,5,0.0625,0.1875

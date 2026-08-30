@@ -1,0 +1,16 @@
+model,model_id,condition,dimension,group,numerator,denominator,downward_rate,ci_low,ci_high
+qwen36_27b_bf16__gcp_a100,Qwen/Qwen3.6-27B,benign_image,occupied_area_tertile,low,8,84,0.09523809523809523,0.049051709909559385,0.17682635594992718
+qwen36_27b_bf16__gcp_a100,Qwen/Qwen3.6-27B,benign_image,occupied_area_tertile,medium,2,79,0.02531645569620253,0.006970367306584818,0.08768584628891136
+qwen36_27b_bf16__gcp_a100,Qwen/Qwen3.6-27B,benign_image,occupied_area_tertile,high,4,82,0.04878048780487805,0.019131065567745804,0.1188146192257594
+qwen36_27b_bf16__gcp_a100,Qwen/Qwen3.6-27B,benign_image,placement,bottom_edge,6,128,0.046875,0.021657844171923776,0.09849752245094322
+qwen36_27b_bf16__gcp_a100,Qwen/Qwen3.6-27B,benign_image,placement,top_edge,8,117,0.06837606837606838,0.03505171056757551,0.12914242457717726
+qwen36_27b_bf16__gcp_a100,Qwen/Qwen3.6-27B,direct_image,occupied_area_tertile,low,59,84,0.7023809523809523,0.5975091495076318,0.7895518175626247
+qwen36_27b_bf16__gcp_a100,Qwen/Qwen3.6-27B,direct_image,occupied_area_tertile,medium,48,79,0.6075949367088608,0.4973399088270549,0.7078713494246327
+qwen36_27b_bf16__gcp_a100,Qwen/Qwen3.6-27B,direct_image,occupied_area_tertile,high,59,82,0.7195121951219512,0.6141492754244032,0.8052284995409186
+qwen36_27b_bf16__gcp_a100,Qwen/Qwen3.6-27B,direct_image,placement,bottom_edge,88,128,0.6875,0.6027289441827964,0.7613446972146379
+qwen36_27b_bf16__gcp_a100,Qwen/Qwen3.6-27B,direct_image,placement,top_edge,78,117,0.6666666666666666,0.5771523809129953,0.745584537199427
+qwen36_27b_bf16__gcp_a100,Qwen/Qwen3.6-27B,misleading_image,occupied_area_tertile,low,17,84,0.20238095238095238,0.130374567896324,0.30041812758859254
+qwen36_27b_bf16__gcp_a100,Qwen/Qwen3.6-27B,misleading_image,occupied_area_tertile,medium,12,79,0.1518987341772152,0.08908267892631742,0.24699854437704644
+qwen36_27b_bf16__gcp_a100,Qwen/Qwen3.6-27B,misleading_image,occupied_area_tertile,high,15,82,0.18292682926829268,0.1141102185364291,0.2801218842914394
+qwen36_27b_bf16__gcp_a100,Qwen/Qwen3.6-27B,misleading_image,placement,bottom_edge,20,128,0.15625,0.10348354800906658,0.22904810942897047
+qwen36_27b_bf16__gcp_a100,Qwen/Qwen3.6-27B,misleading_image,placement,top_edge,24,117,0.20512820512820512,0.14189945306384225,0.28710446104494924

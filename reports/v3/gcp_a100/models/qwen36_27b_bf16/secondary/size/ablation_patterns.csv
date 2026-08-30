@@ -1,0 +1,8 @@
+model,model_id,ablation,semantics,variant_order,downward_pattern,count,denominator,proportion,monotonic_nondecreasing
+qwen36_27b_bf16__gcp_a100,Qwen/Qwen3.6-27B,size,direct,small|medium|large,000,4,19,0.21052631578947367,True
+qwen36_27b_bf16__gcp_a100,Qwen/Qwen3.6-27B,size,direct,small|medium|large,011,2,19,0.10526315789473684,True
+qwen36_27b_bf16__gcp_a100,Qwen/Qwen3.6-27B,size,direct,small|medium|large,110,3,19,0.15789473684210525,False
+qwen36_27b_bf16__gcp_a100,Qwen/Qwen3.6-27B,size,direct,small|medium|large,111,10,19,0.5263157894736842,True
+qwen36_27b_bf16__gcp_a100,Qwen/Qwen3.6-27B,size,misleading,small|medium|large,000,15,19,0.7894736842105263,True
+qwen36_27b_bf16__gcp_a100,Qwen/Qwen3.6-27B,size,misleading,small|medium|large,010,1,19,0.05263157894736842,False
+qwen36_27b_bf16__gcp_a100,Qwen/Qwen3.6-27B,size,misleading,small|medium|large,111,3,19,0.15789473684210525,True

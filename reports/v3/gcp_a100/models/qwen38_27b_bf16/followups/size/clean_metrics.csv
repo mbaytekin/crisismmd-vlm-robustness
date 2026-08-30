@@ -1,0 +1,2 @@
+model,model_id,n,n_parsed,parse_rate,accuracy,macro_f1,mean_absolute_severity_error,clean_correct_total,little_precision,little_recall,little_f1,clean_correct_little,mild_precision,mild_recall,mild_f1,clean_correct_mild,severe_precision,severe_recall,severe_f1,clean_correct_severe,clean_correct_mild_or_severe,confusion_matrix
+qwen38_27b_bf16__gcp_a100,Qwen/Qwen3.8-27B,60,60,1.0,0.5,0.48563611491108066,0.6,30,0.4782608695652174,0.55,0.5116279069767442,11,0.35714285714285715,0.25,0.2941176470588235,5,0.6086956521739131,0.7,0.6511627906976744,14,19,"[[11,6,3],[9,5,6],[3,3,14]]"

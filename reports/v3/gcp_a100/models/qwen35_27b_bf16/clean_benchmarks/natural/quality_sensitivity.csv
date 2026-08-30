@@ -1,0 +1,3 @@
+model,model_id,cohort,group_type,group_value,n,n_parsed,parse_rate,accuracy,macro_f1_all_labels,macro_f1_present_labels,mean_absolute_severity_error,support_little,support_mild,support_severe,excluded_rows
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,natural,quality_subset,all_rows,3474,3474,1.0,0.5679332181922856,0.4946882445381409,0.4946882445381409,0.6039147956246402,474,829,2171,0
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,natural,quality_subset,exclude_exact_sha_label_conflicts,3463,3463,1.0,0.5682933872365001,0.49490954977878826,0.49490954977878826,0.6038117239387814,474,823,2166,11

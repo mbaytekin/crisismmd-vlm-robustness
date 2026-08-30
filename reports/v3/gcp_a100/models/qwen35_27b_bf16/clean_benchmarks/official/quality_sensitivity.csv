@@ -1,0 +1,5 @@
+model,model_id,cohort,group_type,group_value,n,n_parsed,parse_rate,accuracy,macro_f1_all_labels,macro_f1_present_labels,mean_absolute_severity_error,support_little,support_mild,support_severe,excluded_rows
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,official,quality_subset,all_rows,529,529,1.0,0.5727788279773157,0.49819552886219554,0.49819552886219554,0.5973534971644613,71,126,332,0
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,official,quality_subset,exclude_exact_sha_label_conflicts,522,522,1.0,0.5766283524904214,0.50081154900432,0.50081154900432,0.5938697318007663,71,121,330,7
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,official,quality_subset,exclude_all_v3_cohort_overlap,319,319,1.0,0.5830721003134797,0.40401279013951474,0.40401279013951474,0.6300940438871473,10,52,257,210
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,official,quality_subset,v3_eligible_exclude_prompt_and_label_conflict,425,425,1.0,0.5670588235294117,0.47699511524710614,0.47699511524710614,0.6094117647058823,45,98,282,104

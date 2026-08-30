@@ -1,0 +1,9 @@
+{
+  "model": "qwen35_27b_bf16__gcp_a100",
+  "model_id": "Qwen/Qwen3.5-27B",
+  "cohort": "natural",
+  "n": 3474,
+  "n_parsed": 3474,
+  "duplicate_clusters": 2933,
+  "output_dir": "/home/can.baytekin/crisismmd-vlm-robustness/reports/v3/gcp_a100/models/qwen35_27b_bf16/clean_benchmarks/natural"
+}

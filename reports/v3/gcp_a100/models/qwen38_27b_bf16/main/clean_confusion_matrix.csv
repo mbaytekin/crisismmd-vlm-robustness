@@ -1,0 +1,10 @@
+model,model_id,ground_truth,prediction,count,row_denominator,row_rate
+qwen38_27b_bf16__gcp_a100,Qwen/Qwen3.8-27B,little_or_no_damage,little_or_no_damage,131,240,0.5458333333333333
+qwen38_27b_bf16__gcp_a100,Qwen/Qwen3.8-27B,little_or_no_damage,mild_damage,89,240,0.37083333333333335
+qwen38_27b_bf16__gcp_a100,Qwen/Qwen3.8-27B,little_or_no_damage,severe_damage,20,240,0.08333333333333333
+qwen38_27b_bf16__gcp_a100,Qwen/Qwen3.8-27B,mild_damage,little_or_no_damage,74,240,0.30833333333333335
+qwen38_27b_bf16__gcp_a100,Qwen/Qwen3.8-27B,mild_damage,mild_damage,92,240,0.38333333333333336
+qwen38_27b_bf16__gcp_a100,Qwen/Qwen3.8-27B,mild_damage,severe_damage,74,240,0.30833333333333335
+qwen38_27b_bf16__gcp_a100,Qwen/Qwen3.8-27B,severe_damage,little_or_no_damage,59,240,0.24583333333333332
+qwen38_27b_bf16__gcp_a100,Qwen/Qwen3.8-27B,severe_damage,mild_damage,24,240,0.1
+qwen38_27b_bf16__gcp_a100,Qwen/Qwen3.8-27B,severe_damage,severe_damage,157,240,0.6541666666666667

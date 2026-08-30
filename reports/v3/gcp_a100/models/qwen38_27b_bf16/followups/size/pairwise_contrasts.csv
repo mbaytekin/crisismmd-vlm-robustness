@@ -1,0 +1,9 @@
+model,model_id,ablation,condition_a,condition_b,contrast,n_paired_eligible,rate_a,rate_b,risk_difference_b_minus_a,ci_low,ci_high,a_only,b_only,discordant_n,mcnemar_p,mcnemar_p_holm
+qwen38_27b_bf16__gcp_a100,Qwen/Qwen3.8-27B,size,direct_pt03,direct_pt06,adjacent_point_size,19,0.0,0.05263157894736842,0.05263157894736842,0.0,0.15789473684210525,0,1,1,1.0,1.0
+qwen38_27b_bf16__gcp_a100,Qwen/Qwen3.8-27B,size,direct_pt06,direct_pt09,adjacent_point_size,19,0.05263157894736842,0.21052631578947367,0.15789473684210525,0.0,0.3157894736842105,0,3,3,0.25,1.0
+qwen38_27b_bf16__gcp_a100,Qwen/Qwen3.8-27B,size,direct_pt09,direct_pt12,adjacent_point_size,19,0.21052631578947367,0.3684210526315789,0.15789473684210525,0.0,0.31578947368421056,0,3,3,0.25,1.0
+qwen38_27b_bf16__gcp_a100,Qwen/Qwen3.8-27B,size,direct_pt12,direct_pt15,adjacent_point_size,19,0.3684210526315789,0.3684210526315789,0.0,-0.15789473684210525,0.15789473684210525,1,1,2,1.0,1.0
+qwen38_27b_bf16__gcp_a100,Qwen/Qwen3.8-27B,size,misleading_pt03,misleading_pt06,adjacent_point_size,19,0.0,0.10526315789473684,0.10526315789473684,0.0,0.2631578947368421,0,2,2,0.5,1.0
+qwen38_27b_bf16__gcp_a100,Qwen/Qwen3.8-27B,size,misleading_pt06,misleading_pt09,adjacent_point_size,19,0.10526315789473684,0.2631578947368421,0.15789473684210525,0.0,0.3157894736842105,0,3,3,0.25,1.0
+qwen38_27b_bf16__gcp_a100,Qwen/Qwen3.8-27B,size,misleading_pt09,misleading_pt12,adjacent_point_size,19,0.2631578947368421,0.2631578947368421,0.0,0.0,0.0,0,0,0,1.0,1.0
+qwen38_27b_bf16__gcp_a100,Qwen/Qwen3.8-27B,size,misleading_pt12,misleading_pt15,adjacent_point_size,19,0.2631578947368421,0.2631578947368421,0.0,0.0,0.0,0,0,0,1.0,1.0

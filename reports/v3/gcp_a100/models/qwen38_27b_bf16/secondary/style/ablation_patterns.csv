@@ -1,0 +1,10 @@
+model,model_id,ablation,semantics,variant_order,downward_pattern,count,denominator,proportion,monotonic_nondecreasing
+qwen38_27b_bf16__gcp_a100,Qwen/Qwen3.8-27B,style,direct,simple|news|camouflage,000,26,35,0.7428571428571429,
+qwen38_27b_bf16__gcp_a100,Qwen/Qwen3.8-27B,style,direct,simple|news|camouflage,010,3,35,0.08571428571428572,
+qwen38_27b_bf16__gcp_a100,Qwen/Qwen3.8-27B,style,direct,simple|news|camouflage,110,4,35,0.11428571428571428,
+qwen38_27b_bf16__gcp_a100,Qwen/Qwen3.8-27B,style,direct,simple|news|camouflage,111,2,35,0.05714285714285714,
+qwen38_27b_bf16__gcp_a100,Qwen/Qwen3.8-27B,style,misleading,simple|news|camouflage,000,26,35,0.7428571428571429,
+qwen38_27b_bf16__gcp_a100,Qwen/Qwen3.8-27B,style,misleading,simple|news|camouflage,010,2,35,0.05714285714285714,
+qwen38_27b_bf16__gcp_a100,Qwen/Qwen3.8-27B,style,misleading,simple|news|camouflage,100,1,35,0.02857142857142857,
+qwen38_27b_bf16__gcp_a100,Qwen/Qwen3.8-27B,style,misleading,simple|news|camouflage,110,3,35,0.08571428571428572,
+qwen38_27b_bf16__gcp_a100,Qwen/Qwen3.8-27B,style,misleading,simple|news|camouflage,111,3,35,0.08571428571428572,

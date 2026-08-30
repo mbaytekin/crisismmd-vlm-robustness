@@ -1,0 +1,5 @@
+model,model_id,cohort,group_type,group_value,n,n_parsed,parse_rate,accuracy,macro_f1_all_labels,macro_f1_present_labels,mean_absolute_severity_error,support_little,support_mild,support_severe,excluded_rows
+qwen3vl_32b_bf16__gcp_a100,Qwen/Qwen3-VL-32B-Instruct,official,quality_subset,all_rows,529,529,1.0,0.5689981096408318,0.4945248637646767,0.4945248637646767,0.5330812854442344,71,126,332,0
+qwen3vl_32b_bf16__gcp_a100,Qwen/Qwen3-VL-32B-Instruct,official,quality_subset,exclude_exact_sha_label_conflicts,522,522,1.0,0.5727969348659003,0.4975510416434406,0.4975510416434406,0.5287356321839081,71,121,330,7
+qwen3vl_32b_bf16__gcp_a100,Qwen/Qwen3-VL-32B-Instruct,official,quality_subset,exclude_all_v3_cohort_overlap,319,319,1.0,0.567398119122257,0.37816966983633654,0.37816966983633654,0.5611285266457681,10,52,257,210
+qwen3vl_32b_bf16__gcp_a100,Qwen/Qwen3-VL-32B-Instruct,official,quality_subset,v3_eligible_exclude_prompt_and_label_conflict,425,425,1.0,0.5764705882352941,0.48757392991560883,0.48757392991560883,0.52,45,98,282,104

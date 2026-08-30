@@ -1,0 +1,8 @@
+model,model_id,cohort,group_type,group_value,n,n_parsed,parse_rate,accuracy,macro_f1_all_labels,macro_f1_present_labels,mean_absolute_severity_error,support_little,support_mild,support_severe
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,official,leave_one_event_out,california_wildfires,442,442,1.0,0.5565610859728507,0.5064687065189999,0.5064687065189999,0.5950226244343891,69,119,254
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,official,leave_one_event_out,hurricane_harvey,397,397,1.0,0.6246851385390428,0.5306037401677345,0.5306037401677345,0.4987405541561713,52,93,252
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,official,leave_one_event_out,hurricane_irma,409,409,1.0,0.5623471882640587,0.4465339483999446,0.4465339483999446,0.6210268948655256,31,96,282
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,official,leave_one_event_out,hurricane_maria,396,396,1.0,0.5681818181818182,0.49309591020417054,0.49309591020417054,0.6439393939393939,62,79,255
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,official,leave_one_event_out,iraq_iran_earthquake,506,506,1.0,0.5592885375494071,0.4931190418405024,0.4931190418405024,0.6185770750988142,70,123,313
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,official,leave_one_event_out,mexico_earthquake,508,508,1.0,0.562992125984252,0.49656658249520264,0.49656658249520264,0.6141732283464567,71,123,314
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,official,leave_one_event_out,srilanka_floods,516,516,1.0,0.5813953488372093,0.5072054826947632,0.5072054826947632,0.5833333333333334,71,123,322

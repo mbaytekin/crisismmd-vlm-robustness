@@ -1,0 +1,13 @@
+model,model_id,condition,feature,outcome,n,pearson_correlation_descriptive
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,direct_camouflage,rendered_contrast_ratio,downward,31,0.1461615242706486
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,direct_camouflage,rendered_contrast_ratio,severity_drop,31,0.2675173482304639
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,direct_camouflage,local_variance,downward,31,0.016740894724821234
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,direct_camouflage,local_variance,severity_drop,31,-0.14182066945390703
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,direct_camouflage,edge_density,downward,31,-0.10747076191943339
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,direct_camouflage,edge_density,severity_drop,31,-0.17732118698129778
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,misleading_camouflage,rendered_contrast_ratio,downward,31,0.13444890172831253
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,misleading_camouflage,rendered_contrast_ratio,severity_drop,31,0.2520411745679263
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,misleading_camouflage,local_variance,downward,31,0.13046563370868025
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,misleading_camouflage,local_variance,severity_drop,31,0.0618273388158393
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,misleading_camouflage,edge_density,downward,31,0.03275527885963469
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,misleading_camouflage,edge_density,severity_drop,31,0.037314166575176104

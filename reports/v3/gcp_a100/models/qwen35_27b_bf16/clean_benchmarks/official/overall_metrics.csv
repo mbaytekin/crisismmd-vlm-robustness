@@ -1,0 +1,2 @@
+model,model_id,cohort,group_type,group_value,n,n_parsed,parse_rate,accuracy,macro_f1_all_labels,macro_f1_present_labels,mean_absolute_severity_error,support_little,support_mild,support_severe
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,official,cohort,official,529,529,1.0,0.5727788279773157,0.49819552886219554,0.49819552886219554,0.5973534971644613,71,126,332

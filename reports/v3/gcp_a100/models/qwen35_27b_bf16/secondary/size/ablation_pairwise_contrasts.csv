@@ -1,0 +1,7 @@
+model,model_id,ablation,semantics,condition_a,condition_b,n_paired_eligible,downward_rate_a,downward_rate_b,downward_risk_difference_b_minus_a,downward_risk_difference_ci_low,downward_risk_difference_ci_high,severity_drop_difference_b_minus_a,severity_drop_difference_ci_low,severity_drop_difference_ci_high,a_only_downward,b_only_downward,discordant,mcnemar_p,mcnemar_p_holm
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,size,direct,direct_small,direct_medium,20,0.7,0.7,0.0,-0.25,0.25,0.0,-0.5,0.5,3,3,6,1.0,1.0
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,size,direct,direct_small,direct_large,20,0.7,0.5,-0.19999999999999996,-0.45000000000000007,0.050000000000000044,-0.3999999999999999,-0.9000000000000001,0.10000000000000009,6,2,8,0.2890625,0.578125
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,size,direct,direct_medium,direct_large,20,0.7,0.5,-0.19999999999999996,-0.4,-0.04999999999999993,-0.3999999999999999,-0.8,-0.09999999999999998,4,0,4,0.125,0.375
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,size,misleading,misleading_small,misleading_medium,20,0.25,0.25,0.0,0.0,0.0,0.0,0.0,0.0,0,0,0,1.0,1.0
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,size,misleading,misleading_small,misleading_large,20,0.25,0.35,0.09999999999999998,0.0,0.25,0.15000000000000002,0.0,0.30000000000000004,0,2,2,0.5,1.0
+qwen35_27b_bf16__gcp_a100,Qwen/Qwen3.5-27B,size,misleading,misleading_medium,misleading_large,20,0.25,0.35,0.09999999999999998,0.0,0.25,0.15000000000000002,0.0,0.30000000000000004,0,2,2,0.5,1.0
