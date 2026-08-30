@@ -52,8 +52,20 @@ __pycache__/
 .cache/
 .model-lock/
 
-# Local manuscript builds and submission sources
+# Local manuscript builds and submission sources. The manuscript is authored
+# and shared through Overleaf, not versioned here; transfer it as manuscript.zip.
 manuscript/
+manuscript_backup_*/
+
+# External LLM drafting exchange. Holds duplicate manuscript sources, duplicate
+# copies of the canonical docs, and CrisisMMD-derived overlay figures. Keeping it
+# out avoids re-importing the manuscript through the back door and avoids stale
+# duplicates of PAPER_DECISIONS.md / ALL_RESULTS.md drifting from the canonical ones.
+GPT/
+
+# macOS metadata
+.DS_Store
+**/.DS_Store
 
 # Legacy V1 generated reports; reports/v2 remains the publication-facing report set
 reports/baseline_revision/
