@@ -32,7 +32,7 @@ kanonik referans kabul et. paper.md ile çelişkileri bul, caveat'leri koru,
 sonuç tablolarındaki paydaları değiştirme ve kanıtsız iddia ekleme.
 ```
 
-V2 is the completed historical experiment. V3 is the corrected primary pipeline: it removes tweet/near-image split leakage, excludes unusable text/images, matches visual dose across payload families, freezes size-ablation placement, and validates camouflage contrast after rendering. The final paper panel contains four BF16 open VLMs and Gemini 2.5 Flash under one frozen prompt; exact runtime provenance is recorded per run and is not treated as an experimental factor.
+V2 is the completed historical experiment. V3 is the corrected primary pipeline: it removes tweet/near-image split leakage, excludes unusable text/images, matches visual dose across payload families, freezes size-ablation placement, and validates camouflage contrast after rendering. The final paper panel contains five BF16 open VLMs and Gemini 2.5 Flash under one fixed zero-shot prompt; exact runtime provenance is recorded per run and is not treated as an experimental factor.
 
 ## Research question
 
@@ -100,7 +100,7 @@ scripts/run_v3_clean_benchmarks.sh --cohort both \
 
 This secondary queue evaluates all 3,474 locally valid severity records under their natural distribution and the exact published 529-row test split, clean-only. It reports duplicate-cluster bootstrap intervals, event/event-by-class metrics, leave-one-event-out sensitivity, and exact-SHA label-conflict sensitivity. It uses port 8094 by default, supports the larger Qwen aliases listed by `--help`, resumes completed predictions, never downloads checkpoints, and stops only the server PID it starts.
 
-V3 splits, payloads, frozen V4/P5 prompt, and attack images are immutable for the final run. The commands below are retained only for pipeline reproduction and validation; do not regenerate artifacts during paper-facing inference.
+V3 splits, payloads, the fixed zero-shot prompt, and attack images are immutable for the final run. Internal prompt-development labels are eliminated from paper-facing use. The commands below are retained only for pipeline reproduction and validation; do not regenerate artifacts during paper-facing inference.
 
 ```bash
 python -m src.v3_pipeline prepare

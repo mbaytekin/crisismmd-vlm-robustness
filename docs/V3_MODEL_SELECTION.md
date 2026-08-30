@@ -1,4 +1,9 @@
-# V3 model-panel rationale
+# Historical model-screening rationale — eliminated from paper-facing use
+
+**Status:** The candidate/gate policy below is superseded by the completed
+six-model panel in D018--D032. It must not be supplied to a manuscript-writing
+model or used to qualify the reported results. It remains only as execution
+history.
 
 Selection date: 2026-08-11. Revised after the Qwen3.5 9B pilot produced only 53.3% clean accuracy. The goal is to measure attack robustness only on models that first demonstrate adequate CrisisMMD task competence.
 
@@ -19,7 +24,7 @@ The standard 12B–32B tier uses MLX 8-bit checkpoints. The 235B and 397B ultra-
 
 ## Clean-first qualification
 
-1. Run the selected V4 zero-shot prompt on the 180-example prompt-validation split (60 per class). Stop below 60% accuracy, 55% macro-F1, 40% minimum class recall, or 99.5% parse rate.
+1. Run the selected zero-shot prompt on the 180-example prompt-validation split (60 per class). Stop below 60% accuracy, 55% macro-F1, 40% minimum class recall, or 99.5% parse rate.
 2. For screen passers, run only the 720 clean main examples. Stop below 70% accuracy, 65% macro-F1, 50% minimum class recall, or 99.5% parse rate.
 3. Run attack, benign, style, and size conditions only after both gates pass. Publish the clean screen for every rejected candidate to avoid selective reporting.
 

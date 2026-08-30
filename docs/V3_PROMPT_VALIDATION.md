@@ -1,4 +1,4 @@
-# V3 prompt validation
+# Prompt-development audit (historical; not paper-facing evidence)
 
 ## Status
 
@@ -6,20 +6,21 @@ This began as a post-hoc exploratory prompt revision performed after inspection 
 the Qwen3.5 27B `frozen_p3` clean pilot. The original `frozen_p3` file and its
 results remain unchanged as the historical zero-shot baseline.
 
-The revised rubric makes the evaluation scope operational: only visible damage
+The selected rubric makes the evaluation scope operational: only visible damage
 to man-made infrastructure and utilities is classified; hazard context,
 vegetation damage, and emergency response do not establish infrastructure
 damage by themselves; and severe damage requires visible destruction or loss
-of function. `p5_rubric_zero_shot` and `p6_rubric_few_shot` use the same rubric
-and output schema. P6 adds six balanced synthetic text demonstrations and no
-CrisisMMD examples.
+of function. The zero-shot and few-shot candidates use the same rubric and
+output schema. The few-shot candidate adds six balanced synthetic text
+demonstrations and no CrisisMMD examples. Internal candidate/version names are
+eliminated from all paper-facing use under D029.
 
 ## Validation split
 
 The comparison uses 180 previously unused source pairs, balanced at 60 per
 class. All 180 duplicate clusters are disjoint from V3 pilot, main, style, and
 size splits. The clean main split remains untouched. As of 2026-08-12, model
-screening uses this 180-sample split and the selected V4 prompt instead of the
+screening used this 180-sample split and the selected zero-shot prompt instead of the
 earlier 90-sample pilot. For Qwen3.5 27B, this screen remains post-hoc because
 the same split selected the prompt; its main result is confirmatory.
 
@@ -31,7 +32,7 @@ split only for paired prompt selection, not event-general performance claims.
 
 ## Results
 
-| metric | P5 rubric zero-shot | P6 rubric few-shot |
+| metric | Selected zero-shot | Few-shot candidate |
 |---|---:|---:|
 | parsed | 180/180 | 180/180 |
 | accuracy | 0.639 (115/180) | 0.628 (113/180) |
@@ -49,26 +50,23 @@ latency was 8.2% higher.
 
 Both prompts exceeded the numerical V3 pilot thresholds on this larger
 validation split, but this does not constitute a main-gate pass. Accuracy was
-strongly associated with source annotation confidence: P5 scored 0.510 for
+strongly associated with source annotation confidence: the selected zero-shot candidate scored 0.510 for
 confidence <=0.67 and 0.744 for unanimous confidence 1.0.
 
 ## Selection
 
-Select `p5_rubric_zero_shot` and lock it as `frozen_prompt_v4.yaml`. It has
+Select and lock the zero-shot rubric. It has
 higher accuracy, macro F1, mild recall, severe recall, and lower latency. The
 few-shot demonstrations add no supported quality benefit on the independent
 validation split. Keep few-shot prompting out of the primary production
 protocol and report it as a clean-prompt sensitivity analysis.
 
-Do not modify the locked V4 text after this selection. Before any clean-main
-run, record its prompt hash and update the protocol to disclose that V4 was
+Do not modify the locked prompt text after this selection. Before any clean-main
+run, record its prompt hash and update the protocol to disclose that it was
 selected post-hoc on the independent prompt-validation split.
 
 The locked prompt hash is
 `1fa1a4a2b61c4aaadb95215385cd97915fd515ca4b19fc477ba98291cdf39ee6`.
-Production scripts default to V4 as of 2026-08-12. An explicit selection remains
-available for reproducible commands:
-
-```bash
-export V3_PROMPT_CONFIG=configs/prompts/frozen_prompt_v4.yaml
-```
+Production scripts use the content-locked rubric. The immutable artifact lock
+and the prompt text reproduced in the manuscript appendix are the paper-facing
+references; internal filenames are implementation history only.

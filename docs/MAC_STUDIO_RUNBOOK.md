@@ -104,10 +104,10 @@ V3_CONCURRENCY=1 \
 scripts/run_v3_model.sh qwen35_27b_8bit
 ```
 
-The runner first evaluates the selected V4 zero-shot prompt on the balanced
+The runner first evaluates the selected zero-shot prompt on the balanced
 180-image prompt-validation split (60 examples per class). A passer continues
 with 720 untouched main clean images and stops if the stricter main gate fails.
-The V4 prompt was selected on this split with Qwen3.5 27B, so that model's
+The prompt was selected on this split with Qwen3.5 27B, so that model's
 first-stage score is post-hoc; its main result is confirmatory. After reviewing
 `reports/v3/clean_gates/`, explicitly unlock attacks for a qualified model:
 
@@ -122,7 +122,7 @@ scripts/run_v3_model.sh qwen35_27b_8bit
 Run IDs and SQLite caches are deterministic, so completed clean requests are reused.
 
 To screen every fully downloaded Mac checkpoint sequentially with the selected
-V4 prompt, run:
+prompt, run:
 
 ```bash
 scripts/run_all_v3_mac_models.sh

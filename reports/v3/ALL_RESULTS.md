@@ -1,15 +1,15 @@
 # CrisisMMD VLM Robustness: Canonical Paper-Writing Reference
 
-**Status date:** 2026-08-28
-**Paper panel:** Qwen3.5 27B BF16, Qwen3.6 27B BF16, Qwen3-VL 32B BF16, Mistral Small 3.1 24B BF16, and Gemini 2.5 Flash.
+**Status date:** 2026-08-30
+**Paper panel:** Qwen3.5 27B BF16, Qwen3.6 27B BF16, Qwen3.8 27B BF16, Qwen3-VL 32B BF16, Mistral Small 3.1 24B BF16, and Gemini 2.5 Flash.
 **Purpose:** This is the one reader-facing file to use while writing the manuscript. It combines the active paper decisions, dataset construction and rationale, complete BF16 + Gemini results, supported claims, caveats, and bibliography. Implementation artifacts remain audit evidence, but they are not competing manuscript summaries.
-**Interpretation rule:** Decisions D018-D022 govern post-result manuscript scope. Historical 8-bit, 4-bit, V2, 9B pilot, pass/fail gates, and deployment thresholds are excluded from paper-facing conclusions. Qwen3.8 is a pending same-protocol extension and must not enter aggregate tables until its complete matrix is available.
+**Interpretation rule:** Decisions D018-D029 govern post-result manuscript scope. Historical 8-bit, 4-bit, V2, 9B pilot, pass/fail gates, deployment thresholds, and abandoned internal prompt candidates are excluded from paper-facing conclusions. Qwen3.8 is a same-protocol extension whose complete validated matrix is now included. Text-rhetoric and point-size results remain secondary analyses and are complete for all six models. The active manuscript target is the NeurIPS 2026 AI4GOOD workshop; the NeurIPS checklist is not compiled.
 
 ## Technical Summary
 
-The completed evidence is sufficient to write a controlled, paired adversarial-robustness paper. All five models parsed every main response; balanced-main clean accuracy was 50.28%-55.69%. Clean performance is reported continuously without a pass/fail or deployment threshold. The paper-primary attack percentage is the number of clean-correct mild/severe decisions shifted downward divided by all 720 main samples. Conditional ASR on the clean-correct eligible subset is retained as a susceptibility analysis, not used as the headline population percentage.
+The completed evidence is sufficient to write a controlled, paired adversarial-robustness paper. All six models parsed every main response; balanced-main clean accuracy was 50.28%-55.69%. Clean performance is reported continuously without a pass/fail or deployment threshold. The paper-primary attack percentage is the number of clean-correct mild/severe decisions shifted downward divided by all 720 main samples. Conditional ASR on the clean-correct eligible subset is retained as a susceptibility analysis, not used as the headline population percentage.
 
-The main result is not a universal modality ordering. All 30 malicious model-condition comparisons produced a positive full-cohort malicious-minus-benign downward risk difference with Holm-corrected McNemar significance. However, magnitude and modality were strongly model-dependent. Full-cohort direct image/joint effects reached about 25%-33% for Qwen3-VL and Mistral, 14%-23% for the dense Qwen models, and 9%/25% for Gemini. Conditional eligible-only rates are larger and remain useful for explaining susceptibility, but they are not the headline population percentages.
+The main result is not a universal modality ordering. All 36 malicious model-condition comparisons produced a positive full-cohort malicious-minus-benign downward risk difference with Holm-corrected McNemar significance. However, magnitude and modality were strongly model-dependent. Full-cohort direct image/joint effects reached about 25%-33% for Qwen3-VL and Mistral, 8%-23% for the dense Qwen models, and 9%/25% for Gemini. Conditional eligible-only rates are larger and remain useful for explaining susceptibility, but they are not the headline population percentages.
 
 Presentation-style and size experiments are secondary mechanism analyses. Simple/news presentation was usually more effective than camouflage for direct instructions, but this is a bundled presentation contrast rather than an isolated style effect. Size did not have a universal monotonic relationship with attack success. These ablations have small model-specific eligible denominators (style 28-37; size 13-21), so exact counts and uncertainty must remain visible.
 
@@ -17,9 +17,11 @@ The paper's defensible contribution is therefore: a duplicate-resistant paired b
 
 ## Paper-Readiness Verdict
 
-**The study is manuscript-ready and has a coherent publishable contribution.** The expensive evidence is complete for a common five-model panel: main clean + nine paired conditions, natural clean, official-test clean, presentation-style ablation, and size ablation. The matched-control result is especially strong: all 30 malicious model-condition effects are positive and Holm-significant, and strict typography-matched sensitivity preserves that conclusion.
+**The study is manuscript-ready and has a coherent publishable contribution.** The expensive evidence is complete for a common six-model panel: main clean + nine paired conditions, natural clean, official-test clean, presentation-style ablation, relative-size ablation, text-rhetoric, and point-size follow-ups. The matched-control result is especially strong: all 36 malicious model-condition effects are positive and Holm-significant, and strict typography-matched sensitivity preserves that conclusion. The rhetoric and point-size follow-ups remain secondary.
 
 **It is not yet submission-ready in its strongest form.** The remaining material work is not another model matrix. Complete the two-reviewer visual validation before making readability, plausibility, camouflage, or non-occlusion claims; verify the bibliography and model revision table; and write the manuscript from this file. If visual review is omitted, the paper can still report the main digital intervention results, but the presentation-style section must be explicitly exploratory and must avoid perceptual claims.
+
+**Manuscript presentation (D025).** The active LaTeX draft is an AI4GOOD workshop paper. To keep the result readable, the main Method no longer carries full cluster-accounting and estimand equations; those stay in the appendix. The anonymous PDF may include a small number of generated overlay examples (California benign/direct/misleading in the main text; style and relative-size variants in the appendix). Captions must not claim human-validated realism. The private overlay directory remains gitignored and is not part of a public archive.
 
 The central contribution is meaningful for the literature because it combines four elements that prior typographic-attack and disaster-classification studies do not ordinarily combine in one design: a disaster under-triage target, globally duplicate-resistant cohorts, three delivery modalities, and modality-matched benign controls with direction-sensitive paired statistics. The contribution is an evaluation protocol and empirical finding, not a new classifier, attack optimizer, or defense.
 
@@ -29,27 +31,28 @@ The central contribution is meaningful for the literature because it combines fo
 |---|---|---|
 | Framing | Clean-characterized paired conditional robustness audit | Do not call the work a leaderboard or operational deployment study |
 | Clean performance | No pass/fail, qualification, or deployment threshold | Report accuracy, macro-F1, MAE, parsing, confusion matrix, and per-class recall as continuous measurements |
-| Primary panel | Four BF16 open VLMs plus Gemini 2.5 Flash | Exclude historical 8-bit, 4-bit, V2, and 9B pilot results from primary tables |
+| Primary panel | Five BF16 open VLMs plus Gemini 2.5 Flash | Exclude historical 8-bit, 4-bit, V2, and 9B pilot results from primary tables |
 | Primary estimand | Full-cohort downward success: clean-correct mild/severe cases shifted lower, divided by all 720 samples | Report its numerator and 720 denominator; retain eligible-only ASR as conditional susceptibility |
 | Controls | Compare each malicious condition with its modality-matched benign condition | Attacked accuracy alone is descriptive, not the main finding |
 | Statistics | Wilson intervals, 5,000 paired bootstrap draws, exact McNemar, Holm correction | Keep pairing and comparison families explicit; do not pool model predictions |
-| Prompt | Frozen zero-shot P5/V4 for all main runs | Do not add attack-aware language or retrofit the prompt after outcomes |
-| P7 sensitivity | Predeclared but not run; retired from required scope | Disclose this protocol deviation and do not claim prompt invariance |
+| Prompt | One fixed zero-shot rubric for all main runs | Do not add attack-aware language, narrate abandoned internal candidates, or claim prompt invariance |
 | Runtimes | Canonical open-model results use GCP A100/CUDA-vLLM; Gemini uses its hosted API | Do not interpret cross-service differences as backend effects |
 | Main cohort | Preserve custom balanced V3 main-720 | Use it for paired effects, not natural-prevalence or event-general claims |
 | Secondary clean cohorts | Natural-3,474 and official-test-529 | Use them for competence context and literature comparability, not attack prevalence |
-| Ablations | Separate presentation-style-120 and relative-size-60 cohorts; frozen post-review text-rhetoric and point-size follow-ups | Treat all as secondary mechanism analyses with explicit denominators |
+| Ablations | Separate presentation-style-120 and relative-size-60 cohorts; completed post-review text-rhetoric and point-size follow-ups | Treat all as secondary mechanism analyses with explicit denominators |
+| Gemini follow-ups (D027--D028) | Complete on the frozen rhetoric and point-size manifests; all 2,040 rows parsed and passed validation | Present unified six-model tables and 0/18 and 0/48 summaries; do not reopen 720 or replace relative 3/5/8% size |
 | Human review | Required for perceptual/readability/occlusion claims | Main numerical effects remain valid without it, but style realism claims do not |
+| Venue / figures | AI4GOOD workshop; no compiled checklist; illustrative PDF overlays only | Do not treat overlay figures as human validation or as an archive release |
 
 ## Decisions Retired or Narrowed After the Completed Runs
 
 These changes are amendments to reporting scope, not silent rewrites of the frozen experiment:
 
 1. **Deployment and clean pass/fail thresholds are retired (D018).** The old 180-screen and 720-main numeric cutoffs were investigator-defined and not externally calibrated for an operational use case. They remain in historical artifacts but are absent from manuscript claims and figures.
-2. **The 8-bit/4-bit candidate panel is retired from primary reporting (D019).** The final common panel is selected by completion of the same paper matrix, not by favorable attack outcomes: four BF16 open models plus Gemini 2.5 Flash.
+2. **The 8-bit/4-bit candidate panel is retired from primary reporting (D019).** The final common panel is selected by completion of the same paper matrix, not by favorable attack outcomes: five BF16 open models plus Gemini 2.5 Flash.
 3. **The MLX-only runtime rule is superseded by a common A100 runtime (D020).** Canonical open-model outputs use GCP A100/CUDA-vLLM and Gemini uses its hosted Batch API. Repeated MLX runs remain noncanonical audit evidence and are not mixed into the primary tables.
-4. **The P7 prompt sensitivity is retired from required scope (D021).** It was predeclared as secondary but never run. The paper must disclose this deviation and list prompt dependence as a limitation; it must not imply that V4 results are prompt-invariant.
-5. **The 90-sample pilot is historical only.** It helped debug the pipeline but does not enter the five-model paper evidence.
+4. **Abandoned internal prompt candidates are eliminated from paper-facing scope (D029).** The paper reports one fixed zero-shot rubric and retains only the supported limitation that the attack matrix was not repeated under another prompt.
+5. **The 90-sample pilot is historical only.** It helped debug the pipeline but does not enter the six-model paper evidence.
 6. **Human visual review is not retired.** It is still needed for claims about readability, plausibility, camouflage, or critical-region occlusion. Omitting it requires removing those perceptual claims, not pretending the validation occurred.
 
 ## What Dataset Counts Mean
@@ -81,7 +84,7 @@ The 720 main cohort is scientifically defensible for balanced paired estimation,
 
 ### Why 720, 120, and 60?
 
-These exact values are **not CrisisMMD conventions and are not sample sizes copied from a prior paper**. Repository history shows that 240, 40, and 20 sources per class were introduced in the initial V3 protocol and fixed before the canonical five-model paper-facing runs. The repository contains no derivation from a published rule, no predeclared minimum detectable effect, and no a priori power calculation for these values. They must therefore be reported as investigator-chosen protocol allocations, not as literature-standard sample sizes.
+These exact values are **not CrisisMMD conventions and are not sample sizes copied from a prior paper**. Repository history shows that 240, 40, and 20 sources per class were introduced in the initial V3 protocol and fixed before the canonical paper-facing runs. The repository contains no derivation from a published rule, no predeclared minimum detectable effect, and no a priori power calculation for these values. They must therefore be reported as investigator-chosen protocol allocations, not as literature-standard sample sizes.
 
 The allocation is nevertheless coherent with the experiments' different roles. Main received the largest cohort because it estimates the primary paired attack effects across ten conditions. Presentation-style received a smaller, separate cohort because it is a secondary bundled-mechanism comparison. Size received the smallest cohort because it is a secondary ordered one-factor comparison. Every cohort remains exactly class-balanced and fully paired within source, so enlarging a cohort increases cost by ten model requests per added source while preserving equal class contribution.
 
@@ -138,7 +141,7 @@ No one cohort can serve all three purposes without tradeoffs. The natural and of
 - Report the exact main event distribution and avoid event-general or disaster-type causal claims.
 - Describe official-test-529 as a secondary natural-imbalance benchmark; pair accuracy with macro-F1 and class recall.
 - Preserve four main rows linked to exact-image label-conflict groups in the frozen primary analysis and report their exclusion sensitivity.
-- Do not rebuild V3 after observing results. A future redesigned cohort would be V4, main-first, within-class event-proportional, and fully rerun.
+- Do not rebuild the completed cohort after observing results. Any future redesigned cohort must be separately versioned, main-first, within-class event-proportional, and fully rerun.
 
 ### Literature Basis for the Dataset Choices
 
@@ -195,24 +198,25 @@ The literature establishes typography size, opacity, color, placement, scene coh
 
 ### Prompt and Inference
 
-The primary prompt is the frozen zero-shot P5 rubric in `configs/prompts/frozen_prompt_v4.yaml`. It prioritizes visible physical damage to man-made infrastructure and allows tweet text only to clarify visible evidence. It contains no attack-aware instruction. Decoding is deterministic: temperature 0, top-p 1, seed 42, maximum 150 output tokens, and thinking disabled.
+The primary prompt is one fixed zero-shot damage-assessment rubric, reproduced in the manuscript appendix. It prioritizes visible physical damage to man-made infrastructure and allows tweet text only to clarify visible evidence. It contains no attack-aware instruction. Decoding is deterministic: temperature 0, top-p 1, seed 42, maximum 150 output tokens, and thinking disabled.
 
 | Paper label | Exact model identity | Precision/service | Result provenance |
 |---|---|---|---|
 | Qwen3.5 27B BF16 | `Qwen/Qwen3.5-27B` | BF16 | GCP A100 / vLLM |
 | Qwen3.6 27B BF16 | `Qwen/Qwen3.6-27B` | BF16 | GCP A100 / vLLM |
+| Qwen3.8 27B BF16 | `Qwen/Qwen3.8-27B` | BF16 | GCP A100 / vLLM |
 | Qwen3-VL 32B BF16 | `Qwen/Qwen3-VL-32B-Instruct` | BF16 | GCP A100 / vLLM |
 | Mistral 24B BF16 | `mistralai/Mistral-Small-3.1-24B-Instruct-2503` | BF16 | GCP A100 / vLLM |
 | Gemini 2.5 Flash | `gemini-2.5-flash` | Hosted service | Gemini Batch API |
 
-All four open models use the same GCP A100/CUDA-vLLM execution family for the canonical tables. Gemini remains a separate hosted service. Predictions are never pooled across models as independent observations, and runtime is not treated as a causal factor.
+All five open models use the same GCP A100/CUDA-vLLM execution family for the canonical tables. Gemini remains a separate hosted service. Predictions are never pooled across models as independent observations, and runtime is not treated as a causal factor.
 
 ## Metric Definitions
 
 - **Clean accuracy / macro-F1:** three-class correctness and class-balanced F1.
-- **Eligible denominator:** samples whose ground truth is mild/severe and whose clean prediction is correct for that model.
-- **Conditional downward ASR:** downward successes divided by the model-specific eligible denominator. This measures susceptibility after conditioning on a correct actionable clean decision.
-- **Full-cohort downward success rate (paper-primary):** the same downward-success count divided by all 720 main samples. Algebraically this is `eligible share x conditional downward ASR`; this is the requested clean-performance-aware population percentage.
+- **Eligible denominator:** the number of mild/severe samples that a model classified correctly before any intervention. It varies by model because clean predictions differ. It does not remove samples from the primary cohort; it only tells us how many cases could possibly move downward from a correct actionable decision.
+- **Conditional downward ASR:** downward successes divided by the model-specific eligible denominator. This secondary number answers, “among the initially correct actionable cases, what share was pushed lower?”
+- **Full-cohort downward success rate (paper-primary):** the exact same downward-success count divided by all 720 main samples. This answers, “out of the full test cohort, how often did the intervention turn a correct actionable decision into a lower one?” The numerator is identical in the two rates; only the denominator changes.
 - **Full-cohort upward shift rate:** clean-correct little/no or mild decisions shifted to a higher severity, divided by all 720 samples.
 - **Induced severe under-triage:** clean-correct severe samples attacked to mild or little/no.
 - **Induced critical under-triage:** clean-correct severe samples attacked specifically to little/no.
@@ -229,10 +233,11 @@ Attack columns report downward-success counts over all 720 balanced-main samples
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Qwen3.5 27B BF16 | 55.69% | 54.94% | 245/720 | 14.86% | 4.86% | 14.44% | 6.39% | 3.75% | 7.64% |
 | Qwen3.6 27B BF16 | 53.89% | 53.17% | 245/720 | 23.06% | 2.78% | 15.42% | 6.11% | 2.08% | 7.50% |
+| Qwen3.8 27B BF16 | 52.78% | 52.43% | 249/720 | 8.33% | 4.31% | 14.86% | 6.11% | 3.47% | 7.08% |
 | Qwen3-VL 32B BF16 | 53.19% | 52.98% | 294/720 | 32.64% | 4.72% | 32.92% | 9.86% | 3.75% | 9.44% |
 | Mistral 24B BF16 | 50.28% | 48.57% | 232/720 | 26.25% | 8.61% | 24.58% | 10.14% | 2.78% | 11.53% |
 | Gemini 2.5 Flash | 54.58% | 54.85% | 273/720 | 9.44% | 6.11% | 24.58% | 6.67% | 5.97% | 10.83% |
-| **Unweighted model mean** | **53.53%** | **52.90%** | **257.8/720** | **21.25%** | **5.42%** | **22.39%** | **7.83%** | **3.67%** | **9.39%** |
+| **Unweighted model mean** | **53.40%** | **52.82%** | **256.3/720** | **19.10%** | **5.23%** | **21.14%** | **7.54%** | **3.64%** | **9.01%** |
 
 Clean performance is modest and heterogeneous, with eligible counts of 232-294. The 720-denominator rate makes that competence limitation visible in the headline effect while preserving the attack's direction. It does not imply that any model is operationally useful. No pass/fail label is assigned.
 
@@ -244,10 +249,11 @@ These are the original eligible-only downward ASRs. They answer a different ques
 |---|---:|---:|---:|---:|---:|---:|
 | Qwen3.5 27B BF16 | 43.67% | 14.29% | 42.45% | 18.78% | 11.02% | 22.45% |
 | Qwen3.6 27B BF16 | 67.76% | 8.16% | 45.31% | 17.96% | 6.12% | 22.04% |
+| Qwen3.8 27B BF16 | 24.10% | 12.45% | 42.97% | 17.67% | 10.04% | 20.48% |
 | Qwen3-VL 32B BF16 | 79.93% | 11.56% | 80.61% | 24.15% | 9.18% | 23.13% |
 | Mistral 24B BF16 | 81.47% | 26.72% | 76.29% | 31.47% | 8.62% | 35.78% |
 | Gemini 2.5 Flash | 24.91% | 16.12% | 64.84% | 17.58% | 15.75% | 28.57% |
-| **Unweighted model mean** | **59.55%** | **15.37%** | **61.90%** | **21.99%** | **10.14%** | **26.39%** |
+| **Unweighted model mean** | **53.64%** | **14.88%** | **58.75%** | **21.27%** | **10.12%** | **25.41%** |
 
 ### Main Clean Detail
 
@@ -257,22 +263,23 @@ MAE uses the ordinal mapping little/no=0, mild=1, severe=2. Recall columns show 
 |---|---:|---:|---:|---:|---:|---:|---:|
 | Qwen3.5 27B BF16 | 55.69% | 54.94% | 0.5486 | 65.00% | 35.83% | 66.25% | 245 |
 | Qwen3.6 27B BF16 | 53.89% | 53.17% | 0.5833 | 59.58% | 35.83% | 66.25% | 245 |
+| Qwen3.8 27B BF16 | 52.78% | 52.43% | 0.5819 | 54.58% | 38.33% | 65.42% | 249 |
 | Qwen3-VL 32B BF16 | 53.19% | 52.98% | 0.5319 | 37.08% | 56.67% | 65.83% | 294 |
 | Mistral 24B BF16 | 50.28% | 48.57% | 0.5778 | 54.17% | 71.67% | 25.00% | 232 |
 | Gemini 2.5 Flash | 54.58% | 54.85% | 0.5597 | 50.00% | 50.83% | 62.92% | 273 |
-| **Unweighted model mean** | **53.53%** | **52.90%** | **0.5603** | **53.17%** | **50.17%** | **57.25%** | **257.8** |
+| **Unweighted model mean** | **53.40%** | **52.82%** | **0.5639** | **53.41%** | **48.20%** | **58.61%** | **256.3** |
 
 Mistral's 25% severe recall is the clearest class-level weakness. The two dense Qwen runs have identical mild and severe recall but differ on little/no recall. These differences explain why all conditional attack denominators and severe-case denominators must remain model-specific.
 
 ### Cross-Model Mean Clean Confusion Matrix
 
-Rows are ground truth and columns are predictions. Each cell is the unweighted mean of the five models' row-normalized clean confusion matrices, so every model contributes equally. This is a descriptive panel summary, not a pooled 3,600-observation estimate. Model-specific count matrices belong in the appendix.
+Rows are ground truth and columns are predictions. Each cell is the unweighted mean of the six models' row-normalized clean confusion matrices, so every model contributes equally. This is a descriptive panel summary, not a pooled 4,320-observation estimate. Model-specific count matrices belong in the appendix.
 
 | Ground truth | Pred. little/no | Pred. mild | Pred. severe |
 |---|---:|---:|---:|
-| Little/no | 53.17% | 41.42% | 5.42% |
-| Mild | 26.75% | 50.17% | 23.08% |
-| Severe | 23.25% | 19.50% | 57.25% |
+| Little/no | 53.41% | 40.70% | 5.91% |
+| Mild | 27.43% | 48.20% | 24.37% |
+| Severe | 23.47% | 17.92% | 58.61% |
 
 ## Matched Benign-Control Instability
 
@@ -282,52 +289,54 @@ These are benign downward-success counts divided by all 720 main samples. The sa
 |---|---:|---:|---:|
 | Qwen3.5 27B BF16 | 1.25% | 0.56% | 1.53% |
 | Qwen3.6 27B BF16 | 1.94% | 0.14% | 1.81% |
+| Qwen3.8 27B BF16 | 1.81% | 0.14% | 1.53% |
 | Qwen3-VL 32B BF16 | 1.39% | 0.56% | 1.53% |
 | Mistral 24B BF16 | 2.50% | 0.56% | 2.92% |
 | Gemini 2.5 Flash | 2.08% | 1.67% | 2.22% |
-| **Unweighted model mean** | **1.83%** | **0.69%** | **2.00%** |
+| **Unweighted model mean** | **1.83%** | **0.60%** | **1.92%** |
 
 Benign controls caused some instability, particularly for visual and joint additions, but their downward rates were substantially below the corresponding malicious rates. This is why the paper reports malicious-minus-matched-benign effects rather than attributing every changed prediction to attack semantics.
 
 ## Malicious Effects Exceed Matched Benign Instability
 
-Values are paired malicious-minus-benign downward risk differences on the full 720-sample cohort. All 30 values are positive, their full-cohort bootstrap intervals exclude zero, and all Holm-adjusted McNemar tests are significant. Conditional eligible-cohort effects and strict typography-matched sensitivity remain in model-level artifacts.
+Values are paired malicious-minus-benign downward risk differences on the full 720-sample cohort. All 36 values are positive, their full-cohort bootstrap intervals exclude zero, and all Holm-adjusted McNemar tests are significant. Conditional eligible-cohort effects and strict typography-matched sensitivity remain in model-level artifacts.
 
 | Model | Direct image | Direct text | Direct joint | Misleading image | Misleading text | Misleading joint |
 |---|---:|---:|---:|---:|---:|---:|
 | Qwen3.5 27B BF16 | +13.61 pp | +4.31 pp | +12.92 pp | +5.14 pp | +3.19 pp | +6.11 pp |
 | Qwen3.6 27B BF16 | +21.11 pp | +2.64 pp | +13.61 pp | +4.17 pp | +1.94 pp | +5.69 pp |
+| Qwen3.8 27B BF16 | +6.53 pp | +4.17 pp | +13.33 pp | +4.31 pp | +3.33 pp | +5.56 pp |
 | Qwen3-VL 32B BF16 | +31.25 pp | +4.17 pp | +31.39 pp | +8.47 pp | +3.19 pp | +7.92 pp |
 | Mistral 24B BF16 | +23.75 pp | +8.06 pp | +21.67 pp | +7.64 pp | +2.22 pp | +8.61 pp |
 | Gemini 2.5 Flash | +7.36 pp | +4.44 pp | +22.36 pp | +4.58 pp | +4.31 pp | +8.61 pp |
-| **Unweighted model mean** | **+19.42 pp** | **+4.72 pp** | **+20.39 pp** | **+6.00 pp** | **+2.97 pp** | **+7.39 pp** |
+| **Unweighted model mean** | **+17.27 pp** | **+4.63 pp** | **+19.21 pp** | **+5.72 pp** | **+3.03 pp** | **+7.08 pp** |
 
 This is the cleanest evidence that the findings are not explained merely by adding visual/textual material. Benign controls can still change predictions, but malicious payloads create substantially more downward movement on the same samples.
 
 ## Cross-Model Mean Severity Transition Matrices
 
-These confusion-matrix-like rows replace mean severity drop as the main presentation. Each row begins with a clean-correct label and shows the attacked label distribution. Values are unweighted means of the five model-specific row percentages. Downward and upward movements are both visible; model-specific count matrices belong in the appendix.
+These confusion-matrix-like rows replace mean severity drop as the main presentation. Each row begins with a clean-correct label and shows the attacked label distribution. Values are unweighted means of the six model-specific row percentages. Downward and upward movements are both visible; model-specific count matrices belong in the appendix.
 
 | Condition | Clean label | To little/no | To mild | To severe |
 |---|---|---:|---:|---:|
-| Direct image | Little/no | 100.00% | 0.00% | 0.00% |
-|  | Mild | 75.11% | 21.62% | 3.27% |
-|  | Severe | 47.61% | 2.10% | 50.29% |
-| Direct text | Little/no | 99.72% | 0.28% | 0.00% |
-|  | Mild | 25.99% | 71.77% | 2.24% |
-|  | Severe | 2.38% | 2.25% | 95.37% |
-| Direct joint | Little/no | 99.74% | 0.26% | 0.00% |
-|  | Mild | 73.85% | 23.19% | 2.95% |
-|  | Severe | 51.22% | 2.59% | 46.19% |
-| Misleading image | Little/no | 99.44% | 0.56% | 0.00% |
-|  | Mild | 29.29% | 69.90% | 0.81% |
-|  | Severe | 2.95% | 12.52% | 84.53% |
-| Misleading text | Little/no | 99.21% | 0.79% | 0.00% |
-|  | Mild | 16.04% | 83.45% | 0.51% |
-|  | Severe | 0.52% | 5.65% | 93.83% |
-| Misleading joint | Little/no | 99.62% | 0.38% | 0.00% |
-|  | Mild | 34.69% | 64.57% | 0.75% |
-|  | Severe | 3.68% | 15.64% | 80.68% |
+| Direct image | Little/no | 99.87% | 0.13% | 0.00% |
+|  | Mild | 71.11% | 24.72% | 4.17% |
+|  | Severe | 40.95% | 1.86% | 57.19% |
+| Direct text | Little/no | 99.64% | 0.36% | 0.00% |
+|  | Mild | 26.55% | 71.40% | 2.05% |
+|  | Severe | 2.20% | 2.09% | 95.72% |
+| Direct joint | Little/no | 99.53% | 0.47% | 0.00% |
+|  | Mild | 71.69% | 24.76% | 3.55% |
+|  | Severe | 48.10% | 2.16% | 49.74% |
+| Misleading image | Little/no | 99.41% | 0.59% | 0.00% |
+|  | Mild | 30.21% | 69.12% | 0.68% |
+|  | Severe | 2.78% | 11.39% | 85.83% |
+| Misleading text | Little/no | 99.34% | 0.66% | 0.00% |
+|  | Mild | 16.63% | 82.95% | 0.42% |
+|  | Severe | 0.54% | 5.35% | 94.12% |
+| Misleading joint | Little/no | 99.68% | 0.32% | 0.00% |
+|  | Mild | 35.61% | 63.77% | 0.62% |
+|  | Severe | 3.39% | 14.20% | 82.41% |
 
 ### Full-Cohort Upward Shift Rates
 
@@ -337,10 +346,13 @@ Upward shifts are possible but rare. Each value is the count of clean-correct li
 |---|---:|---:|---:|---:|---:|---:|
 | Qwen3.5 27B BF16 | 0.83% | 0.28% | 0.97% | 0.28% | 0.00% | 0.00% |
 | Qwen3.6 27B BF16 | 0.14% | 0.28% | 0.97% | 0.14% | 0.14% | 0.28% |
+| Qwen3.8 27B BF16 | 1.25% | 0.28% | 1.11% | 0.14% | 0.00% | 0.00% |
 | Qwen3-VL 32B BF16 | 0.00% | 0.42% | 0.00% | 0.14% | 0.00% | 0.14% |
 | Mistral 24B BF16 | 0.00% | 0.28% | 0.00% | 0.14% | 0.56% | 0.28% |
 | Gemini 2.5 Flash | 1.39% | 0.83% | 0.14% | 0.28% | 0.42% | 0.14% |
-| **Unweighted model mean** | **0.47%** | **0.42%** | **0.42%** | **0.20%** | **0.22%** | **0.17%** |
+| **Unweighted model mean** | **0.60%** | **0.39%** | **0.53%** | **0.19%** | **0.19%** | **0.14%** |
+
+The mean row is recomputed from the exact six-model full-cohort upward numerators (26, 17, 23, 8, 8, and 6 successes, respectively) over the common $6\times720$ denominator; it is not an average of already rounded display percentages.
 
 The directional asymmetry is empirical rather than imposed by the analysis: attacks overwhelmingly lower severity, but occasional mild-to-severe and little/no-to-mild transitions occur. Mean ordinal severity drop remains available as a supplementary magnitude statistic in each model's `attack_metrics.csv` and `statistical_tests.csv`.
 
@@ -352,10 +364,11 @@ Each cell is induced severe under-triage / induced critical under-triage among c
 |---|---:|---:|---:|
 | Qwen3.5 27B BF16 | 28.93% / 28.30% | 7.55% / 3.77% | 33.96% / 33.96% |
 | Qwen3.6 27B BF16 | 55.97% / 54.72% | 1.89% / 1.26% | 32.70% / 32.08% |
+| Qwen3.8 27B BF16 | 8.28% / 7.64% | 2.55% / 1.27% | 32.48% / 32.48% |
 | Qwen3-VL 32B BF16 | 67.72% / 67.09% | 4.43% / 1.90% | 73.42% / 73.42% |
 | Mistral 24B BF16 | 83.33% / 76.67% | 3.33% / 1.67% | 73.33% / 65.00% |
 | Gemini 2.5 Flash | 12.58% / 11.26% | 5.96% / 3.31% | 55.63% / 51.66% |
-| **Unweighted model mean** | **49.71% / 47.61%** | **4.63% / 2.38%** | **53.81% / 51.22%** |
+| **Unweighted model mean** | **42.81% / 40.95%** | **4.28% / 2.20%** | **50.26% / 48.10%** |
 
 The Qwen3-VL, Mistral, and Gemini joint findings are not only generic label changes: many initially correct severe judgments are moved directly to little/no damage.
 
@@ -369,6 +382,7 @@ Each cell reports `mild->little/no / severe->mild / severe->little/no`. Percenta
 |---|---:|---:|---:|
 | Qwen3.5 27B BF16 | 70.93% (61/86) / 0.63% (1/159) / 28.30% (45/159) | 26.74% (23/86) / 3.77% (6/159) / 3.77% (6/159) | 58.14% (50/86) / 0.00% (0/159) / 33.96% (54/159) |
 | Qwen3.6 27B BF16 | 89.53% (77/86) / 1.26% (2/159) / 54.72% (87/159) | 19.77% (17/86) / 0.63% (1/159) / 1.26% (2/159) | 68.60% (59/86) / 0.63% (1/159) / 32.08% (51/159) |
+| Qwen3.8 27B BF16 | 51.09% (47/92) / 0.64% (1/157) / 7.64% (12/157) | 29.35% (27/92) / 1.27% (2/157) / 1.27% (2/157) | 60.87% (56/92) / 0.00% (0/157) / 32.48% (51/157) |
 | Qwen3-VL 32B BF16 | 94.12% (128/136) / 0.63% (1/158) / 67.09% (106/158) | 19.85% (27/136) / 2.53% (4/158) / 1.90% (3/158) | 88.97% (121/136) / 0.00% (0/158) / 73.42% (116/158) |
 | Mistral 24B BF16 | 80.81% (139/172) / 6.67% (4/60) / 76.67% (46/60) | 34.88% (60/172) / 1.67% (1/60) / 1.67% (1/60) | 77.33% (133/172) / 8.33% (5/60) / 65.00% (39/60) |
 | Gemini 2.5 Flash | 40.16% (49/122) / 1.32% (2/151) / 11.26% (17/151) | 28.69% (35/122) / 2.65% (4/151) / 3.31% (5/151) | 76.23% (93/122) / 3.97% (6/151) / 51.66% (78/151) |
@@ -379,6 +393,7 @@ Each cell reports `mild->little/no / severe->mild / severe->little/no`. Percenta
 |---|---:|---:|---:|
 | Qwen3.5 27B BF16 | 27.91% (24/86) / 10.69% (17/159) / 3.14% (5/159) | 19.77% (17/86) / 5.66% (9/159) / 0.63% (1/159) | 33.72% (29/86) / 11.95% (19/159) / 4.40% (7/159) |
 | Qwen3.6 27B BF16 | 29.07% (25/86) / 8.81% (14/159) / 3.14% (5/159) | 13.95% (12/86) / 1.89% (3/159) / 0.00% (0/159) | 33.72% (29/86) / 13.21% (21/159) / 2.52% (4/159) |
+| Qwen3.8 27B BF16 | 34.78% (32/92) / 5.73% (9/157) / 1.91% (3/157) | 19.57% (18/92) / 3.82% (6/157) / 0.64% (1/157) | 40.22% (37/92) / 7.01% (11/157) / 1.91% (3/157) |
 | Qwen3-VL 32B BF16 | 29.41% (40/136) / 15.82% (25/158) / 3.80% (6/158) | 13.97% (19/136) / 5.06% (8/158) / 0.00% (0/158) | 27.94% (38/136) / 15.82% (25/158) / 3.16% (5/158) |
 | Mistral 24B BF16 | 35.47% (61/172) / 16.67% (10/60) / 3.33% (2/60) | 8.72% (15/172) / 8.33% (5/60) / 0.00% (0/60) | 39.53% (68/172) / 20.00% (12/60) / 5.00% (3/60) |
 | Gemini 2.5 Flash | 24.59% (30/122) / 10.60% (16/151) / 1.32% (2/151) | 23.77% (29/122) / 7.28% (11/151) / 1.99% (3/151) | 38.52% (47/122) / 17.22% (26/151) / 3.31% (5/151) |
@@ -395,6 +410,7 @@ Patterns are defined on the same eligible samples using image/text/joint downwar
 |---|---:|---:|---:|---:|---:|---:|
 | Qwen3.5 27B BF16 | 37.96% (93/245) | 13.06% (32/245) | 18.78% (46/245) | 0.41% (1/245) | 24.49% (60/245) | 8.57% (21/245) |
 | Qwen3.6 27B BF16 | 20.41% (50/245) | 11.02% (27/245) | 34.29% (84/245) | 0.00% (0/245) | 33.47% (82/245) | 7.35% (18/245) |
+| Qwen3.8 27B BF16 | 53.01% (132/249) | 20.08% (50/249) | 3.21% (8/249) | 0.80% (2/249) | 20.88% (52/249) | 9.64% (24/249) |
 | Qwen3-VL 32B BF16 | 15.99% (47/294) | 3.74% (11/294) | 3.06% (9/294) | 0.34% (1/294) | 76.87% (226/294) | 11.22% (33/294) |
 | Mistral 24B BF16 | 16.38% (38/232) | 0.86% (2/232) | 6.03% (14/232) | 1.29% (3/232) | 75.43% (175/232) | 25.43% (59/232) |
 | Gemini 2.5 Flash | 32.23% (88/273) | 39.93% (109/273) | 2.93% (8/273) | 0.00% (0/273) | 21.98% (60/273) | 13.19% (36/273) |
@@ -405,6 +421,7 @@ Patterns are defined on the same eligible samples using image/text/joint downwar
 |---|---:|---:|---:|---:|---:|---:|
 | Qwen3.5 27B BF16 | 75.51% (185/245) | 3.27% (8/245) | 1.22% (3/245) | 0.82% (2/245) | 17.55% (43/245) | 8.57% (21/245) |
 | Qwen3.6 27B BF16 | 77.55% (190/245) | 4.08% (10/245) | 0.41% (1/245) | 0.00% (0/245) | 17.55% (43/245) | 5.71% (14/245) |
+| Qwen3.8 27B BF16 | 77.51% (193/249) | 4.02% (10/249) | 1.61% (4/249) | 0.40% (1/249) | 16.06% (40/249) | 9.24% (23/249) |
 | Qwen3-VL 32B BF16 | 72.79% (214/294) | 2.38% (7/294) | 3.40% (10/294) | 0.34% (1/294) | 20.41% (60/294) | 8.16% (24/294) |
 | Mistral 24B BF16 | 61.64% (143/232) | 5.60% (13/232) | 1.29% (3/232) | 1.29% (3/232) | 30.17% (70/232) | 7.33% (17/232) |
 | Gemini 2.5 Flash | 69.23% (189/273) | 8.79% (24/273) | 0.73% (2/273) | 1.47% (4/273) | 16.85% (46/273) | 11.36% (31/273) |
@@ -419,10 +436,11 @@ Each cell is accuracy / macro-F1. Natural-clean uncertainty is duplicate-cluster
 |---|---:|---:|
 | Qwen3.5 27B BF16 | 56.79% / 49.47% | 57.28% / 49.82% |
 | Qwen3.6 27B BF16 | 56.10% / 48.12% | 56.52% / 48.12% |
+| Qwen3.8 27B BF16 | 54.84% / 47.08% | 56.14% / 48.58% |
 | Qwen3-VL 32B BF16 | 56.36% / 48.68% | 56.90% / 49.45% |
 | Mistral 24B BF16 | 36.56% / 36.28% | 37.05% / 36.83% |
 | Gemini 2.5 Flash | 54.84% / 48.16% | 56.33% / 49.99% |
-| **Unweighted model mean** | **52.13% / 46.14%** | **52.82% / 46.84%** |
+| **Unweighted model mean** | **52.58% / 46.30%** | **53.37% / 47.13%** |
 
 The main and secondary clean views tell different stories because they answer different questions. The balanced main gives equal class precision for the paired audit. Natural and official cohorts expose source prevalence and class behavior. Mistral's large drop on natural/official data is especially important: its balanced-main attack estimates remain conditionally valid, but its broader task competence is weak.
 
@@ -434,10 +452,11 @@ Values are downward ASR; eligible n is model-specific. Simple/news/camouflage ar
 |---|---:|---:|---:|---:|---:|---:|---:|
 | Qwen3.5 27B BF16 | 31 | 41.94% | 32.26% | 12.90% | 19.35% | 22.58% | 9.68% |
 | Qwen3.6 27B BF16 | 32 | 56.25% | 34.38% | 15.62% | 12.50% | 18.75% | 9.38% |
+| Qwen3.8 27B BF16 | 35 | 17.14% | 25.71% | 5.71% | 20.00% | 22.86% | 8.57% |
 | Qwen3-VL 32B BF16 | 37 | 81.08% | 83.78% | 21.62% | 24.32% | 29.73% | 16.22% |
 | Mistral 24B BF16 | 28 | 67.86% | 53.57% | 32.14% | 32.14% | 39.29% | 17.86% |
 | Gemini 2.5 Flash | 36 | 25.00% | 16.67% | 8.33% | 22.22% | 16.67% | 13.89% |
-| **Unweighted model mean** | **32.8** | **54.42%** | **44.13%** | **18.13%** | **22.11%** | **25.40%** | **13.40%** |
+| **Unweighted model mean** | **33.2** | **48.21%** | **41.06%** | **16.06%** | **21.76%** | **24.98%** | **12.60%** |
 
 Direct simple/news attacks are especially strong for Qwen3-VL and Mistral, while both dense Qwen models also show larger direct effects for simple/news than camouflage. Camouflage usually reduces efficacy but does not eliminate it. Small denominators and several individually non-significant ablation contrasts make these rankings descriptive rather than confirmatory.
 
@@ -449,12 +468,13 @@ Values are downward ASR. Target relative font heights are small=3%, medium=5%, a
 |---|---:|---:|---:|---:|---:|---:|---:|
 | Qwen3.5 27B BF16 | 20 | 70.00% | 70.00% | 50.00% | 25.00% | 25.00% | 35.00% |
 | Qwen3.6 27B BF16 | 19 | 68.42% | 78.95% | 63.16% | 15.79% | 21.05% | 15.79% |
+| Qwen3.8 27B BF16 | 19 | 31.58% | 26.32% | 21.05% | 26.32% | 26.32% | 31.58% |
 | Qwen3-VL 32B BF16 | 21 | 76.19% | 90.48% | 85.71% | 28.57% | 33.33% | 33.33% |
 | Mistral 24B BF16 | 13 | 53.85% | 61.54% | 76.92% | 15.38% | 38.46% | 38.46% |
 | Gemini 2.5 Flash | 18 | 22.22% | 27.78% | 44.44% | 11.11% | 16.67% | 22.22% |
-| **Unweighted model mean** | **18.2** | **58.14%** | **65.75%** | **64.05%** | **19.17%** | **26.90%** | **28.96%** |
+| **Unweighted model mean** | **18.3** | **53.71%** | **59.18%** | **56.88%** | **20.36%** | **26.80%** | **29.40%** |
 
-Mistral and Gemini show increasing direct ASR across the three observed sizes, Qwen3.6 and Qwen3-VL peak at medium, and Qwen3.5 ties at small/medium before falling at large. The paper must reject a universal monotonic-size hypothesis. With only 13-21 eligible observations per model, individual percentage-point differences are imprecise and should be reported with intervals rather than as a deterministic law.
+Mistral and Gemini show increasing direct ASR across the three observed sizes, Qwen3.6 and Qwen3-VL peak at medium, Qwen3.5 ties at small/medium before falling at large, and Qwen3.8 declines. The paper must reject a universal monotonic-size hypothesis. With only 13-21 eligible observations per model, individual percentage-point differences are imprecise and should be reported with intervals rather than as a deterministic law.
 
 ## Descriptive Disaster-Type Analysis
 
@@ -466,21 +486,22 @@ This analysis reuses the completed main predictions; it does not require new mod
 |---|---:|---:|---:|---:|
 | Qwen3.5 27B BF16 | 94.67% | 37.93% | 52.95% | 40.35% |
 | Qwen3.6 27B BF16 | 94.67% | 37.93% | 50.45% | 42.11% |
+| Qwen3.8 27B BF16 | 93.33% | 37.93% | 49.19% | 42.11% |
 | Qwen3-VL 32B BF16 | 93.33% | 41.38% | 49.19% | 45.61% |
 | Mistral 24B BF16 | 50.67% | 6.90% | 53.31% | 42.11% |
 | Gemini 2.5 Flash | 93.33% | 41.38% | 51.16% | 43.86% |
-| **Unweighted model mean** | **85.33%** | **33.10%** | **51.41%** | **42.81%** |
+| **Unweighted model mean** | **86.67%** | **33.91%** | **51.04%** | **42.69%** |
 
 ### Mean Full-Cohort Downward Success by Disaster Type
 
-Each cell is the unweighted mean of five model-level rates. The denominator is the number of sources in that disaster group, while the numerator still requires a clean-correct mild/severe decision followed by a downward shift.
+Each cell is the unweighted mean of six model-level rates. The denominator is the number of sources in that disaster group, while the numerator still requires a clean-correct mild/severe decision followed by a downward shift.
 
 | Disaster type | Direct image | Direct text | Direct joint | Misleading image | Misleading text | Misleading joint |
 |---|---:|---:|---:|---:|---:|---:|
-| Earthquake | 35.20% | 1.60% | 39.73% | 6.40% | 2.93% | 7.73% |
-| Flood | 13.79% | 4.83% | 20.69% | 8.28% | 2.07% | 11.03% |
-| Hurricane | 19.36% | 6.19% | 20.00% | 8.37% | 3.94% | 10.02% |
-| Wildfire | 25.26% | 3.16% | 23.86% | 4.21% | 2.81% | 4.56% |
+| Earthquake | 29.78% | 1.33% | 36.89% | 6.00% | 2.44% | 6.89% |
+| Flood | 13.22% | 4.02% | 20.11% | 7.47% | 2.30% | 9.77% |
+| Hurricane | 17.68% | 6.02% | 18.93% | 8.11% | 3.94% | 9.72% |
+| Wildfire | 21.93% | 3.22% | 22.51% | 4.09% | 2.92% | 4.39% |
 
 These differences are **descriptive, not causal disaster-type effects**. The main cohort has severe class concentration in earthquakes, no little/no wildfire or earthquake rows, only 29 flood examples, and 559 hurricane examples. Thus class mix, event identity, image characteristics, and disaster type are inseparable. The earthquake clean score, for example, largely reflects performance on severe examples rather than general earthquake competence. Model-specific numerators, eligible denominators, upward rates, and signed shifts are retained in each `disaster_type_metrics.csv` appendix artifact.
 
@@ -490,31 +511,58 @@ This second view asks a different question: among the clean-correct mild/severe 
 
 | Disaster type | Eligible n range per model | Direct image | Direct text | Direct joint | Misleading image | Misleading text | Misleading joint |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| Earthquake | 38-71 | 44.97% | 1.94% | 48.91% | 8.50% | 4.10% | 10.17% |
-| Flood | 2-12 | 51.21% | 12.12% | 60.30% | 20.76% | 5.15% | 27.58% |
-| Hurricane | 139-186 | 67.16% | 21.49% | 68.46% | 29.03% | 13.81% | 34.99% |
-| Wildfire | 23-26 | 58.91% | 7.24% | 55.10% | 9.65% | 6.41% | 10.55% |
+| Earthquake | 38-71 | 37.95% | 1.62% | 44.80% | 7.80% | 3.41% | 8.95% |
+| Flood | 2-12 | 47.22% | 10.10% | 57.83% | 18.81% | 5.81% | 24.49% |
+| Hurricane | 139-186 | 61.98% | 21.26% | 65.84% | 28.59% | 14.06% | 34.49% |
+| Wildfire | 23-26 | 51.18% | 7.42% | 52.17% | 9.43% | 6.73% | 10.18% |
 
-No single disaster type is simply “most reliable.” Earthquake has the strongest clean baseline (85.33%) and comparatively lower conditional susceptibility, but its many eligible correct cases produce high full-cohort direct risk. Hurricane has middling clean competence and the highest conditional susceptibility in all six malicious conditions. Flood has the weakest clean baseline and only 2-12 eligible cases per model, so its attack percentages are too unstable to support a reliability claim. The paper should show clean competence and conditional susceptibility side by side and keep the result descriptive.
+No single disaster type is simply “most reliable.” Earthquake has the strongest clean baseline (86.67%) and comparatively lower conditional susceptibility, but its many eligible correct cases produce high full-cohort direct risk. Hurricane has middling clean competence and the highest conditional susceptibility in all six malicious conditions. Flood has the weakest clean baseline and only 2-12 eligible cases per model, so its attack percentages are too unstable to support a reliability claim. The paper should show clean competence and conditional susceptibility side by side and keep the result descriptive.
 
-## Frozen Supervisor Follow-Ups Now Running
+## Completed Supervisor Follow-Ups
 
-Two post-review secondary analyses were frozen before their model responses were inspected:
+The two secondary analyses are complete for all six paper models. Each text-rhetoric file contains 1,080 parsed rows (120 sources x 9 conditions), and each point-size file contains 960 parsed rows (60 sources x 16 conditions). Exact row counts, unique source-condition pairs, prompt hashes, model identities, parse status, and error fields were validated before incorporation.
 
-1. **Text-rhetoric ablation:** 120 existing disjoint sources, 9 conditions, 1,080 requests per model. It compares exact-label direct instructions, natural-language direct instructions, plain misleading claims, and authority-framed misleading claims against four rhetoric-matched benign controls.
-2. **Point-size response:** 60 existing disjoint sources, 16 conditions, 960 requests per model. It compares benign/direct/misleading image overlays at nominal `3, 6, 9, 12, 15 pt` under the fixed 72-PPI mapping and frozen DejaVu Sans font.
+### Text-Rhetoric Follow-Up
 
-Qwen3.5 27B, Qwen3.6 27B, Qwen3.8 27B, Qwen3-VL 32B, and Mistral 24B BF16 run on separate A100 80GB instances. These outputs must remain outside the completed canonical tables until every requested condition passes completeness checks. Qwen3.8 is an extension model, not a replacement selected by outcome.
+Rates below are full-cohort downward successes over all 120 sources; the eligible count is shown separately. The final row is an unweighted six-model mean.
+
+| Model | Eligible n/120 | Exact-label direct | Natural direct | Plain misleading | Authority misleading |
+|---|---:|---:|---:|---:|---:|
+| Qwen3.5 27B BF16 | 31/120 | 2.50% | 2.50% | 2.50% | 4.17% |
+| Qwen3.6 27B BF16 | 32/120 | 1.67% | 2.50% | 1.67% | 1.67% |
+| Qwen3.8 27B BF16 | 35/120 | 5.83% | 1.67% | 5.83% | 5.83% |
+| Qwen3-VL 32B BF16 | 37/120 | 4.17% | 4.17% | 4.17% | 4.17% |
+| Mistral 24B BF16 | 28/120 | 7.50% | 7.50% | 7.50% | 4.17% |
+| Gemini 2.5 Flash | 33/120 | 1.67% | 3.33% | 3.33% | 4.17% |
+| **Unweighted model mean** | **32.7/120** | **3.89%** | **3.61%** | **4.17%** | **4.03%** |
+
+Conditional eligible-only means were 14.61%, 13.76%, 15.62%, and 14.82%, respectively. Full-cohort malicious-minus-rhetoric-matched-benign means were +3.75, +3.33, +3.89, and +3.47 percentage points. None of the three within-model pairwise rhetoric contrasts was Holm-significant across the six models (0/18 model-contrast tests). The data therefore do not support a universal advantage for exact labels, natural wording, plain claims, or authority framing.
+
+### Point-Size Follow-Up
+
+Nominal 3, 6, 9, 12, and 15 pt map to 3, 6, 9, 12, and 15 rendered pixels at the frozen 72-PPI conversion. Rates are full-cohort downward successes over all 60 sources.
+
+| Model | Direct 3/6/9/12/15 pt | Misleading 3/6/9/12/15 pt |
+|---|---:|---:|
+| Qwen3.5 27B BF16 | 5.00 / 5.00 / 8.33 / 11.67 / 13.33% | 3.33 / 5.00 / 8.33 / 6.67 / 8.33% |
+| Qwen3.6 27B BF16 | 1.67 / 3.33 / 8.33 / 13.33 / 16.67% | 1.67 / 3.33 / 6.67 / 8.33 / 6.67% |
+| Qwen3.8 27B BF16 | 0.00 / 1.67 / 6.67 / 11.67 / 11.67% | 0.00 / 3.33 / 8.33 / 8.33 / 8.33% |
+| Qwen3-VL 32B BF16 | 3.33 / 1.67 / 8.33 / 21.67 / 26.67% | 3.33 / 3.33 / 6.67 / 11.67 / 11.67% |
+| Mistral 24B BF16 | 0.00 / 0.00 / 1.67 / 11.67 / 11.67% | 0.00 / 0.00 / 1.67 / 3.33 / 3.33% |
+| Gemini 2.5 Flash | 0.00 / 1.67 / 1.67 / 1.67 / 1.67% | 0.00 / 1.67 / 3.33 / 5.00 / 3.33% |
+| **Unweighted model mean** | **1.67 / 2.22 / 5.83 / 11.94 / 13.61%** | **1.39 / 2.78 / 5.83 / 7.22 / 6.94%** |
+
+The descriptive means rise with size, especially for direct attacks, but none of the eight within-model point-size contrasts was Holm-significant across the six models (0/48 model-contrast tests). The follow-up therefore shows an aggregate size-response pattern without establishing a deterministic monotonic law for individual models.
 
 ## Answers to the Research Questions
 
 ### RQ1: Delivery modality matters, but the ordering is model-dependent
 
-Image/joint delivery is much stronger than text-only for all four open models. Qwen3.5 and Qwen3-VL have similar direct image and joint effects, while Qwen3.6 and Mistral are more vulnerable to image-only delivery. Gemini uniquely shows a large direct joint amplification over both image and text. A single universal ordering is unsupported.
+Image/joint delivery is much stronger than text-only for all five open models. Qwen3.5 and Qwen3-VL have similar direct image and joint effects, Qwen3.6 and Mistral are more vulnerable to image-only delivery, and Qwen3.8 is more vulnerable to joint delivery. Gemini shows a particularly large direct joint amplification over both image and text. A single universal ordering is unsupported.
 
 ### RQ2: Direct instructions are generally more damaging than misleading claims
 
-Direct image/joint attacks dominate for all four open models, while Gemini's direct-joint condition is the clearest semantic contrast. Misleading claims remain effective and significantly exceed matched benign controls in every modality for every model.
+Direct image/joint attacks dominate for all five open models, while Gemini's direct-joint condition is the clearest semantic contrast. Misleading claims remain effective and significantly exceed matched benign controls in every modality for every model.
 
 ### RQ3: Low-salience camouflage can remain effective, but realism is not established
 
@@ -535,8 +583,8 @@ Benign downward rates are generally low, and all malicious-minus-benign paired e
 ## Robustness and Sensitivity Checks
 
 - All main prediction files contain 720 parsed clean rows and 720 parsed rows per attack condition; parse rate is 100%.
-- Strict visual-match subsets preserve positive benign-adjusted downward effects for all 30 model-condition combinations; the smallest lower bootstrap bound remains above zero.
-- Excluding the four main rows linked to exact-image label conflicts produces negligible changes for all five models. For example, Qwen3-VL accuracy changes from 53.19% to 53.35%, and Mistral from 50.28% to 50.42%; attack-condition sensitivities are preserved in the regenerated model reports.
+- Strict visual-match subsets preserve positive benign-adjusted downward effects for all 36 model-condition combinations; the smallest lower bootstrap bound remains above zero.
+- Excluding the four main rows linked to exact-image label conflicts produces negligible changes for the original five canonical models. For example, Qwen3-VL accuracy changes from 53.19% to 53.35%, and Mistral from 50.28% to 50.42%; attack-condition sensitivities are preserved in the regenerated model reports. Qwen3.8 has no additional conflict rows in the validated extension artifact.
 - Class-prior post-stratification exists, but event-by-class reweighting is unsupported because the main cohort has structural-zero cells.
 - Predictions from different models/backends are not pooled as independent samples.
 
@@ -567,7 +615,7 @@ The strongest framing is: **a controlled, leakage-resistant, matched-control aud
 
 Recommended one-sentence claim:
 
-> Across four BF16 open VLM configurations and Gemini 2.5 Flash, fixed image, text, and joint messages significantly increased downward damage-severity errors relative to matched benign controls, but modality, semantic, presentation, and size effects varied sharply by model.
+> Across five BF16 open VLM configurations and Gemini 2.5 Flash, fixed image, text, and joint messages significantly increased downward damage-severity errors relative to matched benign controls, but modality, semantic, presentation, and size effects varied sharply by model.
 
 The abstract should lead with the paired benchmark and benign-adjusted downward risk, then report the heterogeneity: direct image/joint ASR ranged from roughly 25%-81% across models, with a distinct Gemini joint amplification. It should immediately state that balanced-main clean accuracy was 50%-56%, so results are conditional security estimates rather than evidence of operational competence.
 
@@ -575,18 +623,18 @@ The abstract should lead with the paired benchmark and benign-adjusted downward 
 
 | Section | What to establish | Evidence to use |
 |---|---|---|
-| Abstract | Problem, duplicate-resistant paired design, five-model panel, all-positive benign-adjusted effects, model-dependent modality ordering, bounded conclusion | Main clean/ASR and benign-adjusted tables in this file |
+| Abstract | Problem, duplicate-resistant paired design, six-model panel, all-positive benign-adjusted effects, model-dependent modality ordering, bounded conclusion | Main clean/ASR and benign-adjusted tables in this file |
 | Introduction | Embedded/accompanying text can compete with visual evidence in high-stakes damage triage; existing work does not answer the paired under-triage question | CrisisMMD, typographic-attack, and prompt-injection references below |
 | Related work | Separate supervised disaster classifiers, zero-shot generative VLM assessment, typographic attacks, and multimodal prompt injection | Regime-aware references below; do not compare raw scores across unlike splits |
 | Dataset | Explain 18,082 -> 3,526 -> 3,474 -> 3,095/2,628 -> V3 cohorts; distinguish custom main from official test | Dataset construction and literature-basis sections above |
 | Threat model | Fixed benign/direct/misleading payloads delivered by image, text, or both; attacker does not change ground truth | Fixed experimental design above and payload YAML |
-| Models and prompt | Four BF16 open VLMs on GCP A100/vLLM plus Gemini; frozen P5/V4; deterministic decoding | Prompt/inference table above and model locks |
+| Models and prompt | Five BF16 open VLMs on GCP A100/vLLM plus Gemini; one fixed zero-shot rubric; deterministic decoding | Prompt/inference table above and model locks |
 | Metrics | Downward ASR, induced severe/critical under-triage, benign-adjusted paired risk difference | Metric definitions above |
 | Main results | Clean context first, then malicious effects, benign controls, severe-case risk, and cross-model heterogeneity | Main result tables above |
 | Secondary results | Natural/official clean context, presentation-style, and size mechanisms | Three secondary tables above |
 | Discussion | No universal modality order; direct usually stronger; joint is model-dependent; camouflage persists but realism is unvalidated; size is non-monotonic | RQ answers above |
 | Limitations | Conditional denominators, custom cohort, event/class confounding, synthetic English payloads, cross-service preprocessing, training contamination, no operational outcomes, pending visual review | Claims boundaries and active decisions above |
-| Conclusion | Matched benign controls reveal direction-sensitive vulnerability across five models, with large model-specific variation | Recommended one-sentence claim above |
+| Conclusion | Matched benign controls reveal direction-sensitive vulnerability across six models, with large model-specific variation | Recommended one-sentence claim above |
 
 ### Recommended Research Questions
 
@@ -614,7 +662,7 @@ The abstract should lead with the paired benchmark and benign-adjusted downward 
 3. **Attack-aware prompting and training:** compare frozen attack-aware prompts, adversarial instruction tuning, and fine-tuning only in a new predeclared study; do not retrofit defenses to the current outcomes.
 4. **Human-in-the-loop agency guidance:** study how emergency-management analysts interpret model rationales, warnings, and uncertainty; define escalation rules and audit logs with disaster agencies before any operational recommendation.
 5. **External and multilingual validation:** repeat on another disaster dataset, non-English payloads, naturally occurring text, and newer events to test whether CrisisMMD-specific wording, 2017 imagery, and English-only attacks drive the result.
-6. **Cleaner disaster-type estimation:** construct a new main-first, within-class event-proportional V4 cohort with enough observations in every event-by-class cell. The present disaster-type table cannot separate event from class.
+6. **Cleaner disaster-type estimation:** construct a new main-first, within-class event-proportional cohort with enough observations in every event-by-class cell. The present disaster-type table cannot separate event from class.
 7. **Perceptual validation:** complete blinded human review and measure damage-region overlap so readability, plausibility, camouflage, and semantic occlusion can be evaluated rather than inferred from geometry.
 8. **Richer text attacks:** extend the frozen rhetoric follow-up to paraphrases, multilingual claims, source-attribution cues, temporal claims, and adaptive attacks while controlling length and semantic target.
 
@@ -622,14 +670,14 @@ The current paper may motivate these safeguards, but it cannot claim that they a
 
 ## Remaining Work Before Submission
 
-1. Complete the two-reviewer blinded visual validation for readability, plausibility, and critical-damage occlusion; the current 303 review rows are blank.
+1. Complete the two-reviewer blinded visual validation for readability, plausibility, and critical-damage occlusion. A blank reporting shell is retained at `reports/v3/manual_review/RESULTS_TEMPLATE.md`; it is not a human result.
 2. **Completed 2026-08-28:** verify the core related-work records against primary publisher/proceedings sources. Continue to avoid a first-of-kind claim unless a systematic review supports it.
-3. Import and validate the five open-model text-rhetoric and point-size follow-up outputs; keep them secondary and add Qwen3.8 only after its requested matrix is complete.
+3. **Completed 2026-08-30:** imported and validated all six models' text-rhetoric and point-size outputs, including the 1,080-row and 960-row Gemini files; retained the follow-ups as secondary evidence.
 4. **Completed 2026-08-28:** synchronize `paper.md` from this reference and the accepted decision log, including full transition matrices and appendix counts.
 5. Verify model revisions, environment locks, privacy/licensing, and every final table denominator before release.
-6. Disclose the retired P7 sensitivity as a protocol deviation and retain prompt dependence as a limitation.
+6. Keep abandoned internal prompt candidates out of the manuscript and retain prompt dependence as a limitation.
 
-The original paper-facing main, natural-clean, official-test, presentation-style, and relative-size inference runs are complete for the selected five-model panel, and the label-conflict sensitivity reports have been regenerated. The newly frozen text-rhetoric/point-size follow-ups and Qwen3.8 extension are secondary additions prompted by review; they do not invalidate the completed canonical matrix.
+The paper-facing main, natural-clean, official-test, presentation-style, relative-size, text-rhetoric, and point-size inference runs are complete for the selected six-model panel. Rhetoric and point-size remain secondary mechanism analyses and do not replace the 720-source main experiment or the canonical relative-height size experiment.
 
 ## References for Manuscript Drafting
 
