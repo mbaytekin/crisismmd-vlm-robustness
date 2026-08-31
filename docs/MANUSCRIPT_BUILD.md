@@ -9,7 +9,7 @@ another writing session.
 
 Paper claims and numbers must follow this precedence:
 
-1. [`PAPER_DECISIONS.md`](PAPER_DECISIONS.md), especially accepted decisions D018--D032;
+1. [`PAPER_DECISIONS.md`](PAPER_DECISIONS.md), especially accepted decisions D018--D037;
 2. [`../reports/v3/ALL_RESULTS.md`](../reports/v3/ALL_RESULTS.md) for canonical V3 results;
 3. [`../reports/v3/BF16_RUNTIME_DURATIONS.md`](../reports/v3/BF16_RUNTIME_DURATIONS.md) for measured open-model runtimes;
 4. frozen executable configurations and result artifacts for implementation details;
@@ -63,9 +63,10 @@ The manuscript was produced in the following order:
 5. Put detailed Wilson intervals, event--class composition, severity-drop and
    modality-transition diagnostics, runtime accounting, and reproducibility
    details in the appendix.
-6. Keep unresolved items explicit: human visual review is incomplete, Gemini
-   and full preliminary compute accounting are not consolidated, and raw
-   CrisisMMD assets cannot be redistributed.
+6. Report the completed 234-image human audit with its sample limits; keep
+   realism, stealth, and plausibility outside scope. Gemini and full preliminary
+   compute accounting are not consolidated, and raw CrisisMMD assets cannot be
+   redistributed.
 
 The paper does not claim that the custom 720/120/60 cohorts are CrisisMMD or
 literature-standard sample sizes. They are investigator-chosen V3 allocations;

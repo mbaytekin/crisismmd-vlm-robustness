@@ -52,6 +52,14 @@ __pycache__/
 .cache/
 .model-lock/
 
+# Private model-as-judge visual audit (personal exploration; not paper evidence)
+/gemini_human_eval.md
+
+# Private source exports and working adjudication notes. De-identified audit
+# exports under reports/v3/manual_review/ratings/ remain versioned.
+/reports/v3/manual_review/pass1/
+/reports/v3/manual_review/reviewer_template__*.csv
+
 # Local manuscript builds and submission sources. The manuscript is authored
 # and shared through Overleaf, not versioned here; transfer it as manuscript.zip.
 manuscript/

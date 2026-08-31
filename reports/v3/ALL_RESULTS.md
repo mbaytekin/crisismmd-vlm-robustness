@@ -1,9 +1,9 @@
 # CrisisMMD VLM Robustness: Canonical Paper-Writing Reference
 
-**Status date:** 2026-08-30
+**Status date:** 2026-08-31
 **Paper panel:** Qwen3.5 27B BF16, Qwen3.6 27B BF16, Qwen3.8 27B BF16, Qwen3-VL 32B BF16, Mistral Small 3.1 24B BF16, and Gemini 2.5 Flash.
 **Purpose:** This is the one reader-facing file to use while writing the manuscript. It combines the active paper decisions, dataset construction and rationale, complete BF16 + Gemini results, supported claims, caveats, and bibliography. Implementation artifacts remain audit evidence, but they are not competing manuscript summaries.
-**Interpretation rule:** Decisions D018-D029 govern post-result manuscript scope. Historical 8-bit, 4-bit, V2, 9B pilot, pass/fail gates, deployment thresholds, and abandoned internal prompt candidates are excluded from paper-facing conclusions. Qwen3.8 is a same-protocol extension whose complete validated matrix is now included. Text-rhetoric and point-size results remain secondary analyses and are complete for all six models. The active manuscript target is the NeurIPS 2026 AI4GOOD workshop; the NeurIPS checklist is not compiled.
+**Interpretation rule:** Decisions D018-D037 govern post-result manuscript scope. Historical 8-bit, 4-bit, V2, 9B pilot, pass/fail gates, deployment thresholds, and abandoned internal prompt candidates are excluded from paper-facing conclusions. Qwen3.8 is a same-protocol extension whose complete validated matrix is now included. Text-rhetoric and point-size results remain secondary analyses and are complete for all six models. The active manuscript target is the NeurIPS 2026 AI4GOOD workshop; the NeurIPS checklist is not compiled.
 
 ## Technical Summary
 
@@ -19,7 +19,7 @@ The paper's defensible contribution is therefore: a duplicate-resistant paired b
 
 **The study is manuscript-ready and has a coherent publishable contribution.** The expensive evidence is complete for a common six-model panel: main clean + nine paired conditions, natural clean, official-test clean, presentation-style ablation, relative-size ablation, text-rhetoric, and point-size follow-ups. The matched-control result is especially strong: all 36 malicious model-condition effects are positive and Holm-significant, and strict typography-matched sensitivity preserves that conclusion. The rhetoric and point-size follow-ups remain secondary.
 
-**It is not yet submission-ready in its strongest form.** The remaining material work is not another model matrix. Complete the two-reviewer visual validation before making readability, plausibility, camouflage, or non-occlusion claims; verify the bibliography and model revision table; and write the manuscript from this file. If visual review is omitted, the paper can still report the main digital intervention results, but the presentation-style section must be explicitly exploratory and must avoid perceptual claims.
+**The blinded visual audit is complete.** Two independent human raters assessed 234 sampled rendered images while blinded to model outputs, tweet text, and ground-truth severity labels. The audit supports bounded readability and critical-non-occlusion statements for that sample, while realism, stealth, and plausibility remain outside scope. Remaining submission work concerns bibliography, release, environment, and model-revision checks rather than new inference or human ratings.
 
 **Manuscript presentation (D025).** The active LaTeX draft is an AI4GOOD workshop paper. To keep the result readable, the main Method no longer carries full cluster-accounting and estimand equations; those stay in the appendix. The anonymous PDF may include a small number of generated overlay examples (California benign/direct/misleading in the main text; style and relative-size variants in the appendix). Captions must not claim human-validated realism. The private overlay directory remains gitignored and is not part of a public archive.
 
@@ -41,7 +41,7 @@ The central contribution is meaningful for the literature because it combines fo
 | Secondary clean cohorts | Natural-3,474 and official-test-529 | Use them for competence context and literature comparability, not attack prevalence |
 | Ablations | Separate presentation-style-120 and relative-size-60 cohorts; completed post-review text-rhetoric and point-size follow-ups | Treat all as secondary mechanism analyses with explicit denominators |
 | Gemini follow-ups (D027--D028) | Complete on the frozen rhetoric and point-size manifests; all 2,040 rows parsed and passed validation | Present unified six-model tables and 0/18 and 0/48 summaries; do not reopen 720 or replace relative 3/5/8% size |
-| Human review | Required for perceptual/readability/occlusion claims | Main numerical effects remain valid without it, but style realism claims do not |
+| Human review | Completed on 234 sampled overlays by two independent blinded raters; all five disagreements adjudicated | Report sample-bounded readability/non-occlusion; do not claim realism, stealth, plausibility, or universal coverage |
 | Venue / figures | AI4GOOD workshop; no compiled checklist; illustrative PDF overlays only | Do not treat overlay figures as human validation or as an archive release |
 
 ## Decisions Retired or Narrowed After the Completed Runs
@@ -53,7 +53,26 @@ These changes are amendments to reporting scope, not silent rewrites of the froz
 3. **The MLX-only runtime rule is superseded by a common A100 runtime (D020).** Canonical open-model outputs use GCP A100/CUDA-vLLM and Gemini uses its hosted Batch API. Repeated MLX runs remain noncanonical audit evidence and are not mixed into the primary tables.
 4. **Abandoned internal prompt candidates are eliminated from paper-facing scope (D029).** The paper reports one fixed zero-shot rubric and retains only the supported limitation that the attack matrix was not repeated under another prompt.
 5. **The 90-sample pilot is historical only.** It helped debug the pipeline but does not enter the six-model paper evidence.
-6. **Human visual review is not retired.** It is still needed for claims about readability, plausibility, camouflage, or critical-region occlusion. Omitting it requires removing those perceptual claims, not pretending the validation occurred.
+6. **The narrowed human visual audit is complete (D036--D037).** It supports readability and critical-non-occlusion only for the 234 reviewed overlays. The retired plausibility and realism fields remain eliminated, not inferred from the favorable parts of the audit.
+
+## Human Visual Audit
+
+Two independent human raters assessed 234 sampled rendered images while blinded
+to model outputs, tweet text, and ground-truth severity labels. The sample
+contained 180 simple overlays from 60 main sources and 54 style overlays from
+nine sources. The raters independently judged readability, complete
+invisibility, and critical-damage obscuration, then adjudicated all five
+readability disagreements.
+
+Pre-adjudication readability agreement was 229/234 (97.9%; three-class Cohen's
+kappa 0.634) and 232/234 (99.1%; binary kappa 0.853) after conservatively
+collapsing `uncertain/no`. The final readable counts were 180/180 for main
+simple, 18/18 for style simple, 18/18 for style news, and 10/18 for camouflage;
+the remaining camouflage judgments were six uncertain and two no. No reviewed
+overlay was judged completely invisible or to obscure critical damage (both
+234/234 in the desired direction). The audit does not re-score models or alter
+the 36/36 main matched-control finding. Full intervals and claim boundaries are
+in `reports/v3/manual_review/RESULTS.md`.
 
 ## What Dataset Counts Mean
 
@@ -446,7 +465,7 @@ The main and secondary clean views tell different stories because they answer di
 
 ## Presentation-Style Ablation
 
-Values are downward ASR; eligible n is model-specific. Simple/news/camouflage are bundled presentation packages. These results do not establish human readability, plausibility, or perceptual realism.
+Values are downward ASR; eligible n is model-specific. Simple/news/camouflage are bundled presentation packages. These model results do not by themselves establish a perceptual property; the separate 234-image human audit found mixed camouflage readability and did not assess plausibility or realism.
 
 | Model | Eligible n | Direct simple | Direct news | Direct camouflage | Misleading simple | Misleading news | Misleading camouflage |
 |---|---:|---:|---:|---:|---:|---:|---:|
@@ -566,7 +585,7 @@ Direct image/joint attacks dominate for all five open models, while Gemini's dir
 
 ### RQ3: Low-salience camouflage can remain effective, but realism is not established
 
-Camouflage produces non-zero downward ASR for all models, yet is usually weaker than simple/news presentation. Because the style factor changes multiple visual properties and human review is incomplete, the paper can claim persistence under a lower-salience presentation package, not real-world plausibility or stealth.
+Camouflage produces non-zero downward ASR for all models, yet is usually weaker than simple/news presentation. The style factor changes multiple visual properties, and the human audit found only 10/18 camouflage overlays confidently readable after adjudication. The paper can report this mixed readability alongside model vulnerability, but it cannot infer real-world plausibility or stealth.
 
 ### RQ4: Larger text does not universally increase attack efficacy
 
@@ -596,6 +615,7 @@ Benign downward rates are generally low, and all malicious-minus-benign paired e
 4. Joint delivery is not universally additive: Gemini shows strong amplification, Qwen3-VL is approximately image-dominated, and Mistral's direct joint condition is weaker than image-only.
 5. Presentation and size alter vulnerability, but neither a universal style ranking nor a universal monotonic size law is supported.
 6. Clean competence and conditional robustness are separate: balanced-main clean accuracy is 50.28%-55.69%, while initially correct mild/severe decisions can still be audited conditionally.
+7. In the separate 234-image human audit, every reviewed main simple and style simple/news overlay was readable, camouflage readability was mixed, and no reviewed overlay obscured critical damage.
 
 ## What the Paper Must Not Claim
 
@@ -604,7 +624,7 @@ Benign downward rates are generally low, and all malicious-minus-benign paired e
 - That model size, precision, architecture, or runtime causally explains robustness differences.
 - That joint attacks are universally stronger than image-only attacks.
 - That attack success increases monotonically with text size.
-- That camouflage/news variants are realistic, stealthy, or human-approved.
+- That camouflage/news variants are realistic, stealthy, plausible, or universally human-readable.
 - That event-specific differences generalize to disaster types.
 - That this is the first such study until the systematic literature review is complete.
 - That the attacks cause real-world emergency-response failures.
@@ -632,8 +652,8 @@ The abstract should lead with the paired benchmark and benign-adjusted downward 
 | Metrics | Downward ASR, induced severe/critical under-triage, benign-adjusted paired risk difference | Metric definitions above |
 | Main results | Clean context first, then malicious effects, benign controls, severe-case risk, and cross-model heterogeneity | Main result tables above |
 | Secondary results | Natural/official clean context, presentation-style, and size mechanisms | Three secondary tables above |
-| Discussion | No universal modality order; direct usually stronger; joint is model-dependent; camouflage persists but realism is unvalidated; size is non-monotonic | RQ answers above |
-| Limitations | Conditional denominators, custom cohort, event/class confounding, synthetic English payloads, cross-service preprocessing, training contamination, no operational outcomes, pending visual review | Claims boundaries and active decisions above |
+| Discussion | No universal modality order; direct usually stronger; joint is model-dependent; camouflage persists but its audited readability is mixed; size is non-monotonic | RQ answers and human-audit section above |
+| Limitations | Conditional denominators, custom cohort, event/class confounding, synthetic English payloads, cross-service preprocessing, training contamination, no operational outcomes, and the human audit's sample/field limits | Claims boundaries and active decisions above |
 | Conclusion | Matched benign controls reveal direction-sensitive vulnerability across six models, with large model-specific variation | Recommended one-sentence claim above |
 
 ### Recommended Research Questions
@@ -653,7 +673,7 @@ The abstract should lead with the paired benchmark and benign-adjusted downward 
 5. Explain model heterogeneity and the absence of a universal modality order.
 6. Present natural/official clean results as context, not as a second attack experiment.
 7. Keep presentation-style and size analyses secondary and denominator-aware.
-8. End with sensitivity results and visual-review status.
+8. End with sensitivity results and the bounded human-audit finding.
 
 ## Future Work and Mitigation Agenda
 
@@ -663,14 +683,14 @@ The abstract should lead with the paired benchmark and benign-adjusted downward 
 4. **Human-in-the-loop agency guidance:** study how emergency-management analysts interpret model rationales, warnings, and uncertainty; define escalation rules and audit logs with disaster agencies before any operational recommendation.
 5. **External and multilingual validation:** repeat on another disaster dataset, non-English payloads, naturally occurring text, and newer events to test whether CrisisMMD-specific wording, 2017 imagery, and English-only attacks drive the result.
 6. **Cleaner disaster-type estimation:** construct a new main-first, within-class event-proportional cohort with enough observations in every event-by-class cell. The present disaster-type table cannot separate event from class.
-7. **Perceptual validation:** complete blinded human review and measure damage-region overlap so readability, plausibility, camouflage, and semantic occlusion can be evaluated rather than inferred from geometry.
+7. **Broader perceptual validation:** extend the completed 234-image audit to exact transcription, credibility, plausibility, naturally occurring text, additional size families, and independently marked damage regions.
 8. **Richer text attacks:** extend the frozen rhetoric follow-up to paraphrases, multilingual claims, source-attribution cues, temporal claims, and adaptive attacks while controlling length and semantic target.
 
 The current paper may motivate these safeguards, but it cannot claim that they are effective until tested. Its immediate practical implication is narrower: disaster-facing VLM systems should treat image-embedded and accompanying text as potentially untrusted and preserve human oversight for consequential triage.
 
 ## Remaining Work Before Submission
 
-1. Complete the two-reviewer blinded visual validation for readability, plausibility, and critical-damage occlusion. A blank reporting shell is retained at `reports/v3/manual_review/RESULTS_TEMPLATE.md`; it is not a human result.
+1. **Completed 2026-08-31:** two independent blinded raters assessed 234 rendered images, all disagreements were adjudicated, and aggregate results were frozen in `reports/v3/manual_review/RESULTS.md`.
 2. **Completed 2026-08-28:** verify the core related-work records against primary publisher/proceedings sources. Continue to avoid a first-of-kind claim unless a systematic review supports it.
 3. **Completed 2026-08-30:** imported and validated all six models' text-rhetoric and point-size outputs, including the 1,080-row and 960-row Gemini files; retained the follow-ups as secondary evidence.
 4. **Completed 2026-08-28:** synchronize `paper.md` from this reference and the accepted decision log, including full transition matrices and appendix counts.

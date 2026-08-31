@@ -34,7 +34,7 @@ error-field checks. They remain deliberately secondary.
 | Evaluate font size in points. | A frozen follow-up maps 3, 6, 9, 12, and 15 pt to pixels at 72 PPI and renders them with a bundled DejaVu Sans font. Values above 15 pt were rejected before inference because they would cover 53%-100% of the smallest images. | The paper must report the pixel rendering and the 72-PPI conversion together: raster images have pixels, not device-independent point sizes. |
 | Analyze vulnerability by disaster type. | The main split is summarized descriptively as wildfire, hurricane, earthquake, and flood, with clean accuracy, full-cohort downward risk, and conditional clean-correct attack susceptibility. | Hurricane is conditionally most vulnerable in the current table, whereas earthquake has the strongest clean baseline. Do not turn this into a causal disaster ranking: disaster type, event, and label are confounded, and group sizes range from 29 to 559. |
 | Add model-average rows. | Main, clean, benign-adjusted, style, size, upward-shift, and severe-case tables include unweighted descriptive model means. | These means summarize model-level estimates; they do not pool predictions across models or establish a population-level model average. |
-| Validate the generated visual stimuli with people. | The blinded two-reviewer protocol and an explicitly blank results template are prepared, but the sampled gallery and ratings are not complete. Reviewers will rate readability, semantic visibility, presentation plausibility, critical-damage obscuration, image usability, and whether the original damage remains judgeable; model outputs and tweet text remain hidden. | Humans are not re-scoring model accuracy. Until real ratings and agreement statistics exist, the paper makes no perceptual or non-occlusion claim. |
+| Validate the generated visual stimuli with people. | Two independent human raters completed a blinded audit of 234 sampled rendered images. They judged readability, complete invisibility, and critical-damage obscuration without seeing model outputs, tweet text, or ground-truth severity labels; all five disagreements were adjudicated. | Humans did not re-score model accuracy. Main simple and style simple/news overlays were all readable in the reviewed sample; camouflage was 10/18 readable, six uncertain, two unreadable; no reviewed overlay obscured critical damage. Realism, stealth, and plausibility remain outside scope. |
 | Discuss mitigation and operational relevance. | The paper's future-work section covers input trust separation, cross-modal consistency/abstention, attack-aware prompting or fine-tuning in a new study, human/agency review, external and multilingual validation, and a separately frozen balanced event-class cohort. | The current paper measures vulnerability. It should not claim that it has validated a deployed mitigation. |
 | Add Qwen3.8 27B BF16. | Qwen3.8 canonical main, natural-clean, official-clean, style, relative-size, and follow-up work is complete and validated (13,003 parsed predictions). | It is now included as the predeclared extension. Its six matched-control main effects are positive and Holm-significant, bringing the current panel to 36/36. |
 
@@ -123,14 +123,14 @@ not that one disaster type is intrinsically safe or unsafe.
 
 ### What the human review does
 
-Yes, the generated intervention images are intended to be checked by human
-eyes. Two reviewers independently inspect a blinded gallery; they do not see
-model outputs and do not determine whether a prediction is correct. Their task
-is to verify that the payload is readable, the intended semantics are visible,
-the presentation is plausible enough for the stated claim, critical damage is
-not hidden, and the original scene remains judgeable. Until this is completed,
-the numerical attack findings remain usable but claims such as “realistic,”
-“stealthy,” or “non-occluding” must be omitted.
+Two independent human raters assessed 234 sampled rendered images while blinded
+to model outputs, tweet text, and ground-truth severity labels. They did not
+decide whether any model prediction was correct. They checked whether the text
+was readable or completely invisible and whether it covered critical damage.
+After adjudication, all 180 main simple and all 36 style simple/news overlays
+were readable; camouflage was readable in 10/18, uncertain in six, and unreadable
+in two. No reviewed overlay hid critical damage. These findings apply to the
+sample and do not establish realism, stealth, or plausibility.
 
 ## Fixed Dataset and Experiment Design
 
@@ -207,11 +207,10 @@ connection, retrieval, and shutdown procedure is documented in
 2. **Completed 2026-08-28:** synchronize [`paper.md`](../paper.md) from
    `ALL_RESULTS.md` and `PAPER_DECISIONS.md`, including the current six-model panel,
    canonical metrics, result tables, caveats, and model/runtime details.
-3. Complete the planned blinded visual review with at least two ratings per
-   modified image and a preselected agreement statistic. Until then, claims
-   about readability, plausibility, and critical-damage occlusion must remain
-   bounded. Under D025, a few generated overlays may appear in the anonymous
-   PDF as illustrations only; they do not close this item.
+3. **Completed 2026-08-31:** two independent blinded raters assessed 234
+   sampled overlays, agreement was calculated, and all five disagreements were
+   adjudicated. The manuscript reports only sample-bounded readability and
+   critical-non-occlusion; realism, stealth, and plausibility remain prohibited.
 4. **Completed for the core bibliography 2026-08-28:** verify related work
    against publisher/proceedings pages. Export the target venue's final BibTeX
    during typesetting.
@@ -232,8 +231,8 @@ connection, retrieval, and shutdown procedure is documented in
 
 ## Decision Status
 
-The core empirical design, six-model main results, and six-model
-follow-ups are complete, subject to the stated caveats. The remaining work is
-the two-reviewer visual validation, official Overleaf compile, and final
-artifact/release checks. No further full-model experiment is currently required
-by the accepted protocol.
+The core empirical design, six-model main results, six-model follow-ups, and
+234-image human audit are complete, subject to their stated caveats. Remaining
+work is the official Overleaf compile and final artifact/release checks. No
+further full-model experiment or human rating is required by the accepted
+protocol.

@@ -31,14 +31,9 @@ VALUES = ("yes", "no", "uncertain")
 # pass_on is the single response that counts as a pass; everything else,
 # including `uncertain`, fails. `descriptive` fields are reported but gate nothing.
 FIELDS = {
-    "original_label_still_valid": {"pass_on": "yes", "descriptive": False},
-    "image_usable": {"pass_on": "yes", "descriptive": False},
     "text_readable": {"pass_on": "yes", "descriptive": False},
-    "text_too_obvious": {"pass_on": "yes", "descriptive": True},
     "text_completely_invisible": {"pass_on": "no", "descriptive": False},
     "critical_damage_obscured": {"pass_on": "no", "descriptive": False},
-    "layout_plausible": {"pass_on": "yes", "descriptive": False},
-    "approve": {"pass_on": "yes", "descriptive": False},
 }
 
 # Rater-quality floor, predeclared. Not a stealth floor.
@@ -69,6 +64,14 @@ def cohen_kappa(pairs: list[tuple[str, str]]) -> float | None:
     if abs(1 - pe) < 1e-12:
         return None  # undefined: one label saturates both raters
     return (po - pe) / (1 - pe)
+
+
+def _rel(path: Path) -> str:
+    """Repo-relative when possible; absolute otherwise (e.g. a scratch --out)."""
+    try:
+        return str(path.relative_to(REPO))
+    except ValueError:
+        return str(path)
 
 
 def pabak(po: float) -> float:
@@ -217,7 +220,7 @@ def main() -> None:
                     "sample_id": k[0], "condition": k[1], "field": f,
                     f"{id_a}": va, f"{id_b}": vb, "adjudicated": "", "adjudication_note": "",
                 })
-    adj_path = OUT_DIR / "ADJUDICATION.csv"
+    adj_path = args.out.parent / "ADJUDICATION.csv"
     with adj_path.open("w", newline="") as fh:
         wr = csv.DictWriter(fh, fieldnames=list(disagree[0].keys()) if disagree else
                             ["sample_id", "condition", "field", id_a, id_b,
@@ -228,7 +231,7 @@ def main() -> None:
     w("## Adjudication")
     w("")
     w(f"**{len(disagree)}** field-level disagreements were written to "
-      f"`{adj_path.relative_to(REPO)}` with an empty `adjudicated` column. The protocol requires "
+      f"`{_rel(adj_path)}` with an empty `adjudicated` column. The protocol requires "
       "100% of them to be resolved jointly, after both independent passes, before any pass rate "
       "is reported.")
     w("")
@@ -236,14 +239,11 @@ def main() -> None:
     # --- descriptive rates --------------------------------------------------
     w("## Descriptive rates before adjudication")
     w("")
-    w("Reported for orientation only. The manuscript must use adjudicated rates. "
-      "Clean images are excluded because they carry no overlay.")
+    w("Reported for orientation only. The manuscript must use adjudicated rates.")
     w("")
 
     def slice_of(row):
         cond = row["condition"]
-        if cond == "clean":
-            return None
         if row["review_group"] == "main_60":
             return "main simple overlays"
         for style in ("simple", "news", "camouflage"):
@@ -257,12 +257,13 @@ def main() -> None:
         if s:
             slices.setdefault(s, []).append(k)
 
-    w("| Slice | Items | `text_readable` = yes (both) | `critical_damage_obscured` = no (both) | `approve` = yes (both) |")
+    w("| Slice | Items | `text_readable` = yes (both) | `text_completely_invisible` = no (both) | `critical_damage_obscured` = no (both) |")
     w("|---|---:|---:|---:|---:|")
     for s in sorted(slices):
         ks = slices[s]
         cells = []
-        for f, want in (("text_readable", "yes"), ("critical_damage_obscured", "no"), ("approve", "yes")):
+        for f, want in (("text_readable", "yes"), ("text_completely_invisible", "no"),
+                        ("critical_damage_obscured", "no")):
             n = sum(1 for k in ks if (a[k].get(f) or "").strip() in VALUES
                     and (b[k].get(f) or "").strip() in VALUES)
             hit = sum(1 for k in ks if (a[k].get(f) or "").strip() == want

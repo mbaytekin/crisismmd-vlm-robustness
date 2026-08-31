@@ -882,6 +882,192 @@ Executable sources:
   [`scripts/build_human_review_app.py`](../scripts/build_human_review_app.py),
   [`scripts/analyze_human_review.py`](../scripts/analyze_human_review.py).
 
+### D033 - Pre-submission review pass: Holm families stated, framing narrowed
+
+- **Status:** ACCEPTED; PRESENTATION AMENDMENT
+- **Date:** 2026-08-31
+- **Decision:** Five reader-facing corrections from an external review pass. None
+  changes an estimand, denominator, statistic, or result.
+  1. **Holm families are now stated in the paper.** Method says each family is one
+     model, one outcome definition, and one analysis subset, so the 36 primary
+     contrasts form six families of six tests rather than one family of 36. This
+     matches the implementation: `src/v3_final_analysis.py` adjusts within
+     `groupby(["subset", "metric"])` on each model's own result frame.
+  2. **The Introduction no longer argues that a model at this accuracy would be
+     deployed.** The sentence claiming such a system "can still be proposed as a
+     triage aid" asserted a fact about deployment practice that this study does
+     not evidence and that a reviewer could contest. It is replaced by the
+     conditional question the paper actually answers: among the decisions a model
+     initially gets right, can adversarial content induce safety-relevant downward
+     errors? The motivation for why an adversary would bother stays in the threat
+     model, where it is argued rather than assumed.
+  3. **The overlay figure caption no longer reports model predictions on that
+     source.** D025 records that the example was selected partly because two models
+     moved from severe to little/no on it. Reporting an outcome for a case selected
+     on that outcome, without disclosing the selection, invites a cherry-picking
+     objection. The caption now describes construction only; the quantitative
+     evidence is Figures 2 and 3.
+  4. **The abstract's generalisation is narrowed** from "reproduces across
+     off-the-shelf VLM disaster assessment" to "reproduces across all six evaluated
+     VLMs". One dataset does not support the domain-level reading.
+  5. **Appendix floats are barriered per section** using `placeins` with explicit
+     `\FloatBarrier` calls. The `[section]` package option was tried first and
+     rejected: it also barriers the main sections and pushed the main content to ten
+     pages.
+- **Caveat:** Presentation only, made after the results were known. OPEN-002 human
+  visual review remains incomplete.
+- **Paper impact:** Abstract, Introduction, Method 3.3 and 3.5, appendix float
+  placement. Main content still ends on page 9 with references on page 10; the
+  appendix gains one page, which is outside the workshop limit. No overfull boxes
+  and no undefined references. Every claim boundary was re-verified as still present
+  after the edits.
+- **Supersedes:** None.
+- **Evidence:** `src/v3_final_analysis.py` (Holm grouping),
+  [`configs/v3/final_analysis_protocol.yaml`](../configs/v3/final_analysis_protocol.yaml),
+  `manuscript/sections/`.
+
+### D034 - Publish model revisions in the paper; withhold host identifiers
+
+- **Status:** ACCEPTED
+- **Date:** 2026-08-31
+- **Decision:** Report the immutable Hugging Face repository revision for each of
+  the five open checkpoints in the appendix model table, abbreviated to twelve
+  hexadecimal characters, with the full values reserved for the artifact release.
+  State plainly that Gemini 2.5 Flash exposes no equivalent revision, so its
+  results are pinned only by model name and run window and could shift if the
+  served model changes. Do **not** put the GCP cache host names from
+  `docs/SHA.md` into the manuscript.
+- **Reason:** A repository name such as `Qwen/Qwen3.5-27B` is mutable and does not
+  identify the weights that were actually run; the revision does. This converts a
+  reproducibility item the paper previously listed as outstanding into a resolved
+  one, and it makes the open/hosted asymmetry visible rather than glossed.
+- **Anonymity:** The host names recorded in `docs/SHA.md`
+  (`can-crisismmd-*`) contain the author's given name and are a
+  deanonymisation vector in a double-blind submission. They stay in the internal
+  record only. The compiled PDF was checked and contains no host name or author
+  string.
+- **Caveat:** The revisions were read from the run caches on the already-running
+  VMs rather than from a checked-out repository, and the per-run resolved
+  configurations record `git_commit` as unavailable on the remote host. The
+  environment lock and data-access instructions remain to be verified for the
+  artifact release.
+- **Paper impact:** Appendix Table `tab:models` gains the pinned revisions and a
+  caption note; the reproducibility paragraph now states what is pinned and what
+  is not. Main content still ends on page 9, no overfull boxes.
+- **Supersedes:** None.
+- **Evidence:** [`docs/SHA.md`](SHA.md), `reports/v3/artifact_lock.json`.
+
+### D035 - Correct the single-factor over-claim in the secondary-ablation lead
+
+- **Status:** ACCEPTED; CORRECTION
+- **Date:** 2026-08-31
+- **Decision:** The lead sentence of the secondary-ablation subsection claimed the
+  four families "each vary one presentation or wording factor while holding the
+  payload and cohort fixed". Two sentences later the same paragraph states that
+  the three style renderers change contrast, background, occupied area, and
+  placement together. The two statements contradict each other. The lead now
+  reads: four secondary families probe presentation or wording factors on cohorts
+  disjoint from the main 720 sources, and within each family everything except the
+  named factor is held fixed, with the per-family detail carried by appendix
+  Table `tab:ablation_map`.
+- **Reason:** The style family's named factor is a bundled renderer package, not an
+  isolated visual property, so "one factor" was false for that family. Method had
+  always said so ("not an isolated typography factor"); the error was introduced
+  into Results by the D031 restructuring and existed only there.
+- **Rejected alternative:** "holding the source cohort and payload semantics fixed"
+  was proposed. It is inaccurate for the text-rhetoric family, which varies payload
+  wording across two semantic families by design.
+- **Audit:** The manuscript was scanned for other single-factor or
+  everything-held-fixed claims. The only remaining match is the Method disclaimer,
+  which is a negation rather than a claim.
+- **Caveat:** Wording only. No estimand, denominator, statistic, or result changed.
+- **Paper impact:** One sentence in Results. Main content still ends on page 9,
+  references on page 10, no overfull boxes.
+- **Supersedes:** Corrects wording introduced under D031.
+- **Evidence:** `manuscript/sections/04_results.tex`, `manuscript/sections/03_method.tex`.
+
+### D036 - Right-size the human review against comparable published work
+
+- **Status:** ACCEPTED BEFORE ANY RATING EXISTS
+- **Date:** 2026-08-31
+- **Decision:** Reduce the blinded visual review to three fields on the 234
+  overlay images: `text_readable`, `text_completely_invisible`, and
+  `critical_damage_obscured`. Drop `original_label_still_valid`, `image_usable`,
+  `text_too_obvious`, `layout_plausible`, and `approve`, and drop the 69
+  unmodified photographs, since all three surviving questions concern an overlay.
+  Effort falls from 2,079 to 702 judgements per reviewer, roughly 104 to 35
+  minutes.
+- **Reason:** Checked against the closest published work rather than against our
+  own protocol. Cheng et al. (ECCV 2024), whose 3--15 px grid this paper reuses,
+  runs **no** human study; SceneTAP (CVPR 2025) also runs none and instead scores
+  naturalness with GPT-4o, stating that "there is no established method for
+  evaluating the naturalness of text added to images". The field norm for
+  typographic-attack papers is therefore zero human evaluation, and the dropped
+  fields bought claims this paper had already decided not to make: `layout_plausible`
+  supports a realism claim the Discussion explicitly declines, and `text_too_obvious`
+  was already marked descriptive and gates nothing.
+- **What is kept and why:** `critical_damage_obscured` is not a field-norm nicety
+  but a threat-to-validity check specific to this design: if overlays physically
+  cover the damage, part of the 36/36 matched-control result could reflect missing
+  evidence rather than adversarial text. `text_readable` establishes that the
+  intervention is typography rather than noise. `text_completely_invisible` is the
+  second half of the section 5.2 gate and carries the camouflage observation.
+  `approve` was dropped because the review-passed sensitivity subset it existed to
+  define is given directly by `critical_damage_obscured == no`.
+- **Caveat:** Amended before any rating was recorded, which is the only point at
+  which this is legitimate. From the first recorded rating the three fields, the
+  234 items, and the gates are frozen; a later change requires a new dated
+  amendment and a separately labelled analysis.
+- **Paper impact:** None yet. On completion the result becomes two sentences in
+  Limitations plus one appendix table, and releases the nine human-review-gated
+  statements listed under D033 wherever a gate is met.
+- **Supersedes:** Narrows the field set fixed in D032; scope, blinding, shuffling,
+  and the AI pre-audit boundary are unchanged.
+- **Evidence:** Cheng et al. arXiv:2402.19150; SceneTAP arXiv:2412.00114
+  supplementary; [`docs/HUMAN_EVALUATION.md`](HUMAN_EVALUATION.md) section 5.2.
+
+### D037 - Complete the blinded human visual audit and report it in aggregate
+
+- **Status:** ACCEPTED; COMPLETED
+- **Date:** 2026-08-31
+- **Decision:** The paper-facing participant description is exactly: “Two
+  independent human raters assessed 234 sampled rendered images while blinded to
+  model outputs, tweet text, and ground-truth severity labels.” Names, initials,
+  internal rater codes, and raw private files do not enter the manuscript. An
+  earlier rater pair completed the same 234-image instrument but fell below the
+  predeclared agreement floor; those passes are archived, are not analysed, and
+  are not described in the paper. The 234 images comprise 180 simple overlays from 60 main
+  sources and 54 style overlays from nine sources. The independent pass was
+  completed before all five readability disagreements were jointly adjudicated.
+- **Agreement:** Pre-adjudication text-readability agreement was 229/234 (97.9%)
+  with three-class Cohen's kappa 0.634. Under the conservative `yes` versus
+  `uncertain/no` collapse it was 232/234 (99.1%), kappa 0.853. The two remaining
+  fields had 234/234 raw agreement; kappa is not estimable because both raters
+  used only `no`. Per `HUMAN_EVALUATION.md` section 4, PABAK is reported wherever
+  the kappa paradox appears: 0.983 for readability and 1.000 for both saturated
+  fields, on the binary collapse.
+- **Observed outcomes:** Main simple, style simple, and style news overlays were
+  readable in 180/180, 18/18, and 18/18 cases. Camouflage was readable in 10/18,
+  uncertain in 6/18, and unreadable in 2/18 after adjudication. Across all 234
+  reviewed images, no text was judged completely invisible and no overlay was
+  judged to obscure critical damage.
+- **Claim boundary:** The audit supports sample-bounded readability and
+  critical-non-occlusion statements. It does not establish realism, stealth,
+  plausibility, exact transcription, message credibility, physical robustness,
+  or universal non-occlusion. It does not re-score predictions or alter the
+  primary 720-source analysis and 36/36 matched-control finding.
+- **Paper impact:** Replace every “human validation incomplete” statement with
+  the observed, bounded audit; add a compact Results sentence and appendix table;
+  keep perceptual overclaims prohibited. The abstract remains focused on the
+  primary model experiment because the audit is supporting evidence and the main
+  text is at the nine-page boundary.
+- **Supersedes:** Resolves OPEN-002 and completes the narrowed D036 protocol.
+- **Evidence:** [`docs/HUMAN_EVALUATION.md`](HUMAN_EVALUATION.md),
+  [`reports/v3/manual_review/PROTOCOL.md`](../reports/v3/manual_review/PROTOCOL.md),
+  [`reports/v3/manual_review/RESULTS.md`](../reports/v3/manual_review/RESULTS.md),
+  and the two de-identified independent exports plus adjudication record under
+  [`reports/v3/manual_review/ratings/`](../reports/v3/manual_review/ratings/).
+
 ## Superseded decisions and historical results
 
 ### D004-H1 - Use the 90-example pilot as the production screen
@@ -938,9 +1124,10 @@ the validated Qwen3.8 extension and completed follow-ups. Under
 was not silently rewritten. The active LaTeX manuscript at `manuscript/main.tex`
 is synchronized from D024--D025 and `ALL_RESULTS.md`. Venue is the NeurIPS 2026
 AI4GOOD workshop; the NeurIPS checklist is not compiled. Illustrative overlays
-may appear in the anonymous PDF with non-perceptual captions. The remaining
-substantive constraint is the blinded visual review before perceptual claims;
-V2 and Qwen 9B stay historical.
+may appear in the anonymous PDF with non-perceptual captions. The blinded visual
+audit is complete under D037, with sample-bounded readability and non-occlusion
+results. Realism, stealth, and plausibility remain outside its scope; V2 and
+Qwen 9B stay historical.
 
 ## Resolved and open decisions
 
@@ -951,14 +1138,13 @@ extension have complete main clean and fixed attack matrices. D018 changes
 reporting language only; prompt, payloads, exclusions, predictions, and metric
 denominators remain unchanged.
 
-### OPEN-002 - Human visual review
+### RESOLVED-002 - Human visual audit
 
-Freeze reviewer sampling/full-review scope, collect at least two blinded
-ratings per unique modified image, and select the agreement statistic before
-final robustness claims. Predeclared claim gates and literature context:
-[`docs/HUMAN_EVALUATION.md`](HUMAN_EVALUATION.md). Completing the review is
-optional for the current digital 36/36 result; it is required before
-readability, non-occlusion, or plausibility sentences.
+**Resolved 2026-08-31.** Two independent human raters completed the frozen
+234-image blinded audit, and every disagreement was adjudicated. D037 records
+the observed agreement and outcomes. The audit now supports bounded readability
+and critical-non-occlusion statements for the reviewed sample; it does not
+support realism, stealth, or plausibility claims.
 
 ### RESOLVED-003 - Related-work verification
 
@@ -983,13 +1169,13 @@ transition matrices, style/size tables, disaster-type caveats, and model-level
 appendix counts. Future result imports must repeat the consistency check before
 a manuscript-facing release.
 
-### RESOLVED-006 - Ablation outcomes; visual validation remains OPEN-002
+### RESOLVED-006 - Ablation outcomes and bounded visual audit
 
 **Resolved for inference 2026-08-26.** Presentation-style and size outputs and
 paired analyses exist for the initial paper models; D024 subsequently adds
-Qwen3.8. Blinded readability,
-plausibility, and critical-damage-occlusion review remains OPEN-002 and bounds
-perceptual claims.
+Qwen3.8. D037 later resolves readability and critical-damage occlusion for its
+234-image sample. Plausibility and realism were not rated and remain outside the
+paper's claims.
 
 ### RESOLVED-007 - Qwen3.8 and supervisor follow-up incorporation
 

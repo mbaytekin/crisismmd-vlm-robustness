@@ -14,7 +14,7 @@ summary, not a replacement for the repository's frozen evidence.
 
 When a claim or number is disputed, use this precedence:
 
-1. accepted decisions D018--D032 in `docs/PAPER_DECISIONS.md`;
+1. accepted decisions D018--D037 in `docs/PAPER_DECISIONS.md`;
 2. `reports/v3/ALL_RESULTS.md`;
 3. `reports/v3/BF16_RUNTIME_DURATIONS.md`;
 4. frozen result artifacts and executable configurations;
@@ -161,8 +161,9 @@ Every reader-facing revision must cover all of these families at least once:
 
 Presentation style bundles layout, contrast, banner, and placement differences.
 Simple/news presentation was often stronger than camouflage for direct
-instructions, but realism, stealth, readability, and non-occlusion have not
-been human-validated.
+instructions. A separate 234-image blinded audit found all reviewed simple/news
+overlays readable, mixed camouflage readability, and no critical-damage
+occlusion. It did not assess realism, stealth, or plausibility.
 
 Relative size does not show a universal monotonic law. Style and relative-size
 eligible denominators are small and model-specific: approximately 28--37 and
@@ -236,8 +237,8 @@ Do not claim:
   precision, backend, or runtime;
 - universally stronger joint attacks;
 - universally monotonic text-size effects;
-- realistic, stealthy, readable, plausible, non-occluding, or human-approved
-  overlays;
+- realistic, stealthy, plausible, universally readable, universally
+  non-occluding, or generically “human-approved” overlays;
 - causal or generalizable disaster-type differences;
 - external-dataset or real-world emergency-response outcomes;
 - an empirically validated mitigation;
@@ -247,21 +248,17 @@ Do not claim:
 
 ## Open submission blockers
 
-- Complete the blinded two-reviewer visual validation before perceptual claims.
+- Keep the completed 234-image human audit sample-bounded; do not expand it into
+  realism, stealth, or plausibility claims.
 - Verify immutable model revisions and final environment locks.
 - Verify CrisisMMD and model licenses and the anonymous archive/release plan.
 - Complete Gemini and total-project compute accounting if possible.
 - Perform the final ethics, privacy, anonymity, citation, denominator, page,
   font, and archive checks.
 
-The numerical attack results remain usable while human visual review is open,
-but the presentation-style discussion must remain exploratory and avoid
-perceptual claims.
-
-The human-review reminder at
-`reports/v3/manual_review/RESULTS_TEMPLATE.md` contains blank reporting fields
-only. It is not evidence and must never be converted into manuscript numbers
-until two independent reviewers complete the protocol.
+The human audit is complete and does not alter the numerical attack results.
+Its aggregate evidence is in `reports/v3/manual_review/RESULTS.md`; private raw
+rating files and internal rater codes are not paper-facing.
 
 ## Private visual examples
 
@@ -277,10 +274,10 @@ only:
 - appendix: `style_harvey_904606` and `size_harvey_904429`.
 
 Composed JPEG copies live in `manuscript/figures/`. Captions must call them
-generated examples and must not claim realism, stealth, readability, or
-non-occlusion. Do not upload the private directory, raw tweets, or extra
-overlays into a public or anonymous code archive. They are not completed human
-validation.
+generated examples and must not claim realism or stealth. Sample-bounded
+readability and critical-non-occlusion results belong to the aggregate audit,
+not to any unverified individual illustration. Do not upload the private
+directory, raw tweets, or extra overlays into a public or anonymous archive.
 
 ## LaTeX editing contract for ChatGPT
 
@@ -379,5 +376,5 @@ Acceptance conditions:
 - all fonts are embedded;
 - all six models, all seven analysis families, and post-review follow-ups appear
   in at least one reader-facing section;
-- unresolved human review, licensing/archive, Gemini timing, and total compute
-  gaps remain explicit rather than being filled by assumption.
+- human-audit sample limits and unresolved licensing/archive, Gemini timing,
+  and total-compute gaps remain explicit rather than being filled by assumption.

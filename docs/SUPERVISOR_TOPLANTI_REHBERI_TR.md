@@ -44,7 +44,7 @@ bu nedenle “her model aynı davranır” veya “operasyonel olarak hazırdır
 | Veri seti ve örnekler nasıl ayrıldı? | CrisisMMD'de 18,082 görüntü görevi var; hasar etiketi taşıyan 3,526 satırdan doğrulama sonrası 3,474 çift kaldı. Kümeleme/duplicate filtreleri sonrası 3,095 kayıt ve 2,628 bağımsız küme örnekleme havuzu oldu. Ana 720 (sınıf başına 240), stil 120, boyut 60 kaynak birbirinden duplicate-cluster-disjoint. | Method §3.2; Appendix `tab:dataset`, `tab:cohort_precision` |
 | Neden 720/120/60? | Bunlar literatürün zorunlu sayıları değil; ana eşleştirilmiş testi büyütürken iki dengeli mekanizma kohortunu koruyan, önceden seçilmiş ve hesaplama-bütçeli tasarım. Sonuç görüldükten sonra yeniden örnekleme yapılmadı. | Appendix “Why 720, 120, and 60?” |
 | Afet türüne göre güvenilirlik var mı? | Yalnızca betimsel. Deprem temiz doğruluğu ortalama %86.67, sel %33.91; fakat sınıf, olay ve afet türü birbirine karışmış durumda. Selde model başına yalnızca 2–12 eligible vaka var; nedensel afet sıralaması yapmıyoruz. | Results §4.5; Appendix `tab:disaster_clean`, `tab:disaster_cond_mean` |
-| İnsanlar görselleri doğruladı mı? | Henüz tamamlanmadı. İki değerlendiricili kör protokol hazır; okunabilirlik, anlam görünürlüğü, kritik hasarın kapanmaması ve sahnenin değerlendirilebilirliği incelenecek. Şu anda “realistic/stealth/non-occluding” iddiası yok. | Limitations §6; `docs/HUMAN_EVALUATION.md`; OPEN-002 |
+| İnsanlar görselleri doğruladı mı? | Evet, iki bağımsız insan değerlendirici model çıktısını, tweet metnini ve gerçek şiddet etiketini görmeden 234 örneği inceledi. Ana simple 180/180, stil simple/news 36/36 okunabilir; camouflage 10/18 okunabilir, 6 kararsız, 2 okunamaz bulundu. Hiçbir örnekte kritik hasar kapanmadı. Bu sonuç örneklemle sınırlı; realism/stealth/plausibility iddiası yok. | Results §4.5; Limitations §6; Appendix `app:human`; D037 |
 | Bir savunma denendi mi? | Hayır, tasarım gereği. Sonuçları gördükten sonra seçilen savunma aynı payload/model/kohorta ayarlanmış olurdu. Bu makale açığı ölçüyor; held-out payload ve önceden kayıtlı ayrı bir çalışma savunma için gerekli. | Discussion §5, RQ5 |
 | Model/precision/runtime farkından nedensellik çıkarıyor musunuz? | Hayır. Beş açık model ortak A100/vLLM BF16 ailesinde, Gemini hosted serviste. Mimari, boyut, precision ve runtime açıklayıcı değişken olarak yorumlanmıyor. | Method §3.3; Limitations §6; Appendix runtime |
 
@@ -162,8 +162,9 @@ tablosu yalnızca betimsel kalır.
 - 0/18 ve 0/48'in “hiç saldırı başarısı yok” değil, “düzeltilmiş fark yok”
   olduğunu açıkla.
 - 3×3 matrislerde aşağı ve yukarı geçişlerin ikisini de gösterdiğimizi söyle.
-- İnsan görsel incelemesinin **tamamlanmadığını** ve realism/stealth/
-  non-occlusion iddiası yapmadığımızı belirt.
+- İnsan görsel incelemesinin **tamamlandığını**, 234 örnekle sınırlı olduğunu,
+  camouflage okunabilirliğinin karışık çıktığını ve realism/stealth/plausibility
+  iddiası yapmadığımızı belirt.
 - Savunma, prevalence, afet türü nedenselliği, model mimarisi nedenselliği ve
   operasyonel hazır olma iddialarını bu çalışmanın dışında bırak.
 
@@ -181,4 +182,3 @@ tablosu yalnızca betimsel kalır.
   [`docs/HUMAN_EVALUATION.md`](HUMAN_EVALUATION.md).
 - Görsel örnekler: `manuscript/figures/overlay_*.jpg`,
   `manuscript/figures/style_*.jpg`, `manuscript/figures/size_*.jpg`.
-

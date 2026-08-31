@@ -25,11 +25,10 @@ proposals are not paper-facing evidence.
 - [x] Primary downward estimand is the exact success count divided by all 720
   sources; eligible-only ASR is explicitly secondary.
 - [x] Six-model panel and all 36 main matched-control effects are synchronized.
-- [x] Generated overlay captions do not claim realism, stealth, readability,
-  plausibility, or non-occlusion.
-- [x] The human-review reminder is present at
-  `reports/v3/manual_review/RESULTS_TEMPLATE.md`; it contains no observed
-  ratings and must not be treated as evidence.
+- [x] Generated overlay captions do not claim realism, stealth, or plausibility;
+  readability and non-occlusion are stated only for the audited sample.
+- [x] The completed aggregate human-audit report is frozen at
+  `reports/v3/manual_review/RESULTS.md`; private rater files remain gitignored.
 - [ ] Add exact primary `n/720` cells and full-cohort risk-difference intervals
   to the appendix if they are needed for camera-ready auditability.
 - [ ] Add complete model-specific 3x3 count matrices when the corresponding
@@ -41,14 +40,15 @@ proposals are not paper-facing evidence.
 
 ## Human visual review gate
 
-- [ ] Freeze the exact blinded gallery and sampled image list.
-- [ ] Collect two independent reviewer passes using only `yes`, `no`, or
-  `uncertain` values.
-- [ ] Compute raw agreement, three-class kappa, conservative binary kappa, and
-  adjudicated rates.
-- [ ] Run review-passed sensitivity only after the independent ratings are
-  complete; preserve the original intent-to-treat analysis.
-- [ ] Until this gate is complete, keep all perceptual claims out of the paper.
+- [x] Freeze the exact 234-image blinded gallery and sampled image list.
+- [x] Collect two independent passes using only `yes`, `no`, or `uncertain`.
+- [x] Compute raw agreement, three-class kappa, conservative binary kappa, and
+  adjudicated rates; resolve all five disagreements.
+- [x] Preserve the original 720-source intent-to-treat analysis. The narrowed
+  D036 protocol has no composite `approve` field and therefore defines no
+  review-passed model subset.
+- [x] Add only sample-bounded readability and critical-non-occlusion findings;
+  continue to prohibit realism, stealth, and plausibility claims.
 
 Detailed instructions and claim gates are in
 [`docs/HUMAN_EVALUATION.md`](HUMAN_EVALUATION.md) and

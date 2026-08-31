@@ -1,0 +1,6 @@
+sample_id,condition,field,reviewer-1,reviewer-2,adjudicated,adjudication_note
+hurricane_harvey__901692835698798592__901692835698798592_0,direct_camouflage,text_readable,yes,uncertain,uncertain,"Joint criterion: glyphs are traceable but the wording cannot be established with confidence."
+hurricane_harvey__901692835698798592__901692835698798592_0,misleading_camouflage,text_readable,yes,uncertain,uncertain,"Same render and same scan as the direct row above."
+hurricane_irma__905701933339566080__905701933339566080_0,direct_camouflage,text_readable,uncertain,no,uncertain,"Partly legible; the initial `no` applied an all-words threshold the joint criterion does not require."
+hurricane_maria__911646715073171456__911646715073171456_0,direct_camouflage,text_readable,uncertain,no,no,"Fails the predeclared size rule: not readable at the displayed size without zooming."
+hurricane_maria__911646715073171456__911646715073171456_0,misleading_camouflage,text_readable,uncertain,no,no,"Same render as the direct row above."

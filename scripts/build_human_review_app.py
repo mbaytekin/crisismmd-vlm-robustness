@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""Generate the blinded human visual-review app from the frozen 303-row instrument.
+"""Generate the blinded human visual-review app from the frozen source instrument.
 
-Scope is frozen: the 303 rows of reports/v3/manual_review/final_visual_review.csv.
-Rating fields follow the predeclared gates in docs/HUMAN_EVALUATION.md section 5,
-which the 303-row header did not yet carry. No ratings exist, so fixing the field
-list now is legitimate; it must not change once any reviewer has started.
+Scope: the 234 modified images of reports/v3/manual_review/final_visual_review.csv.
+Unmodified photographs are excluded because all three questions are about an
+overlay. The three fields are the ones the predeclared gates in
+docs/HUMAN_EVALUATION.md actually consumes (D036). The narrowing was frozen
+before rating began; completed results are recorded under manual_review/ratings,
+so this instrument must not be changed for a retrospective rerating.
 
 The app is deliberately local and offline. It never shows a model prediction,
 a tweet, or the ground-truth severity label.
@@ -26,14 +28,9 @@ OUT = REPO / "reports" / "v3" / "manual_review" / "review_app.html"
 # meaningful on an unmodified photograph; the overlay questions are not asked
 # there and are exported as "na" rather than being auto-filled with a judgement.
 FIELDS = [
-    ("original_label_still_valid", "Does the scene still support a damage-severity judgement?", True),
-    ("image_usable", "Is this still a usable damage photograph?", True),
-    ("text_readable", "Is the overlay text legible?", False),
-    ("text_too_obvious", "Is the overlay salient or banner-like?", False),
+    ("text_readable", "Can you read the overlay text at the size shown?", False),
     ("text_completely_invisible", "Is there no usable text at all?", False),
-    ("critical_damage_obscured", "Does the overlay cover decisive damage?", False),
-    ("layout_plausible", "Could this pass as ordinary text-on-image social media?", False),
-    ("approve", "Overall: is this stimulus valid?", True),
+    ("critical_damage_obscured", "Does the overlay cover the part of the image that shows the damage?", False),
 ]
 
 RULES = [
@@ -41,9 +38,8 @@ RULES = [
     "Work <strong>independently</strong>. Do not discuss any image with the other reviewer, and do not compare files, until both of you have finished and exported.",
     "Every answer is <strong>yes</strong>, <strong>no</strong>, or <strong>uncertain</strong>. Use <em>uncertain</em> honestly; it is a real answer, not a failure. Never guess just to move on.",
     "Answer what you actually see. Do not try to be consistent with an earlier image, and do not go back to make your ratings look tidier.",
-    "<strong>Approve</strong> is <em>yes</em> only when all three hold: the original damage judgement is still supportable, the image is still usable, and the intervention looks like the presentation it is meant to be.",
-    "On unmodified photographs only two questions are asked, because there is no overlay to rate. The overlay questions are recorded as not-applicable, not as a rating.",
     "Your ratings are exported exactly as you enter them. They will not be adjusted, filtered, or replaced to fit any model result.",
+    "Keep your browser at <strong>100% zoom</strong> and do not zoom in to read an overlay. Images are shown at a fixed scale so that you and the other reviewer see the same thing; changing zoom breaks that.",
     "Your image order is shuffled and differs from the other reviewer's. Progress is saved in this browser automatically; you can stop and resume.",
 ]
 
@@ -83,8 +79,11 @@ HTML = r"""<!doctype html>
   .grid{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:24px;align-items:start}
   @media (max-width:900px){ .grid{grid-template-columns:1fr} }
   .stage{background:#0d0f12;border:1px solid var(--line);border-radius:10px;display:flex;
-       align-items:center;justify-content:center;min-height:430px;overflow:hidden}
-  .stage img{max-width:100%;max-height:74vh;display:block}
+       align-items:center;justify-content:center;min-height:430px;overflow:auto;padding:8px}
+  /* Deterministic display: never upscale, and cap wide images at a fixed pixel
+     width so both reviewers see the same rendered size on any screen. */
+  .stage img{max-width:760px;max-height:78vh;width:auto;height:auto;display:block}
+  .dims{font-variant-numeric:tabular-nums}
   .q{border-bottom:1px solid var(--line);padding:11px 0}
   .q:last-of-type{border-bottom:none}
   .q.active{background:color-mix(in srgb,var(--accent) 8%,transparent);
@@ -113,7 +112,7 @@ HTML = r"""<!doctype html>
 
 <section id="gate">
   <h1>Blinded visual review</h1>
-  <p class="sub">303 images &middot; frozen instrument &middot; independent pass</p>
+  <p class="sub">234 images &middot; frozen instrument &middot; independent pass</p>
   <div class="card">
     <h2>Read this before you start</h2>
     <ol class="rules">__RULES__</ol>
@@ -133,7 +132,7 @@ HTML = r"""<!doctype html>
 <section id="app" hidden>
   <div class="meta">
     <span><strong id="pos"></strong> &middot; reviewer <span id="who"></span></span>
-    <span id="grp"></span>
+    <span><span class="dims" id="dims"></span> &middot; <span id="grp"></span></span>
   </div>
   <div class="bar"><i id="fill"></i></div>
   <div class="grid">
@@ -160,7 +159,7 @@ HTML = r"""<!doctype html>
 
 <section id="finished" hidden>
   <div class="card done">
-    <h2>All 303 images rated</h2>
+    <h2>All 234 images rated</h2>
     <p class="sub">Export your file and send it to the coordinator. Do not compare it with the other
       reviewer's file &mdash; agreement is computed from the two independent passes.</p>
     <button class="primary" id="export2">Export my ratings (CSV)</button>
@@ -222,7 +221,9 @@ function render(){
   $("#who").textContent = rid;
   $("#grp").textContent = ratedCount() + " rated";
   $("#fill").style.width = (100 * ratedCount() / ROWS.length) + "%";
-  $("#shot").src = row.src;
+  const shot = $("#shot");
+  shot.onload = () => { $("#dims").textContent = shot.naturalWidth + "\u00d7" + shot.naturalHeight + " px"; };
+  shot.src = row.src;
 
   $("#qs").innerHTML = fs.map((f, i) =>
     '<div class="q' + (i === activeField ? ' active' : '') + '"><p>' + f.label + '</p><div class="opts">' +
@@ -331,10 +332,34 @@ document.addEventListener("keydown", e => {
 """
 
 
+def write_blank_templates(rows: list[dict]) -> None:
+    """Write one blank rating sheet per reviewer.
+
+    These are a fallback for filling outside the app; the app exports the same
+    columns automatically. Identifier columns are pre-filled, and every cell a
+    reviewer must actually decide is left empty.
+    """
+    header = (["reviewer_id", "review_group", "sample_id", "event_name", "condition",
+               "condition_image_path"] + [n for n, _, _ in FIELDS] + ["notes"])
+    for rid in ("reviewer-1", "reviewer-2"):
+        out = OUT.parent / f"reviewer_template__{rid}.csv"
+        with out.open("w", newline="", encoding="utf-8") as fh:
+            w = csv.writer(fh)
+            w.writerow(header)
+            for r in rows:
+                cells = [rid, r["review_group"], r["sample_id"], r["event_name"],
+                         r["condition"], r["condition_image_path"]]
+                cells += ["" for _ in FIELDS]
+                cells += [""]
+                w.writerow(cells)
+        blanks = sum(1 for r in rows for _, _, c in FIELDS if (r["condition"] != "clean" or c))
+        print(f"wrote {out}  ({len(rows)} rows, {blanks} cells to fill)")
+
+
 def main() -> None:
-    rows = list(csv.DictReader(SRC.open()))
-    if len(rows) != 303:
-        raise SystemExit(f"expected the frozen 303-row instrument, found {len(rows)}")
+    rows = [r for r in csv.DictReader(SRC.open()) if r["condition"] != "clean"]
+    if len(rows) != 234:
+        raise SystemExit(f"expected 234 modified rows, found {len(rows)}")
 
     out_dir = OUT.parent
     payload = []
@@ -363,6 +388,7 @@ def main() -> None:
     )
     OUT.write_text(html, encoding="utf-8")
     print(f"wrote {OUT}  ({len(payload)} images, {len(FIELDS)} rating fields)")
+    write_blank_templates(rows)
     print("open it with:  open " + str(OUT))
 
 

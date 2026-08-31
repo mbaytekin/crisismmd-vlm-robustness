@@ -1,7 +1,7 @@
 # Historical model-screening rationale — eliminated from paper-facing use
 
 **Status:** The candidate/gate policy below is superseded by the completed
-six-model panel in D018--D032. It must not be supplied to a manuscript-writing
+six-model panel in D018--D037. It must not be supplied to a manuscript-writing
 model or used to qualify the reported results. It remains only as execution
 history.
 
