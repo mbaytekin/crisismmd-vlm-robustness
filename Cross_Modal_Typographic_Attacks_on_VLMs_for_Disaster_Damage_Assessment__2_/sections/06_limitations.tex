@@ -1,0 +1,12 @@
+\section{Limitations and responsible use}
+\label{sec:limitations}
+
+\paragraph{Scope and uncertainty.}
+CrisisMMD covers seven 2017 disasters and may not represent current platforms, languages, sensors, official reports, or other datasets. Ground truth is an image annotation although models also receive tweet text, so natural disagreement can resemble attack conflict. The custom 720/120/60 cohorts are class-balanced, event-confounded, and not prospectively powered; structural-zero cells preclude event-general claims, while hard labels and exact-image conflicts retain uncertainty.
+
+The fixed English payloads are non-adaptive. Paraphrase search, multilingual or physical attacks, recapture, compression, cropping, and temporal interaction remain untested. The 50.28--55.69\% clean-accuracy range makes this a conditional robustness audit rather than an operational performance evaluation. The panel also mixes a common open-model backend with a hosted service, and the attack matrix was not repeated under another prompt. Style and size cohorts have 28--37 and 13--21 eligible observations per model.
+
+The human audit samples 234 overlays and tests neither exact transcription, plausibility, realism, nor stealth; its readability and non-occlusion findings are therefore sample-bounded. Potential benchmark contamination was not measured, under-triage denotes model label transitions, and defense evaluation is outside the present scope.
+
+\paragraph{Responsible use.}
+This defensive audit characterizes under-triage risk in model-assisted damage assessment. CrisisMMD raw content is not redistributed \citep{crisisnlpterms}; deployments should expose modality conflict and retain qualified human review.

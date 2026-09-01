@@ -1,0 +1,55 @@
+\documentclass{article}
+
+% Anonymous NeurIPS 2026 AI4GOOD workshop submission mode.
+\usepackage[dblblindworkshop]{neurips_2026}
+\workshoptitle{Trustworthy AI for Good}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[hidelinks]{hyperref}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{nicefrac}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{placeins}
+\usepackage{tabularx}
+
+\title{Cross-Modal Typographic Attacks on VLMs for Disaster Damage Assessment}
+
+\author{Anonymous Author(s)}
+
+\newcommand{\lod}{\texttt{little\_or\_no\_damage}}
+\newcommand{\mild}{\texttt{mild\_damage}}
+\newcommand{\severe}{\texttt{severe\_damage}}
+\newcommand{\pp}{\,pp}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Vision--language models (VLMs) combine disaster imagery with accompanying social-media text for damage assessment. The same interface creates a failure mode: malicious text can compete with visible evidence. We audit this risk on the three-class CrisisMMD damage task. Duplicate-cluster-disjoint paired cohorts receive benign, direct-instruction, or misleading low-damage messages in the image, the accompanying text, or both; each source keeps the same assigned message across delivery channels and models. Five open-weight VLMs and Gemini 2.5 Flash are evaluated with one fixed zero-shot rubric. Balanced-main clean accuracy spans 50.28--55.69\%; accordingly, our primary rate keeps competence visible by counting initially correct mild/severe decisions that move lower and dividing by all 720 sources. For all six models and six malicious conditions, the 36 malicious-minus-modality-matched-benign risk differences are positive and Holm-significant (+1.94 to +31.39 percentage points). Image and joint delivery are often much more damaging than text-only delivery, but their relative order depends on the model and attack semantics. The largest mean full-cohort upward rate is 0.60\%; large severe-to-lower transitions instead point to directional under-triage. Secondary studies of presentation, relative size, rhetoric, and point size do not support a cross-model style ranking or a universal size ordering. Across this six-model panel, the evidence shows a consistent, directionally asymmetric under-triage vulnerability.
+\end{abstract}
+
+\input{sections/01_introduction}
+\input{sections/02_related_work}
+\input{sections/03_method}
+\input{sections/04_results}
+\input{sections/05_discussion}
+\input{sections/06_limitations}
+\input{sections/07_conclusion}
+
+\clearpage
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\appendix
+\input{sections/appendix}
+
+\end{document}
